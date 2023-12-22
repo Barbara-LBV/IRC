@@ -1,41 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/22 16:35:04 by blefebvr         ###   ########.fr       */
+/*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
+/*   Updated: 2023/12/22 16:23:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/server.hpp"
 #include "../lib/client.hpp"
 
-bool checkArg(std::string port, std::string pwd)
+Client::Client()
 {
 	
 }
 
-int main(int ac, char **av)
+Client::Client(Client const &c)
 {
-	if (ac != 3)
+	*this = c;
+}
+
+Client &Client::operator=(Client const &c)
+{
+	if (this != &c)
 	{
-		std::cerr << "Usage: <value>\n";
-		return 1;
-	}
-	if (checkArg(av[1], av[2]) == false)
-		return 2;
-	Server *serv = new Server(atoi(av[1]), av[2]);
-	try
-	{
-		serv->start();
 		
 	}
-	catch (const std::exception& e)
+	return *this;
+}
+
+Client::~Client()
+{
+	std::vector<int>::iterator it = _fdsCli.begin();
+	while (it != _fdsCli.end())
 	{
-		std::cerr << e.what() << std::endl;
+		_fdsCli.erase(it);
+		it++;
 	}
-	return 0;
+	_fdsCli.clear();
 }

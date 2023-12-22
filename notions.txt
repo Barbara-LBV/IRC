@@ -1,0 +1,4 @@
+1-> create socket
+2-> client connects to server (connect function)
+3-> server accepts connexions (accept function) => loop ??
+
