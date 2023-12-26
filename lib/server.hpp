@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/22 16:49:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/12/26 17:19:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,11 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <vector>
+#include <map>
 #include <sys/epoll.h>
 #include <exception>
+#include <string.h>
+#include "client.hpp"
 
 # define DEFAULT "\001\033[0;39m\002"
 # define RED "\001\033[1;91m\002"
@@ -36,6 +38,10 @@
 
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
+#define MAXBUF	1096
+#define BACKLOG 35
+
+class Client; 
 
 class Server
 {
@@ -46,17 +52,19 @@ class Server
 		~Server();
 
 		// server socket creation
-		void 	createSocket(void);
+		void 	createServerSocket(void);
 
 		//client connexions to server
-		void	acceptConnexions(void);
+		void	acceptConnexions(Client const &c);
 		
 	private:
-		std::vector<int>	_fdsServ; //or in another class, which will handle the sockets, map ?? 
-		int					_socServ;
-		struct sockaddr_in 	_addServ;
-		int					_servPort;
-		std::string			_servPwd;
+		int						_socServ;
+		struct sockaddr_in 		_addServ;
+		std::string				_servPwd;
+		std::string				_cliInput;
+		char					_buf[1096];
+		int						_servPort;
+		std::map<int, Client *>	_clients;
 		
 	public:
 
@@ -86,12 +94,28 @@ class Server
 			return (YELLOW "Coudn't listen network." DEFAULT);
 		}
 	};
-	class FailConnexion : public std::exception
+	class CantAccept: public std::exception
 	{
 	public:
 		virtual const char* what() const throw()
 		{
-			return (YELLOW "Coudn't connect through server" DEFAULT);
+			return (YELLOW "Coudn't accept client's connection." DEFAULT);
+		}
+	};
+	class CantSend : public std::exception
+	{
+	public:
+		virtual const char* what() const throw()
+		{
+			return (YELLOW "Coudn't send to server." DEFAULT);
+		}
+	};
+	class CantReceive : public std::exception
+	{
+	public:
+		virtual const char* what() const throw()
+		{
+			return (YELLOW "The server coudn't receive message." DEFAULT);
 		}
 	};
 };
