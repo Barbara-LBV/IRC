@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/26 17:19:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:32:54 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define MAXBUF	1096
-#define BACKLOG 35
+#define BACKLOG 5
 
 class Client; 
 
@@ -55,16 +55,17 @@ class Server
 		void 	createServerSocket(void);
 
 		//client connexions to server
-		void	acceptConnexions(Client const &c);
+		void	acceptConnexions(void);
 		
 	private:
 		int						_socServ;
 		struct sockaddr_in 		_addServ;
 		std::string				_servPwd;
-		std::string				_cliInput;
+		std::string				_servInput;
 		char					_buf[1096];
-		int						_servPort;
+		//int						_servPort;
 		std::map<int, Client *>	_clients;
+		int						_nbCli;
 		
 	public:
 
@@ -102,7 +103,7 @@ class Server
 			return (YELLOW "Coudn't accept client's connection." DEFAULT);
 		}
 	};
-	class CantSend : public std::exception
+	class CantSendMessage : public std::exception
 	{
 	public:
 		virtual const char* what() const throw()
@@ -110,7 +111,7 @@ class Server
 			return (YELLOW "Coudn't send to server." DEFAULT);
 		}
 	};
-	class CantReceive : public std::exception
+	class CantReceiveMessage : public std::exception
 	{
 	public:
 		virtual const char* what() const throw()

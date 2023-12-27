@@ -6,7 +6,8 @@ NAME	= ircserv
 # Source files list
 SRCS_DIR 	= src/
 SRCS_NAME 	= main.cpp \
-			server.cpp
+			server.cpp \
+			client.cpp
 			
 SRCS		= $(shell find $(SRCS_DIR) -name "*.cpp") # SRCS        = $(wildcard $(SRCS_DIR)*.cpp) 
 

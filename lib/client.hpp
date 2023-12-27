@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/26 17:35:37 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:10:36 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <map>
 #include <exception>
+//#include "server.hpp"
 
 # define DEFAULT "\001\033[0;39m\002"
 # define RED "\001\033[1;91m\002"
@@ -37,6 +38,8 @@
 #define SOCKET_ERROR -1
 #define MAXBUF	1096
 
+//class Server;
+
 class Client
 {
 	public:
@@ -45,15 +48,19 @@ class Client
 		Client &operator=(Client const &s);
 		~Client();
 
-		void 	createClientSocket(int socServ);
+		void 		createClientSocket(int servSocket);
+		void  		connectToServer(int servSocket);
+		int	const	&getCliSocket(void);
+		struct sockaddr &getCliAdd(void);
 
 	private:
-		struct sockaddr_in*	_addCli;
+		struct sockaddr_in	*_addCli;
 		std::string			_servOutput;
 		char				_buf[1096];
 		int					_socCli;
 		socklen_t			_cliSize;
 		
+	public:
 	class FailConnexion : public std::exception
 	{
 	public:

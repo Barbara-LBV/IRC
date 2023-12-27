@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/26 14:36:00 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:34:45 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int main(int ac, char **av)
 	Server *serv = new Server(atoi(av[1]), av[2]);
 	try
 	{
-		serv->createSocket();
+		serv->createServerSocket();
 		serv->acceptConnexions();
 	}
 	catch (const std::exception& e)

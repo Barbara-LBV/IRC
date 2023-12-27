@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/26 17:35:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:10:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,20 @@ Client::~Client()
 {
 }
 
-void	Client::createClientSocket(int socServ)
+void	Client::connectToServer(int servSocket)
 {
 	_cliSize = sizeof(_addCli);
-	_socCli = accept(socServ, (struct sockaddr *)&_addCli, &_cliSize);
-	if (_socCli == SOCKET_ERROR)
-		throw CantAcceptServer();
-	int connRes = connect(c._socClient, (sockaddr*)&_addServ, sizeof(_addServ));
+	int connRes = connect(servSocket, (struct sockaddr *)&_addCli, _cliSize);
 	if (connRes == SOCKET_ERROR)
 		throw FailConnexion();
+}
+
+int	const	&Client::getCliSocket(void)
+{
+	return _socCli;
+}
+
+struct sockaddr &Client::getCliAdd(void)
+{
+	return _addCli;
 }
