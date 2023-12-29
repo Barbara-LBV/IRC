@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/27 18:10:32 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/12/29 11:47:11 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	Client::connectToServer(int servSocket)
 	int connRes = connect(servSocket, (struct sockaddr *)&_addCli, _cliSize);
 	if (connRes == SOCKET_ERROR)
 		throw FailConnexion();
+	std::cout << "Connecting ..." << std::endl;
 }
 
 int	const	&Client::getCliSocket(void)
@@ -52,7 +53,12 @@ int	const	&Client::getCliSocket(void)
 	return _socCli;
 }
 
-struct sockaddr &Client::getCliAdd(void)
+//struct sockaddr &Client::getCliAdd(void)
+//{
+//	return _addCli;
+//}
+
+socklen_t &Client::getCliSize(void)
 {
-	return _addCli;
+	return _cliSize;
 }

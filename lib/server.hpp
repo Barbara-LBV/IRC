@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/27 16:32:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/12/29 15:50:05 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <sys/epoll.h>
 #include <exception>
 #include <string.h>
+#include <fcntl.h>
 #include "client.hpp"
 
 # define DEFAULT "\001\033[0;39m\002"
@@ -46,25 +47,46 @@ class Client;
 class Server
 {
 	public:
-		Server(int port, std::string pwd);
-		Server(Server const &s);
-		Server &operator=(Server const &s);
+		Server();
 		~Server();
-
-		// server socket creation
+		typedef struct s_socket
+		{
+			int         fd;
+			sockaddr_in addr;
+			socklen_t   len;
+		} t_socket;
+		
+		//server socket creation
+		void 	initializeServer(int port);
 		void 	createServerSocket(void);
-
+		void	bindServerSocket(int port);
+		void	listenForConnetion(void);
 		//client connexions to server
-		void	acceptConnexions(void);
+		int		acceptConnection(void);
 		
 	private:
-		int						_socServ;
-		struct sockaddr_in 		_addServ;
-		std::string				_servPwd;
-		std::string				_servInput;
-		char					_buf[1096];
+		Server(Server const &s);
+		Server &operator=(Server const &s);
+		//server socket creation
+		//void 	initializeServer(int port);
+		//void 	createServerSocket(void);
+		//void	bindServerSocket(int port);
+		//void	listenForConnetion(void);
+		//client connexions to server
+		//int	acceptConnection(void);
+		
+	protected:
+		t_socket			_socServ;
+		struct sockaddr_in 	_add;
+		std::string			_servPwd;
+		std::string			_servInput;
+		ssize_t     		_result;
+    	ssize_t     		_remain;
+		char				_buf[MAXBUF];
+		int					_fd;
+		
 		//int						_servPort;
-		std::map<int, Client *>	_clients;
+		//std::map<int, Client *>	_clients;
 		int						_nbCli;
 		
 	public:
