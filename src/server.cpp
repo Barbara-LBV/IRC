@@ -6,11 +6,12 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/29 15:51:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/02 18:00:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/server.hpp"
+#include <cerrno>
 
 Server::Server()
 {
@@ -42,6 +43,7 @@ void	Server::createServerSocket(void)
 	memset(&_add, 0, sizeof(_add));
 	if (_socServ.fd == SOCKET_ERROR)
 		throw CantCreateSocket();
+	std::cout << "Server's socket successfully created\n";
 	int toggle = 1;
     setsockopt(_socServ.fd, SOL_SOCKET, SO_REUSEPORT, (const void*)&toggle, sizeof(toggle));
 }
@@ -58,7 +60,7 @@ void	Server::bindServerSocket(int port)
         << inet_ntoa(_socServ.addr.sin_addr) << std::endl;		
 }
 
-void	Server::listenForConnetion(void)
+void	Server::listenForConnection(void)
 {
 	if (listen(_socServ.fd, BACKLOG) ==  SOCKET_ERROR)
 		throw CantListen();
@@ -67,7 +69,8 @@ void	Server::listenForConnetion(void)
 
 int		Server::acceptConnection(void)
 {
-	_fd = accept(_socServ.fd, (struct sockaddr *)&_add, &_socServ.len);
+	_addLen = sizeof (_add);
+	_fd = accept(_socServ.fd, (struct sockaddr *)&_add, &_addLen);
 	if (_fd ==  SOCKET_ERROR)
 		throw CantAccept();
 	else
@@ -79,7 +82,18 @@ void Server::initializeServer(int port)
 {
     createServerSocket();
     bindServerSocket(port);
-    listenForConnetion();
+    listenForConnection();
+	//acceptConnection();
+}
+
+struct sockaddr_in &Server::getServAdd(void)
+{
+	return (_socServ.addr);
+}
+
+socklen_t 		&Server::getServAddLen(void)
+{
+	return (_socServ.len);
 }
 
 //void	Server::acceptConnexions(void)

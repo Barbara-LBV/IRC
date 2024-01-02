@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/29 11:42:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:22:38 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,14 @@ class Client
 		~Client();
 		struct sockaddr_in	*_addCli;
 
-		void 			createClientSocket(int servSocket);
-		void  			connectToServer(int servSocket);
+		//void 			createClientSocket(Server &s);
+		void  			connectToServer(Server &s);
+		void			sendMsg();
+		void			recvMsg();
 		int	const		&getCliSocket(void);
 		struct sockaddr &getCliAdd(void);
-		socklen_t &getCliSize(void);
+		socklen_t 		&getCliSize(void);
+
 
 	private:
 		
@@ -68,7 +71,7 @@ class Client
 	public:
 		virtual const char* what() const throw()
 		{
-			return (YELLOW "Coudn't connect to the server" DEFAULT);
+			return (YELLOW "Coudn't connect to Server" DEFAULT);
 		}
 	};
 	class CantAcceptServer : public std::exception
@@ -76,7 +79,7 @@ class Client
 	public:
 		virtual const char* what() const throw()
 		{
-			return (YELLOW "Coudn't accept server's socket." DEFAULT);
+			return (YELLOW "Coudn't accept Server's socket" DEFAULT);
 		}
 	};
 	class CantReceive : public std::exception
@@ -84,7 +87,15 @@ class Client
 	public:
 		virtual const char* what() const throw()
 		{
-			return (YELLOW "The client coudn't receive message." DEFAULT);
+			return (YELLOW "The client coudn't receive message from Server" DEFAULT);
+		}
+	};
+		class CantSend : public std::exception
+	{
+	public:
+		virtual const char* what() const throw()
+		{
+			return (YELLOW "The client coudn't send message to Server" DEFAULT);
 		}
 	};
 };

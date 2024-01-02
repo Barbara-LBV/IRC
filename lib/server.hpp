@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/29 15:50:05 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:24:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,11 @@ class Server
 		void 	initializeServer(int port);
 		void 	createServerSocket(void);
 		void	bindServerSocket(int port);
-		void	listenForConnetion(void);
+		void	listenForConnection(void);
 		//client connexions to server
 		int		acceptConnection(void);
+		struct sockaddr_in &getServAdd(void);	
+		socklen_t 		&getServAddLen(void);
 		
 	private:
 		Server(Server const &s);
@@ -78,6 +80,7 @@ class Server
 	protected:
 		t_socket			_socServ;
 		struct sockaddr_in 	_add;
+		socklen_t   		_addLen;
 		std::string			_servPwd;
 		std::string			_servInput;
 		ssize_t     		_result;

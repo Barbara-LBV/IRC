@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/29 15:53:25 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:49:45 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,26 @@ bool checkArg(std::string port, std::string pwd)
 {
 	if (pwd.size() > 10)
 	{
-		std::cerr << "Chosen password is too long.\n";
+		std::cerr << pwd << ": chosen password is too long.\n";
 		return false;
+	}
+	for(size_t i = 0; i < port.size(); i++)
+	{
+		if (!isdigit(port[i]))
+		{
+			std::cerr << port << ": unvalid port number\n";
+			return false;
+		}
 	}
 	if (port.size() > 5)
 	{
-		std::cerr << port << " is out of port range (0 ~ 65535)\n";
+		std::cerr << port << ": out of port range (0 ~ 65535)\n";
 		return false;
 	}
 	int portNb = atoi(port.c_str());
 	if (portNb > 65535 || portNb < 0)
 	{
-		std::cerr << port << " is out of port range (0 ~ 65535)\n";
+		std::cerr << port << ": out of port range (0 ~ 65535)\n";
 		return false;
 	}
 	return true;
@@ -43,10 +51,12 @@ int main(int ac, char **av)
 	}
 	if (checkArg(av[1], av[2]) == false)
 		return 2;
-	Server *serv = new Server();
+	Server serv;
+	Client cli;
 	try
 	{
-		serv->initializeServer(atoi(av[1]));
+		serv.initializeServer(atoi(av[1]));
+		cli.connectToServer(serv);		
 	}
 	catch (const std::exception& e)
 	{

@@ -6,11 +6,12 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/12/29 11:47:11 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/02 18:01:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/client.hpp"
+#include <cerrno>
 
 Client::Client()
 {
@@ -39,11 +40,11 @@ Client::~Client()
 {
 }
 
-void	Client::connectToServer(int servSocket)
+void	Client::connectToServer(Server &s)
 {
-	_cliSize = sizeof(_addCli);
-	int connRes = connect(servSocket, (struct sockaddr *)&_addCli, _cliSize);
-	if (connRes == SOCKET_ERROR)
+	int fd_cli = s.acceptConnection();
+	//it's the client socket in the 1st param, and the server addr in 2nd et 2rd params
+	if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == SOCKET_ERROR)
 		throw FailConnexion();
 	std::cout << "Connecting ..." << std::endl;
 }
@@ -52,11 +53,6 @@ int	const	&Client::getCliSocket(void)
 {
 	return _socCli;
 }
-
-//struct sockaddr &Client::getCliAdd(void)
-//{
-//	return _addCli;
-//}
 
 socklen_t &Client::getCliSize(void)
 {
