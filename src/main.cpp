@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/02 17:49:45 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/03 12:37:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int main(int ac, char **av)
 	}
 	if (checkArg(av[1], av[2]) == false)
 		return 2;
-	Server serv;
+	Server serv(av[1], av[2]);
 	Client cli;
 	try
 	{
@@ -61,6 +61,8 @@ int main(int ac, char **av)
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
+		//serv.closeServFd();
+		//cli.closeCliFd();
 	}
 	return 0;
 }

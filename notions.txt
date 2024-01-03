@@ -2,3 +2,18 @@
 2-> client connects to server (connect function)
 3-> server accepts connexions (accept function) => loop ??
 
+Server => ouvre la connection via socket
+		=> gere les connections entrantes
+		=> gere les channels (?)
+
+Event 	=> gere les differents evenements qui interviennent entre server et clients
+		=> ces evenements peuvent etre des messages, des demandes etc
+
+Client	=> se connecte au server
+		=> communique avec le server par des evenements
+		=> se connecte a des channel
+		=> peut communiquer avec d'autres clients ou le server sur les channels
+		=> chaque Client a un nom, un statut, une IP etc
+
+Channel => canal de conversation ou on peut etre invite, demander a joindre, quitter etc
+		=> event.hpp doit pouvoir garder l'oeil sur ces modifications.

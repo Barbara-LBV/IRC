@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/02 17:22:38 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:22:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <map>
 #include <exception>
+#include <poll.h>
 #include "server.hpp"
 
 # define DEFAULT "\001\033[0;39m\002"
@@ -34,7 +35,6 @@
 # define GREEN "\001\033[1;92m\002"
 # define BLUE "\001\033[1;36m\002"
 
-#define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define MAXBUF	1096
 
@@ -53,10 +53,10 @@ class Client
 		void  			connectToServer(Server &s);
 		void			sendMsg();
 		void			recvMsg();
+		void			closeCliFd();
 		int	const		&getCliSocket(void);
 		struct sockaddr &getCliAdd(void);
 		socklen_t 		&getCliSize(void);
-
 
 	private:
 		
@@ -90,12 +90,20 @@ class Client
 			return (YELLOW "The client coudn't receive message from Server" DEFAULT);
 		}
 	};
-		class CantSend : public std::exception
+	class CantSend : public std::exception
 	{
 	public:
 		virtual const char* what() const throw()
 		{
 			return (YELLOW "The client coudn't send message to Server" DEFAULT);
+		}
+	};
+	class TimeoutException: public std::exception
+	{
+	public:
+		virtual const char* what() const throw()
+		{
+			return (YELLOW "Connection time out." DEFAULT);
 		}
 	};
 };

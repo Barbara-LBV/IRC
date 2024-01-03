@@ -6,19 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/02 12:06:04 by blefebvr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   client.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/02 12:01:58 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/03 18:03:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +35,6 @@
 # define GREEN "\001\033[1;92m\002"
 # define BLUE "\001\033[1;36m\002"
 
-#define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define MAXBUF	1096
 
@@ -62,10 +49,24 @@ class Channel : public Client
 		Channel &operator=(Channel const &s);
 		~Channel();
 
+		/*void joinChannel(Client*);
+   		void partChannel(Client*);
+    	void invitationChannel(Client*);
+		const std::string&     getName() const;
+		const std::string&     getTopic() const;
+		const t_vector_member& getMembers();
+		bool                   getStatus(e_type);
+		Client*                getOperator();
+		std::string            getStatus();
+
+		void setName(const std::string&);
+		void setTopic(const std::string&);
+		void setStatus(e_type, bool);
+		void setStatus(std::string&);*/
+
 	private:
 		
 
-		
 	//public:
 	//class FailConnexion : public std::exception
 	//{

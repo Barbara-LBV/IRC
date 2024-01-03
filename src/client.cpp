@@ -6,12 +6,14 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/02 18:01:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/03 12:06:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/client.hpp"
 #include <cerrno>
+#include <errno.h>
+#include <fcntl.h>
 
 Client::Client()
 {
@@ -42,12 +44,80 @@ Client::~Client()
 
 void	Client::connectToServer(Server &s)
 {
-	int fd_cli = s.acceptConnection();
-	//it's the client socket in the 1st param, and the server addr in 2nd et 2rd params
-	if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == SOCKET_ERROR)
-		throw FailConnexion();
-	std::cout << "Connecting ..." << std::endl;
+    int fd_cli = s.acceptConnection();
+
+    // Set the socket to non-blocking
+    fcntl(fd_cli, F_SETFL, O_NONBLOCK);
+
+    // Initialize pollfd structure
+    struct pollfd fds[1];
+    fds[0].fd = fd_cli;
+    fds[0].events = POLLOUT;  // We are interested in the socket being writable
+
+    // Attempt to connect
+    if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == SOCKET_ERROR)
+    {
+		std::cout << "errno = " << errno << std::endl;
+        if (errno == EINPROGRESS)
+        {
+            // Connection is in progress, wait for it to complete using poll
+            int pollResult = poll(fds, 1, /*timeout in milliseconds*/ -1);
+
+            if (pollResult == -1)
+            {
+                // Handle poll error
+				std::cout << "poll error" << std::endl;
+                throw FailConnexion();
+            }
+            else if (pollResult == 0)
+            {
+                // Timeout occurred (optional, depending on your requirements)
+                throw TimeoutException();
+            }
+            else
+            {
+                // Check if the socket is now writable
+                if (fds[0].revents & POLLOUT)
+                {
+                    // Connection is complete, handle it appropriately
+                    std::cout << "Connection established!" << std::endl;
+                }
+                else
+                {
+                    // Connection failed
+					std::cout << "poll connection failed" << std::endl;
+                    throw FailConnexion();
+                }
+            }
+        }
+        else
+        {
+            // Handle other connection errors
+			std::cout << "other connection errors" << std::endl;
+            throw FailConnexion();
+        }
+    }
+
+    std::cout << "Connecting ..." << std::endl;
 }
+
+//void	Client::connectToServer(Server &s)
+//{
+//	int fd_cli = s.acceptConnection();
+//	fcntl(fd_cli, F_SETFL, O_NONBLOCK);
+//	//it's the client socket in the 1st param, and the server addr in 2nd et 2rd params
+//	if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == SOCKET_ERROR)
+//	{
+//		if (errno == EINPROGRESS)
+//        {
+//            // Connection is in progress, handle it appropriately
+//            // You can use select/poll/epoll to check for the completion of the connection
+//        }
+//        else
+//        	throw FailConnexion();
+//	}
+//	std::cout << "Connecting ..." << std::endl;
+//}
 
 int	const	&Client::getCliSocket(void)
 {
