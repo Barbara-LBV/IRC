@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   channel.hpp                                        :+:      :+:    :+:   */
+/*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/03 18:03:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:29:25 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,9 @@
 #define CHANNEL_HPP
 
 #include <iostream>
-#include <string>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <map>
-#include <exception>
-#include "server.hpp"
-#include "client.hpp"
+#include "IrcLib.hpp"
+#include "Server.hpp"
+#include "Client.hpp"
 
 # define DEFAULT "\001\033[0;39m\002"
 # define RED "\001\033[1;91m\002"

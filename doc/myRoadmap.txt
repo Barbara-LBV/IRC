@@ -1,0 +1,87 @@
+**********************  My RoadMap   **********************
+
+Server 	=> ouvre la connection via socket
+		=> gere les connections entrantes et sortantes des clients
+		=> gere les channels (comment ?)
+		=> https://datatracker.ietf.org/doc/html/rfc2813 
+
+Event 	=> gere les differents evenements qui interviennent entre server et clients
+		=> ces evenements peuvent etre des messages, des demandes etc
+		=> /_\ pas simple a implementer !!!
+
+Client	=> se connecte au server
+		=> communique directement avec le server (par des evenements ?)
+		=> se connecte a des channels
+		=> peut etre operateur de channel ou simple utilisateur sur les channels
+		=> peut communiquer avec d'autres clients uniquement via les channels
+		=> sur un channel, si un client envoie un msg, tous les clients connectes au meme channel le recoivent
+		=> chaque Client a un nom, un statut, une IP etc qui lui est propre
+		=> https://datatracker.ietf.org/doc/html/rfc2812 
+
+Channel => canal de conversation ou on peut etre invite, demander a joindre, quitter etc
+		=> operateurs de canaux (chanOp or op) = supers utilisateurs (voir ci-apres)
+		=> chanOp administrent leur channel = autorise, bannit, invite etc d'autres utilisateurs
+		=> on doit implementer leurs commandes (voir sujet)
+		=> event.hpp doit pouvoir garder l'oeil sur ces modifications.
+		=> https://datatracker.ietf.org/doc/html/rfc2811
+		=> https://libera.chat/guides/usermodes 
+
+Quid	=> si un client est banni d'un channel, est-il banni de l'ensemble de la connexion ?
+		=> gerer le temps : chaque action est timee
+
+**************************************************************
+*					send() & recv()                          *
+**************************************************************
+
+si le server send(), le client devra avoir sa fonction recv() positionne avant 
+sa propre fonction send(), parce que send() bloquera les autres fonctions send(),
+et recv() bloque les autres fonctions recv();
+
+**************************************************************
+*					operateurs de canaux                     *
+**************************************************************
+
+Dans le contexte des serveurs IRC (Internet Relay Chat) et des clients IRC, 
+l'opérateur de canal (channel operator) se réfère à un utilisateur qui a des 
+privilèges spéciaux sur un canal (channel). Les canaux sont des espaces de 
+discussion thématiques sur lesquels plusieurs utilisateurs peuvent se rejoindre 
+et discuter.
+
+Un opérateur de canal (souvent abrégé en "chanop" ou "op") est un utilisateur 
+auquel des droits spéciaux ont été accordés sur un canal IRC. Ces droits 
+peuvent inclure la capacité de contrôler qui peut rejoindre le canal, expulser 
+des utilisateurs, changer les modes du canal, et d'autres actions de modération. Les opérateurs de canal sont généralement désignés par un symbole spécial devant leur pseudonyme, tel que "@", pour indiquer leur statut.
+
+La manière dont les opérateurs de canal fonctionnent dans le contexte IRC peut 
+varier en fonction du serveur IRC spécifique et des modes de canal activés. 
+Voici quelques concepts généraux :
+
+Modes de canal : Les canaux IRC ont des modes qui peuvent être définis par les 
+opérateurs de canal. Ces modes déterminent les autorisations et restrictions 
+pour les utilisateurs sur le canal.
+
+Commandes spéciales : Les opérateurs de canal peuvent utiliser des commandes 
+spéciales pour effectuer des actions de modération, telles que l'expulsion d'un 
+utilisateur ou la restriction de l'accès au canal.
+
+Protection du canal : Les opérateurs de canal peuvent protéger le canal en 
+limitant l'accès et en évitant que des utilisateurs indésirables n'y accèdent. 
+Ils peuvent également modérer les discussions pour maintenir un environnement 
+convivial.
+
+Liste des utilisateurs : Les opérateurs de canal ont souvent accès à une liste 
+des utilisateurs présents sur le canal et peuvent voir les adresses IP des 
+utilisateurs pour des raisons de sécurité et de modération.
+
+Voici un exemple simplifié de la manière dont un opérateur de canal pourrait 
+définir des modes sur un canal IRC :
+
+/mode #nomducanal +o pseudonyme_op
+
+Cette commande définirait l'utilisateur "pseudonyme_op" en tant qu'opérateur 
+du canal, lui accordant ainsi des privilèges spéciaux.
+
+Il est important de noter que les détails précis peuvent varier en fonction de 
+la mise en œuvre spécifique du serveur IRC et des fonctionnalités activées. 
+Les opérateurs de canal jouent un rôle crucial dans la gestion et la modération 
+des canaux IRC pour assurer une expérience de discussion positive et sécurisée.

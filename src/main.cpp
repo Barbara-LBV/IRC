@@ -6,46 +6,27 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/03 12:37:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/04 18:01:25 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/server.hpp"
-#include "../lib/client.hpp"
+#include "../lib/Server.hpp"
+#include "../lib/Client.hpp"
+#include "Parsing.cpp"
 
-bool checkArg(std::string port, std::string pwd)
+bool server_shutdown = false;
+
+static void	signal_handler(int signal)
 {
-	if (pwd.size() > 10)
-	{
-		std::cerr << pwd << ": chosen password is too long.\n";
-		return false;
-	}
-	for(size_t i = 0; i < port.size(); i++)
-	{
-		if (!isdigit(port[i]))
-		{
-			std::cerr << port << ": unvalid port number\n";
-			return false;
-		}
-	}
-	if (port.size() > 5)
-	{
-		std::cerr << port << ": out of port range (0 ~ 65535)\n";
-		return false;
-	}
-	int portNb = atoi(port.c_str());
-	if (portNb > 65535 || portNb < 0)
-	{
-		std::cerr << port << ": out of port range (0 ~ 65535)\n";
-		return false;
-	}
-	return true;
+	(void)signal;
+	server_shutdown = true;
 }
 
 int main(int ac, char **av)
 {
 	if (ac != 3)
 	{
+		signal(SIGINT, signal_handler);
 		std::cerr << "Usage: " << av[0] << " <port> <password>\n";
 		return 1;
 	}

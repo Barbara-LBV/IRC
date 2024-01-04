@@ -1,36 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   channel.cpp                                        :+:      :+:    :+:   */
+/*   Event.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/02 12:07:01 by blefebvr         ###   ########.fr       */
+/*   Created: 2024/01/04 11:30:05 by blefebvr          #+#    #+#             */
+/*   Updated: 2024/01/04 16:26:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/channel.hpp"
+#include "../lib/Event.hpp"
 
-Channel::Channel()
+Event::Event(){};
+
+~Event::Event(){};
+
+void   Event::setEventStruct(int id, short filt, u_short flags, u_int fflags, int data, void*   udata)
 {
-
+	
 }
 
-Channel::Channel(Channel const &c)
+void          Event::initialize(int socket_fd)
 {
-	*this = c;
+	
 }
 
-Channel &Channel::operator=(Channel const &c)
+void          Event::remove(int fd)
 {
-	if (this != &c)
-	{
-
-	}
-	return *this;
+	
 }
 
-Channel::~Channel()
+void          Event::add(Client*)
 {
+	
+}
+
+int           Event::kevent()
+{
+	
 }
