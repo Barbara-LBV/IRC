@@ -3,6 +3,8 @@
 Server 	=> ouvre la connection via socket
 		=> gere les connections entrantes et sortantes des clients
 		=> gere les channels (comment ?)
+		=> par convention, le server doit pouvoir envoyer des reponses specifiques aux clients
+		selon ce qui se passe (fichier NumReply.hpp)
 		=> https://datatracker.ietf.org/doc/html/rfc2813 
 
 Event 	=> gere les differents evenements qui interviennent entre server et clients

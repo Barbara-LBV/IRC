@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/04 16:26:00 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:43:01 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	Client::connectToServer(Server &s)
     fds[0].events = POLLOUT;  // We are interested in the socket being writable
 
     // Attempt to connect
-    if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == SOCKET_ERROR)
+    if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == ERROR)
     {
 		std::cout << "errno = " << errno << std::endl;
         if (errno == EINPROGRESS)
@@ -103,7 +103,7 @@ void	Client::connectToServer(Server &s)
 //	int fd_cli = s.acceptConnection();
 //	fcntl(fd_cli, F_SETFL, O_NONBLOCK);
 //	//it's the client socket in the 1st param, and the server addr in 2nd et 2rd params
-//	if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == SOCKET_ERROR)
+//	if (connect(fd_cli, (struct sockaddr *)&s.getServAdd(), s.getServAddLen()) == ERROR)
 //	{
 //		if (errno == EINPROGRESS)
 //        {

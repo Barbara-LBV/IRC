@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/04 17:53:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:22:37 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Client
 		Client();
 		~Client();
 		
+		/* structures */
 		typedef struct s_status //client status, usefull also for channel management
 		{
 			/* what's client status : registred, joined(channel) etc*/
@@ -37,144 +38,35 @@ class Client
 		typedef struct s_names // all the infos allowing to identify a client
 		{
 			std::string	nickname; // pseudo: usefull for channel operator
+			std::string	oldNick;
 			std::string	username; 
-			sockaddr_in ip_addr; // IP adress: usefull for channel operator
-			
+			int			cliFd; // IP adress: usefull for channel operator
+			int			user_id; 
+			std::string	host;
 		} t_names;
 		
-
-		//void 			createClientSocket(Server &s);
+		/* Assessors */
+		
+		/* connections management */
+		
+		/* Channel management => which "mode" : chanOp, simple user, disconnected ?*/
+		
 		void  			connectToServer(Server &s);
 		void			sendMsg();
 		void			recvMsg();
 		void			closeCliFd();
 		int	const		&getCliSocket(void);
-		struct sockaddr &getCliAdd(void);
-		socklen_t 		&getCliSize(void);
 
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);
 		
-		std::string			_servOutput;
+		std::string			_sendTo;
+		std::string			_recvFrom;
 		char				_buf[1096]; //each client has its own buffer. Must check that the whole msg has been received (ending with /0)
-		int					_socCli;
-		socklen_t			_cliSize;
-		struct sockaddr_in	*_addCli;
+		
 };
 
 #endif
-
-/*     Have to manage the errors with errno instead of try/catch  */
-
-	//public:
-	//class FailConnexion : public std	//public:
-
-	//class CantCreateSocket : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't create socket." DEFAULT);
-	//	}
-	//};
-
-	//class CantConfigSocket : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't configure socket." DEFAULT);
-	//	}
-	//};
-	
-	//class CantBind : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't bind socket" DEFAULT);
-	//	}
-	//};
-	
-	//class CantListen : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't listen network." DEFAULT);
-	//	}
-	//};
-	//class CantAccept: public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't accept client's connection." DEFAULT);
-	//	}
-	//};
-	//class CantSendMessage : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't send to client." DEFAULT);
-	//	}
-	//};
-	//class CantReceiveMessage : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "The server coudn't receive message." DEFAULT);
-	//	}
-	//};
-	//class PollIssue : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return ("");
-	//	}
-	//};::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't connect to Server" DEFAULT);
-	//	}
-	//};
-	//class CantAcceptServer : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Coudn't accept Server's socket" DEFAULT);
-	//	}
-	//};
-	//class CantReceive : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "The client coudn't receive message from Server" DEFAULT);
-	//	}
-	//};
-	//class CantSend : public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "The client coudn't send message to Server" DEFAULT);
-	//	}
-	//};
-	//class TimeoutException: public std::exception
-	//{
-	//public:
-	//	virtual const char* what() const throw()
-	//	{
-	//		return (YELLOW "Connection time out." DEFAULT);
-	//	}
-	//};
 
 

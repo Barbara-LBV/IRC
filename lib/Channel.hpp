@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/04 16:29:25 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:43:01 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define GREEN "\001\033[1;92m\002"
 # define BLUE "\001\033[1;36m\002"
 
-#define SOCKET_ERROR -1
+#define ERROR -1
 #define MAXBUF	1096
 
 class Server;

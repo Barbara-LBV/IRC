@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/04 17:51:22 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/05 16:51:52 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,14 @@
 #include <cerrno>
 #include <fcntl.h>
 #include <poll.h>
-#include <sys/event.h>
+#include <ctime>
+//#include <sys/event.h> => if we use the event tools
 #include <sys/types.h>
+
+/****************** Includes *******************/
+
+#include "Replies.hpp"
+// # include "Command.hpp"
 
 /*********************  Colors *******************/
 
@@ -47,7 +53,7 @@
 
 /*********************  Macros *******************/
 
-# define SOCKET_ERROR 	-1
+# define ERROR 	-1
 # define MAXBUF			1096
 # define BACKLOG 		1
 # define TRUE			1

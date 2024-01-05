@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 17:44:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/04 16:53:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/05 16:57:26 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ plusieurs descripteurs de fichiers et d'autres événements système en utilisan
 une seule interface. Cela est particulièrement utile pour les serveurs réseau 
 et d'autres applications nécessitant une gestion efficace des événements.*/
 
-#ifndef EVENT_HPP
+/*#ifndef EVENT_HPP
 #define EVENT_HPP
 
 #include <iostream>
@@ -47,7 +47,7 @@ class Event
         int           kevent();
 }
 
-#endif
+#endif*/
 
 /*struct kevent 
         {
