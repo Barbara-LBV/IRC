@@ -6,14 +6,13 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/05 14:40:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:20:01 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 #include "../lib/Client.hpp"
 #include "../lib/IrcLib.hpp"
-#include "Parsing.cpp"
 
 bool server_shutdown = false;
 
@@ -21,6 +20,7 @@ static void	signal_handler(int signal)
 {
 	(void)signal;
 	server_shutdown = true;
+	std::cout << "[Server] Shutting down...\n";
 }
 
 int main(int ac, char **av)
@@ -32,12 +32,12 @@ int main(int ac, char **av)
 	}
 	if (checkArg(av[1], av[2]) == false)
 		return 2;
-	signal(SIGINT, signal_handler);
 	Server server(av[1], av[2]);
 	server.initializeServer(atoi(av[1]));
+	signal(SIGINT, signal_handler);
 	try
 	{
-	
+		server.manageConnections();
 	}
 	catch (const std::exception& e)
 	{
@@ -45,5 +45,6 @@ int main(int ac, char **av)
 		//serv.closeServFd();
 		//cli.closeCliFd();
 	}
+	//signal(SIGINT, signal_handler);
 	return 0;
 }

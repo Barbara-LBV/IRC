@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/05 14:43:01 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/08 12:59:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 class Server;
 class Client;
 
-class Channel : public Client
+class Channel
 {
 	public:
 		Channel();

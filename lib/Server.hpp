@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/05 17:18:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:09:43 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Server
 
 		/* Client management */
 		void 				addClient(void);
-		int					delClient(int cliNb);
+		void				delClient(std::vector<pollfd> fds);
 		void 				manageConnections(void);
 
 		/* Channel management */
@@ -74,17 +74,18 @@ class Server
 	//protected: 
 		int									_socServ;
 		sockaddr_in 						_hints; // give indications for configure/initialize info linked to a network address
-		sockaddr_in 						*_servInfo; // stock server's infos for listening for connections
+		sockaddr_in 						_servInfo; // stock server's infos for listening for connections
 		std::string							_servPwd;
 		std::string							_servInput;
 		ssize_t     						_result; //variable qui retourne le nb de bytes envoyes par le client
     	ssize_t     						_remain;
 		char								_buf[MAXBUF]; //buffer qui recoit les donnees
-		struct pollfd						_fds[BACKLOG];
 		int									_servPort;
 		std::map<int, Client *>				_clients; //client id, client class
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
 		std::vector<servOp>					_ops; // vector of serOp struct
 };
+
+bool checkArg(std::string port, std::string pwd);
 
 #endif

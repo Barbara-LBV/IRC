@@ -6,11 +6,11 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/04 16:34:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/08 14:30:55 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/IrcLib.hpp"
+#include "../lib/Server.hpp"
 
 bool checkArg(std::string port, std::string pwd)
 {

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/05 17:04:50 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/08 17:41:49 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,62 +14,67 @@
 
 void 	Server::manageConnections(void)
 {
-	int end_server = FALSE, compress_fds = FALSE, close_conn = FALSE;
-	int current_size, i, rc, new_fd = 0;
+	int rc, compress_fds = FALSE, close_conn = FALSE;
 	int	timeout = 3 * 60 * 100;
-	int nfds = 1;
 	
-	while (end_server == FALSE)
+	std::vector<pollfd>	poll_fds;
+	pollfd 				serv_poll, new_poll;
+	
+	serv_poll.fd 		= _socServ;
+	serv_poll.events 	= POLLIN;
+	poll_fds.push_back(serv_poll);
+	
+	while (server_shutdown == FALSE)
 	{
-		// 1- lancer poll et faire les checks de fails et de temps => 1 fonction
-		rc = poll(_fds, nfds, timeout);
+		// launch poll and check fails eand timing
+		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), timeout);
 		checkPoll(rc);
-		current_size = nfds;
-		// 2- verifie les revents de poll => 1 fonction
-		for (i = 0; i < current_size ; i++)
+		// check revents of poll 
+		for (unsigned int i = 0; i < poll_fds.size() ; i++)
 		{
-			if(_fds[i].revents == 0)
+			if (poll_fds[i].revents == 0)
         		continue;
-			if(_fds[i].revents != POLLIN)
+			if (poll_fds[i].revents != POLLIN)
 			{
-				std::cout << "[Server] Error! poll revents= " << _fds[i].revents << std::endl;
-				end_server = TRUE;
+				std::cout << "[Server] Error! poll revents= " << poll_fds[i].revents << std::endl;
+				server_shutdown = TRUE;
 				break;
 			}
-			// 3- verifier si la socket du serv est "readable" et boucler pour accepter les connections
-			if (_fds[i].fd == _socServ) //s'il s'agit de la socket d'ecoute ..
+			// check if server socket is "readable" and loop to accept connection
+			if (poll_fds[i].fd == _socServ) // if it's the listening socket (server's)
 			{
 				std::cout << "[Server] Socket is readable\n";
-				while (new_fd != -1)
+				while (new_poll.fd != -1)
 				{
-					new_fd = acceptConnection();
-					std::cout << "[Server] New incoming connection - " << new_fd << std::endl;
-          			_fds[nfds].fd = new_fd;
-					_fds[nfds].events = POLLIN;
-					nfds++;
+					new_poll.fd = acceptConnection();
+					new_poll.events = POLLIN;
+					std::cout << "[Server] New incoming connection - " << new_poll.fd << std::endl;
+          			poll_fds.push_back(new_poll);
+					/* add a function that fill the "_client" variable with all the client's infos*/
+					/* send automatic reply RPL_WELCOME */		
 				}
 			}
-			else // s'il s'agit de connexions clients
+			else // if it's a client already connected to server
 			{
-				std::cout << "[Server] FD " << _fds[i].fd << "is readable\n";
+				std::cout << "[Server] FD " << poll_fds[i].fd << "is readable\n";
 				while (TRUE)
 				{
-					// 4- fonction pour recevoir et envoyer des msg
-					rc = recv(_fds[i].fd, _buf, sizeof(_buf), 0);
+					// receive and send msg
+					rc = recv(poll_fds[i].fd, _buf, sizeof(_buf), 0);
 					checkReception(rc);
 					int len = rc;
 					std::cout << "[Server] " << len << "bytes received\n";
-					rc = send(_fds[i].fd, _buf, len, 0);
+					rc = send(poll_fds[i].fd, _buf, len, 0);
 					if (rc == ERROR)
 					{
-						std::cerr << "";
+						std::cerr << "[Server] coudn't send message";
 						exit(ERROR);
 					}
 				}
-				if (close_conn)
+				if (close_conn) // if a Client is closing its connection
 				{
-					close(_fds[i].fd);
-					_fds[i].fd = -1;
+					close(poll_fds[i].fd);
+					poll_fds[i].fd = -1;
 					compress_fds = TRUE;
 				}
 			}
@@ -78,42 +83,40 @@ void 	Server::manageConnections(void)
 	if (compress_fds == TRUE)
 	{
 		compress_fds = FALSE;
-		nfds = delClient(nfds);
+		delClient(poll_fds);
 	}
 }
 
-int		Server::delClient(int cliNb)
+void		Server::delClient(std::vector <pollfd> fds)
 {
-    for (int i = 0; i < cliNb; i++)
+	unsigned int len = fds.size();
+    for (unsigned int i = 0; i < len; i++)
     {
-		if (_fds[i].fd == -1)
+		if (fds[i].fd == -1)
 		{
-			for(int j = i; j < cliNb; j++)
-				_fds[j].fd = _fds[j+1].fd;
+			for(unsigned int j = i; j < len; j++)
+				fds[j].fd = fds[j+1].fd;
 			i--;
-			cliNb--;
+			len--;
 		}
 	}
 }
 
-void		Server::delChannel(std::string chan)
-{
-	std::vector<servOp>::iterator it = _ops.begin();
+//void		Server::delChannel(std::string chan)
+//{
+//	std::vector<servOp>::iterator it = _ops.begin();
 	
-    for (; it != _ops.end(); ++it)
-    {
-		if (it == chan)
-		{
-			for(int j = i; j < cliNb; j++)
-				_fds[j].fd = _fds[j+1].fd;
-			i--;
-			cliNb--;
-		}
-	}
-}
+//    for (; it != _ops.end(); ++it)
+//    {
+//		if (it.name == chan)
+//			_ops.erase(it);
+//	  }
+//}
 
 void 	Server::checkPoll(int rc)
 {
+	if (rc == ERROR && server_shutdown == TRUE)
+		exit(ERROR);
 	if (rc == ERROR)
 	{
 		std::cerr << "[Server] Poll failed" << std::endl;
@@ -121,7 +124,8 @@ void 	Server::checkPoll(int rc)
 	}
 	if (rc == 0)
 	{
-		std::cerr << "[Server] Poll timed out. End of Program" << std::endl;
+		std::cerr << "[Server] Poll timed out." << std::endl;
+		server_shutdown == TRUE;
 		exit(ERROR);
 	}
 }
@@ -132,13 +136,13 @@ void	Server::checkReception(int rc)
 	{
 		if (errno != EWOULDBLOCK)
 		{
-			std::cout << "Reception failed. ";
-			throw CantReceiveMessage();
+			std::cerr << "[Server] Reception failed.";
+			exit(ERROR);
 		}
 	}
 	if (rc == 0)
 	{
-		std::cout << "Connection closed" << std::endl;
-		throw PollIssue();
+		std::cerr << "[Server] Connection closed." << std::endl;
+		exit(ERROR);
 	}
 }

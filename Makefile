@@ -1,13 +1,17 @@
 # Variables
 COMP 	= c++
-FLAGS 	= -Wall -Wextra -Werror -std=c++98
+FLAGS 	= -Wall -Wextra -Werror -std=c++98 -g3
 NAME	= ircserv
 
 # Source files list
 SRCS_DIR 	= src/
 SRCS_NAME 	= main.cpp \
-			server.cpp \
-			client.cpp
+			Server.cpp \
+			Client.cpp \
+			Parsing.cpp \
+			ServerManagement.cpp \
+			#Event.cpp \
+			#Channel.cpp
 			
 SRCS		= $(shell find $(SRCS_DIR) -name "*.cpp") # SRCS        = $(wildcard $(SRCS_DIR)*.cpp) 
 

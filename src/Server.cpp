@@ -6,12 +6,12 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/05 17:06:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:26:24 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
-#include "ServerManagement.cpp"
+//#include "ServerManagement.cpp"
 
 Server::Server(std::string port, std::string pwd)
 {
@@ -22,16 +22,10 @@ Server::Server(std::string port, std::string pwd)
 	_result = 0;
     _remain = 0;
 	memset(&_hints, 0, sizeof(_hints));
-	_servInfo = NULL;
 }
 
 Server::~Server()
 {
-	for (int i = 0; i < BACKLOG; i++)
-  	{
-   		if (_fds[i].fd >= 0)
-    		close(_fds[i].fd);
-	}
 	close(_socServ);
 }
 
@@ -66,16 +60,16 @@ void	Server::createServerSocket(void)
 void	Server::bindServerSocket(int port)
 {
 	memset(&_servInfo, 0, sizeof(sockaddr_in));
-	_servInfo->sin_family = AF_INET;
-	_servInfo->sin_addr.s_addr = INADDR_ANY;
-	_servInfo->sin_port = htons(port);
+	_servInfo.sin_family = AF_INET;
+	_servInfo.sin_addr.s_addr = INADDR_ANY;
+	_servInfo.sin_port = htons(port);
 	if (bind(_socServ, (struct sockaddr *)&_servInfo, sizeof(_servInfo)) == ERROR)
 	{
 		std::cerr << "[Server] Socket impossible to bind" << std::endl;
 		exit(-1);
 	}
 	std::cout << "[Server] Bind succeeded on port: " << port << ", IP="
-        << inet_ntoa(_servInfo->sin_addr) << std::endl;		
+        << inet_ntoa(_servInfo.sin_addr) << std::endl;		
 }
 
 void	Server::listenForConnection(void)
@@ -86,9 +80,6 @@ void	Server::listenForConnection(void)
 		exit(-1);
 	}
 	std::cout << "[Server] Listening on socket fd: " << _socServ << std::endl;
-	memset(_fds, 0, sizeof(_fds));
-	_fds[0].fd = _socServ;
-	_fds[0].events = POLLIN;
 }
 
 int		Server::acceptConnection(void)
@@ -112,7 +103,7 @@ void Server::initializeServer(int port)
 
 struct sockaddr_in &Server::getServAdd(void)
 {
-	return (*_servInfo);
+	return (_servInfo);
 }
 
 //socklen_t 		&Server::getServAddLen(void)
@@ -130,43 +121,4 @@ struct sockaddr_in &Server::getServAdd(void)
 //void 	Server::sendMsg(void)
 //{
 	
-//}
-//void	Server::acceptConnexions(void)
-//{
-//	int	fdCli;
-	
-//	while (1)
-//	{
-//		if (_nbCli <= BACKLOG)
-//		{
-//			_nbCli++;
-//			Client *cli = new Client();
-//			//cli->connectToServer(_socServ);
-//			fdCli = accept(_socServ, (struct sockaddr *)&cli->_addCli, &cli->getCliSize());
-//			if (_clients.find(fdCli) == _clients.end())
-//			{
-//				_clients.insert(std::pair<int, Client *>(fdCli, cli));
-//				//int connRes = connect(cli->getCliSocket(), (sockaddr*)&_addServ, sizeof(_addServ));
-//				//if (connRes == ERROR)
-//				//	throw Client::FailConnexion();
-//				//std::cout << "Client n." << _nbCli << " is connecting..." << std::endl;
-//			}
-//		}
-//		getline(std::cin, _servInput);
-//		int sendRes = send(_socServ, _servInput.c_str(), _servInput.size() + 1, 0);
-//		if (sendRes == ERROR)
-//			throw CantSendMessage();
-//		int bytesReceived = recv(_socServ, _buf, MAXBUF, 0);
-//		if (bytesReceived == ERROR)
-//			throw CantReceiveMessage();
-//		std::cout << "Server> " << std::string(_buf, bytesReceived) << std::endl;
-//		//write
-//		//send
-//		//wait
-//		//recv
-//		//display
-//		//read
-//		//close socket 		
-//	}
-//	close(_socServ);
 //}

@@ -3,8 +3,8 @@
 Server 	=> ouvre la connection via socket
 		=> gere les connections entrantes et sortantes des clients
 		=> gere les channels (comment ?)
-		=> par convention, le server doit pouvoir envoyer des reponses specifiques aux clients
-		selon ce qui se passe (fichier NumReply.hpp)
+		=> par convention, le server doit pouvoir envoyer des reponses specifiques aux
+		clients	selon ce qui se passe (fichier NumReply.hpp)
 		=> https://datatracker.ietf.org/doc/html/rfc2813 
 
 Event 	=> gere les differents evenements qui interviennent entre server et clients
@@ -19,6 +19,11 @@ Client	=> se connecte au server
 		=> sur un channel, si un client envoie un msg, tous les clients connectes au meme channel le recoivent
 		=> chaque Client a un nom, un statut, une IP etc qui lui est propre
 		=> https://datatracker.ietf.org/doc/html/rfc2812 
+
+		=> Client = software used to connect to a server
+		=> user = personne who uses the IRC Client software
+		=> host = specific adress of the host used by a user, allowing this user to 
+		be properly identified with this unique "number"
 
 Channel => canal de conversation ou on peut etre invite, demander a joindre, quitter etc
 		=> operateurs de canaux (chanOp or op) = supers utilisateurs (voir ci-apres)

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/05 17:22:37 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/08 18:24:54 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include <iostream>
 #include "Server.hpp"
 #include "IrcLib.hpp"
-#include "Channel.hpp"
+//#include "Channel.hpp"
 
 class Server;
-class Channel; 
+//class Channel; 
 
 class Client
 {
@@ -28,22 +28,24 @@ class Client
 		~Client();
 		
 		/* structures */
-		typedef struct s_status //client status, usefull also for channel management
-		{
-			/* what's client status : registred, joined(channel) etc*/
-			unsigned char pass : 1;
-			
-		} t_status;
-		
 		typedef struct s_names // all the infos allowing to identify a client
 		{
 			std::string	nickname; // pseudo: usefull for channel operator
 			std::string	oldNick;
-			std::string	username; 
-			int			cliFd; // IP adress: usefull for channel operator
+			std::string	username; // user = personn who is using IRC Client software
+			int			cliFd; // client fd
 			int			user_id; 
-			std::string	host;
+			std::string	host; // IP adress: usefull for channel operator
 		} t_names;
+
+		typedef struct s_status // the client status to check what to do
+		{
+			bool			_connPwd;
+			bool			_registred;
+			bool			_welcomed;
+			bool			_hasAllInfo;
+			bool			_toDisconnect;
+		} t_status;
 		
 		/* Assessors */
 		
@@ -51,20 +53,17 @@ class Client
 		
 		/* Channel management => which "mode" : chanOp, simple user, disconnected ?*/
 		
-		void  			connectToServer(Server &s);
 		void			sendMsg();
 		void			recvMsg();
-		void			closeCliFd();
-		int	const		&getCliSocket(void);
 
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);
 		
-		std::string			_sendTo;
-		std::string			_recvFrom;
-		char				_buf[1096]; //each client has its own buffer. Must check that the whole msg has been received (ending with /0)
-		
+		std::string		_sendTo; //each client has its own send buffer.
+		std::string		_recvFrom;//each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
+		t_names			_client; 
+		t_status		_state;
 };
 
 #endif
