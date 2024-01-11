@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/08 17:20:01 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:50:27 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,5 @@ int main(int ac, char **av)
 		//serv.closeServFd();
 		//cli.closeCliFd();
 	}
-	//signal(SIGINT, signal_handler);
 	return 0;
 }

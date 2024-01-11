@@ -57,7 +57,9 @@ et discuter.
 Un opérateur de canal (souvent abrégé en "chanop" ou "op") est un utilisateur 
 auquel des droits spéciaux ont été accordés sur un canal IRC. Ces droits 
 peuvent inclure la capacité de contrôler qui peut rejoindre le canal, expulser 
-des utilisateurs, changer les modes du canal, et d'autres actions de modération. Les opérateurs de canal sont généralement désignés par un symbole spécial devant leur pseudonyme, tel que "@", pour indiquer leur statut.
+des utilisateurs, changer les modes du canal, et d'autres actions de modération. 
+Les opérateurs de canal sont généralement désignés par un symbole spécial devant leur pseudonyme, 
+tel que "@", pour indiquer leur statut.
 
 La manière dont les opérateurs de canal fonctionnent dans le contexte IRC peut 
 varier en fonction du serveur IRC spécifique et des modes de canal activés. 

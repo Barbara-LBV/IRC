@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/05 16:51:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:25:52 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,12 @@
 
 /*********************  Macros *******************/
 
-# define ERROR 	-1
-# define MAXBUF			1096
-# define BACKLOG 		1
-# define TRUE			1
-# define FALSE			0
-# define EVENTS_MAX 	1024
+# define ERROR 		-1
+# define MAXBUF		4096
+# define BACKLOG 	5
+# define MAXCONN	10
+# define MAXCHAN	10
+# define TRUE		1
+# define FALSE		0
 
 #endif

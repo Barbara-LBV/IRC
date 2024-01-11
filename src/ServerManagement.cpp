@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/08 17:41:49 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/11 17:23:57 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 void 	Server::manageConnections(void)
 {
-	int rc, compress_fds = FALSE, close_conn = FALSE;
-	int	timeout = 3 * 60 * 100;
-	
-	std::vector<pollfd>	poll_fds;
-	pollfd 				serv_poll, new_poll;
+	int	rc, timeout = 3 * 60 * 100;
+	std::vector<pollfd>	poll_fds, new_poll;
+	pollfd 				serv_poll;
 	
 	serv_poll.fd 		= _socServ;
 	serv_poll.events 	= POLLIN;
@@ -26,123 +24,99 @@ void 	Server::manageConnections(void)
 	
 	while (server_shutdown == FALSE)
 	{
-		// launch poll and check fails eand timing
-		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), timeout);
+		std::vector<pollfd>	tmp_poll;
+		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), timeout); // launch poll and check fails and timing
 		checkPoll(rc);
-		// check revents of poll 
-		for (unsigned int i = 0; i < poll_fds.size() ; i++)
+		std::vector<pollfd>::iterator	it = poll_fds.begin();
+		
+		while (it != poll_fds.end())
 		{
-			if (poll_fds[i].revents == 0)
-        		continue;
-			if (poll_fds[i].revents != POLLIN)
+			// POLLIN => events which are coming through; socket in readable mode
+			if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
 			{
-				std::cout << "[Server] Error! poll revents= " << poll_fds[i].revents << std::endl;
-				server_shutdown = TRUE;
-				break;
-			}
-			// check if server socket is "readable" and loop to accept connection
-			if (poll_fds[i].fd == _socServ) // if it's the listening socket (server's)
-			{
-				std::cout << "[Server] Socket is readable\n";
-				while (new_poll.fd != -1)
+				// check if server socket is "readable" and loop to accept all incoming connections
+				if (it->fd == _socServ) // if it's the listening socket (server's)
 				{
-					new_poll.fd = acceptConnection();
-					new_poll.events = POLLIN;
-					std::cout << "[Server] New incoming connection - " << new_poll.fd << std::endl;
-          			poll_fds.push_back(new_poll);
-					/* add a function that fill the "_client" variable with all the client's infos*/
-					/* send automatic reply RPL_WELCOME */		
+					if (addConnections(tmp_poll, it) == TRUE)
+						continue ;
+				}
+				else // if it's a client already connected to server
+				{
+					std::cout << "[Server] FD " << it->fd << "is readable\n";
+					manageExistingConn(*it);
 				}
 			}
-			else // if it's a client already connected to server
+			// POLLOUT => fd is ready to write and send messages through the socket
+			else if (it->revents & POLLOUT) 
 			{
-				std::cout << "[Server] FD " << poll_fds[i].fd << "is readable\n";
-				while (TRUE)
+				if (it->fd == _socServ) // if it's the listening socket (server's)
 				{
-					// receive and send msg
-					rc = recv(poll_fds[i].fd, _buf, sizeof(_buf), 0);
-					checkReception(rc);
-					int len = rc;
-					std::cout << "[Server] " << len << "bytes received\n";
-					rc = send(poll_fds[i].fd, _buf, len, 0);
-					if (rc == ERROR)
-					{
-						std::cerr << "[Server] coudn't send message";
-						exit(ERROR);
-					}
+					std::cout << "[Server] Server socket is writable\n";
 				}
-				if (close_conn) // if a Client is closing its connection
+				else
+				/* the socket is in Writable mode, so we send() messages */
 				{
-					close(poll_fds[i].fd);
-					poll_fds[i].fd = -1;
-					compress_fds = TRUE;
+					std::cout << "[Server] FD " << it->fd << "is writable\n";
+					manageExistingConn(*it);
 				}
 			}
+			// POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
+			else if (it->revents & POLLERR) 
+			{
+				/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
+				std::cout << "[Server] FD " << it->fd << "disconnected \n";
+				delClient(poll_fds);
+			}
+			++it;
 		}
-	}
-	if (compress_fds == TRUE)
-	{
-		compress_fds = FALSE;
-		delClient(poll_fds);
+		poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
 	}
 }
 
-void		Server::delClient(std::vector <pollfd> fds)
+bool 	Server::addConnections(std::vector<pollfd> fd, std::vector<pollfd>::iterator it)
 {
-	unsigned int len = fds.size();
-    for (unsigned int i = 0; i < len; i++)
-    {
-		if (fds[i].fd == -1)
+	it->fd = acceptConnection();
+	it->events = POLLIN;
+	std::cout << "[Server] New incoming connection - " << it->fd << std::endl;
+	if (_cliNb < MAXCONN)
+		addClient(fd);	// function that fill the "_client" variable with all the client's infos
+	else
+		cantAddClient(fd); // what do we do when we cannot add more client ?
+	return TRUE;
+}
+
+void 	Server::manageExistingConn(pollfd fd)
+{
+	if (fd.revents & POLLIN)
+	{
+		int rc = recv(fd.fd, _buf, sizeof(_buf), 0);
+		int i = 0;
+		_result = recv(fd.fd, _buf, sizeof(_buf), 0);
+		
+		checkReception(_result);
+		//handle the reception only with recv, then check with read if \0 is found
+		//otherwise handle the fact that the whole msg hasn't been received
+		while (_result != 0)
 		{
-			for(unsigned int j = i; j < len; j++)
-				fds[j].fd = fds[j+1].fd;
-			i--;
-			len--;
 		}
+	}
+	else if (fd.revents & POLLOUT)
+	{
+		int rc = send(fd.fd, _buf, ??, 0);
+		checkReception(rc);
+
 	}
 }
 
-//void		Server::delChannel(std::string chan)
-//{
-//	std::vector<servOp>::iterator it = _ops.begin();
-	
-//    for (; it != _ops.end(); ++it)
-//    {
-//		if (it.name == chan)
-//			_ops.erase(it);
-//	  }
-//}
-
-void 	Server::checkPoll(int rc)
+void	Server::addClient(std::vector<pollfd> fd)
 {
-	if (rc == ERROR && server_shutdown == TRUE)
-		exit(ERROR);
-	if (rc == ERROR)
-	{
-		std::cerr << "[Server] Poll failed" << std::endl;
-		exit(ERROR);
-	}
-	if (rc == 0)
-	{
-		std::cerr << "[Server] Poll timed out." << std::endl;
-		server_shutdown == TRUE;
-		exit(ERROR);
-	}
+	// 1/ add a new client node in _clients
+	// 2/ add a new node in fd
+	// 3/ make de client registration (?)
+	_cliNb++;
 }
 
-void	Server::checkReception(int rc)
+void	Server::cantAddClient(std::vector<pollfd> fd)
 {
-	if (rc < 0)
-	{
-		if (errno != EWOULDBLOCK)
-		{
-			std::cerr << "[Server] Reception failed.";
-			exit(ERROR);
-		}
-	}
-	if (rc == 0)
-	{
-		std::cerr << "[Server] Connection closed." << std::endl;
-		exit(ERROR);
-	}
+	// ??????
 }
