@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/11 17:09:00 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:41:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,29 +46,55 @@ void	Server::checkReception(int rc)
 	}
 }
 
-void		Server::delClient(std::vector <pollfd> fds)
+void		Server::delClient(std::vector <pollfd> fds, std::vector <pollfd>:: iterator &it, int cliFd)
 {
-	unsigned int len = fds.size();
-    for (unsigned int i = 0; i < len; i++)
+	_clients.erase(it->fd);
+	fds.erase(it);
+	close(cliFd);
+	_cliNb--;
+	std::cout << BLUE << "[Server] Client #" << cliFd
+		<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
+}
+
+void		Server::delChannel(std::string topic)
+{
+	/* quid =>*/
+	
+	// 1- withdraw chanop privigeles to the admin-client => change its status
+	// 2- reduce the server's channel variable _channel
+	std::map<std::string, Channel *>::iterator it = _channels.begin();
+    while(it != _channels.end())
     {
-		if (fds[i].fd == -1)
+		if (it->first == topic)
 		{
-			for(unsigned int j = i; j < len; j++)
-				fds[j].fd = fds[j+1].fd;
-			i--;
-			len--;
+			_channels.erase(it);
+			break ;
 		}
+		++it;
 	}
 }
 
-void		Server::delChannel(std::string chan)
+void	Server::addClient(std::vector<pollfd> fds, int fd)
 {
-	std::vector<servOp>::iterator it = _ops.begin();
-	
-    for (; it != _ops.end(); ++it)
-    {
-		if (it->name == chan)
-			_ops.erase(it);
-	  }
+	Client *cli = new Client(fd);
+	pollfd newFd;
+
+	newFd.fd = fd;
+	newFd.events = POLLIN | POLLOUT;
+	fds.push_back(newFd);
+	_clients.insert(std::pair<int, Client *>(fd, cli));
+	std::cout << BLUE << "[Server] Added client #" << fd 
+		<< " successfully" << DEFAULT << std::endl;
+	/* put here the registration client function ?? */
+	_cliNb++;
 }
 
+void	Server::cantAddClient(int cliSocket)
+{
+	std::cout << RED << ERR_FULL_SERV << DEFAULT << std::endl;
+	send(cliSocket, ERR_FULL_SERV, strlen(ERR_FULL_SERV) + 1, 0);
+	close(_socServ); // really ?? does we still can recv/send msg with clients ??
+}
+
+//managePolloutEvent()	
+//managePollerrEvent()	

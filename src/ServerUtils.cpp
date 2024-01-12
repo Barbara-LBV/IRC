@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/11 14:21:29 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/12 11:43:29 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ void	Server::listenForConnection(void)
 int		Server::acceptConnection(void)
 {
 	socklen_t len = sizeof (_hints);
-	int fd = accept(_socServ, (struct sockaddr *)&_hints, &len);
-	if (fd == ERROR)
+	int cliFd = accept(_socServ, (struct sockaddr *)&_hints, &len);
+	if (cliFd == ERROR)
 	{
 		std::cerr << "[Server] Socket cannot accept connection" << std::endl;
 		exit(-1);
 	}
-	return (fd);
+	return (cliFd);
 }
 
 void Server::initializeServer(int port)

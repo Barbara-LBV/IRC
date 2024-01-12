@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/11 14:25:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/12 14:05:11 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <ctime>
-//#include <sys/event.h> => if we use the event tools
 #include <sys/types.h>
 
 /****************** Includes *******************/

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/08 18:24:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/12 14:04:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@
 #include <iostream>
 #include "Server.hpp"
 #include "IrcLib.hpp"
-//#include "Channel.hpp"
+#include "Channel.hpp"
 
 class Server;
-//class Channel; 
+class Channel; 
 
 class Client
 {
 	public:
-		Client();
+		Client(int fd);
 		~Client();
 		
-		/* structures */
+		/**********    Structures    *********/
 		typedef struct s_names // all the infos allowing to identify a client
 		{
 			std::string	nickname; // pseudo: usefull for channel operator
@@ -40,29 +40,30 @@ class Client
 
 		typedef struct s_status // the client status to check what to do
 		{
-			bool			_connPwd;
+			bool			_connectionPwd;
 			bool			_registred;
 			bool			_welcomed;
 			bool			_hasAllInfo;
 			bool			_toDisconnect;
 		} t_status;
 		
-		/* Assessors */
+		/**********    Assessors     *********/
 		
-		/* connections management */
-		
-		/* Channel management => which "mode" : chanOp, simple user, disconnected ?*/
-		
+		/**********    Connections Management     *********/
 		void			sendMsg();
 		void			recvMsg();
+		
+		/**********    Channel Management    *********/
+		
+		//which "mode" : chanOp, simple user, disconnected ?
 
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);
 		
-		std::string		_sendTo; //each client has its own send buffer.
-		std::string		_recvFrom;//each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
-		t_names			_client; 
+		std::string		_sendTo; // each client has its own send buffer.
+		std::string		_recvFrom; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
+		t_names			_infos; 
 		t_status		_state;
 };
 
