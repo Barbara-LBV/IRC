@@ -10,6 +10,8 @@ SRCS_NAME 	= main.cpp \
 			Client.cpp \
 			Parsing.cpp \
 			ServerManagement.cpp \
+			ServerManagementUtils.cpp \
+			ServerUtils.cpp \
 			#Event.cpp \
 			#Channel.cpp
 			

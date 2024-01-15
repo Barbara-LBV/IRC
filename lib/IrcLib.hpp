@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/12 14:05:11 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:38:14 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #include <unistd.h>
 #include <map>
 #include <vector>
+#include <fstream>
+#include <sstream>
 #include <sys/epoll.h>
 #include <exception>
 #include <string.h>

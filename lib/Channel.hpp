@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/12 13:58:35 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/15 12:14:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ class Channel
 		
 		std::string	_topic;
 		int			_status; // open/close status ??
-		servOp		_ops; // one chanop per channel
-
+		//servOp		_ops; // one chanop per channel
 };
 
 #endif

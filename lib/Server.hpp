@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/12 19:06:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:53:29 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ struct servOp // ChanOps necessary variables
 	std::string name;
 	std::string	host;
 	std::string	pwd;
-	int			cliId; //client's fd
+	int			cliId;
 };
 
 class Server
@@ -46,7 +46,9 @@ class Server
 		servOp				&getOp(void);
 		std::string			&getPwd(void);
 		int					&getPort(void);
+		std::string 		getMsg(void)const;
 		void				setPwd(std::string pwd);
+		void				setMsg(std::string buf);
 
 		/*********    Socket and connections management    *********/
 		void 				initializeServer(int port);
@@ -57,11 +59,9 @@ class Server
 		int					acceptConnection(void);
 		void 				checkPoll(int rc);
 		void				checkReception(int rc);
-		void				sendMsg(void);
-		void				receiveMsg(void);
 		void 				manageConnections(void);
 		void				manageExistingConn(pollfd fd);
-		bool 				addConnections(std::vector<pollfd> fd, std::vector<pollfd>::iterator it);
+		bool 				addConnections(std::vector<pollfd> fd);
 		void 				handleExistingConn(void);
 		//void or bool 		managePolloutEvent();
 		//void or bool 		managePollerrEvents();
@@ -69,7 +69,11 @@ class Server
 		/*********    Client management    *********/
 		void 				addClient(std::vector<pollfd> fds,int fd);
 		void				cantAddClient(int fd);
-		void				delClient(std::vector <pollfd> fds, std::vector <pollfd>:: iterator &it, int cliFd);
+		void				delClient(std::vector <pollfd> fds, std::vector <pollfd>::iterator &it);
+		void				sendMsg(void);
+		void				receiveMsg(Client *cli, int fd);
+		void				stockMsg(Client *cli, char *s);
+		void 				splitMsg(Client *cli, std::string msg);
 		
 		/*********    Channel management    *********/
 		void				addChannel(std::string topic);
@@ -86,13 +90,14 @@ class Server
 		std::string							_servPwd;
 		std::string							_cliMsg;
 		ssize_t     						_result; // variable qui retourne le nb de bytes envoyes par le client
-    	ssize_t     						_remain;
-		char								_buf[MAXBUF]; //buffer qui recoit les donnees
+    	//ssize_t     						_remain;
 		int									_servPort;
 		int									_cliNb;
 		std::map<int, Client *>				_clients; //client id, client class
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
 		std::vector<servOp>					_ops; // vector of serOp struct
 };
+
+bool checkArg(std::string port, std::string pwd);
 
 #endif

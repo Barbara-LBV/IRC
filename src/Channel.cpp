@@ -6,29 +6,15 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/04 16:25:41 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/15 12:23:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Channel.hpp"
 
-Channel::Channel()
+Channel::Channel(std::string topic)
 {
-
-}
-
-Channel::Channel(Channel const &c)
-{
-	*this = c;
-}
-
-Channel &Channel::operator=(Channel const &c)
-{
-	if (this != &c)
-	{
-
-	}
-	return *this;
+	_topic = topic;
 }
 
 Channel::~Channel()

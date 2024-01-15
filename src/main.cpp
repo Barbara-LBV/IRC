@@ -6,13 +6,14 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/11 14:50:27 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:52:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 #include "../lib/Client.hpp"
 #include "../lib/IrcLib.hpp"
+//#include "Parsing.cpp"
 
 bool server_shutdown = false;
 
@@ -21,6 +22,7 @@ static void	signal_handler(int signal)
 	(void)signal;
 	server_shutdown = true;
 	std::cout << "[Server] Shutting down...\n";
+	exit(ERROR);
 }
 
 int main(int ac, char **av)

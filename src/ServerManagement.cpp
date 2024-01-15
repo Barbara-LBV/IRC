@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/12 19:07:00 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/15 14:36:34 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void 	Server::manageConnections(void)
 				// check if server socket is "readable" and loop to accept all incoming connections
 				if (it->fd == _socServ) // if it's the listening socket (server's)
 				{
-					if (addConnections(tmp_poll, it) == TRUE)
+					if (addConnections(tmp_poll) == TRUE)
 						continue ;
 				}
 				else // if it's a client already connected to server
@@ -58,7 +58,7 @@ void 	Server::manageConnections(void)
 				//managePollerrEvents()	
 				/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
 				std::cout << "[Server] FD " << it->fd << "disconnected \n";
-				delClient(poll_fds);
+				delClient(poll_fds, it);
 				break ;
 			}
 			++it;
@@ -67,16 +67,16 @@ void 	Server::manageConnections(void)
 	}
 }
 
-bool 	Server::addConnections(std::vector<pollfd> tmpPoll, std::vector<pollfd>::iterator it)
+bool 	Server::addConnections(std::vector<pollfd> tmpPoll)
 {
 	pollfd 		cliSocket;
 	
 	cliSocket.fd = acceptConnection();
 	cliSocket.events = POLLIN;
 	
-	std::cout << "[Server] New incoming connection - " << cliSocket.fd << std::endl;
 	if (_cliNb <= MAXCONN)
 	{
+		std::cout << "[Server] New incoming connection - " << cliSocket.fd << std::endl;
 		tmpPoll.push_back(cliSocket);
 		addClient(tmpPoll, cliSocket.fd);// function that fill the "_client" variable with all the client's infos
 	}
@@ -91,6 +91,7 @@ void 	Server::manageExistingConn(pollfd fd)
 	//otherwise handle the fact that the whole msg hasn't been received
 	
 	//parse the received msg
+	std::cout << "In manage existing connection function" << fd.fd << std::endl;
 }
 
 /*  managePolloutEvent => send message */
