@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 18:07:42 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 15:40:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,14 @@ void	Server::addClient(std::vector<pollfd> fds, int fd)
 	newFd.events = POLLIN | POLLOUT;
 	fds.push_back(newFd);
 	receiveMsg(cli, fd);
-	splitMsg(cli, cli->getMsgSent());
+	std::cout << BLUE << _cliMsg << DEFAULT << std::endl;
+	//splitMsg(cli, cli->getMsgSent());
 	//add here the 1st msg sent by client to get the client info =>split
-	_clients.insert(std::pair<int, Client *>(fd, cli));
-	std::cout << BLUE << "[Server] Added client #" << fd 
-		<< " successfully" << DEFAULT << std::endl;
 	/* put here the registration client function ?? */
+	_clients.insert(std::pair<int, Client *>(fd, cli));
+	std::cout << "[Server] Added client #" << fd 
+		<< " successfully" << std::endl;
+	_cliMsg.clear();
 	_cliNb++;
 }
 
@@ -63,13 +65,13 @@ void	Server::cantAddClient(int cliSocket)
 {
 	std::cout << RED << ERR_FULL_SERV << DEFAULT << std::endl;
 	send(cliSocket, ERR_FULL_SERV, strlen(ERR_FULL_SERV) + 1, 0);
-	close(_socServ); // really ?? does we still can recv/send msg with clients ??
+	close(_servFd); // really ?? do we still can recv/send msg with clients ??
 }
 
-void	Server::sendMsg(void)
-{
+//void	Server::sendMsg(void)
+//{
 	
-}
+//}
 
 void	Server::receiveMsg(Client *cli, int fd)
 {
@@ -86,21 +88,7 @@ void	Server::receiveMsg(Client *cli, int fd)
 		stockMsg(cli, buf); // to keep the msg until you manage to get the rest of the incoming msg
 	else 
 		cli->setMsgSent(getMsg());
-	_cliMsg.clear();
 }
 
-void	Server::stockMsg(Client *cli, char *buf)
-{
-	std::string partialTmp = cli->getPartialMsg();
-	
-	if (partialTmp.empty())
-		cli->setPartialMsg(buf);
-	else
-	{
-		partialTmp.insert(partialTmp.size(), buf);
-		cli->setPartialMsg(partialTmp);
-	}
-}
-
-//managePolloutEvent()	
-//managePollerrEvent()	
+//void or bool 		Server::managePolloutEvent(){}
+//void or bool 		Server::managePollerrEvents(){}

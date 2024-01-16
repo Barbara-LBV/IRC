@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 14:36:34 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 16:59:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 void 	Server::manageConnections(void)
 {
-	int	rc, timeout = 3 * 60 * 100;
-	std::vector<pollfd>	poll_fds, new_poll;
+	int	rc;
+	std::vector<pollfd>	poll_fds; // struct { int fd; short events; short revents;}
 	pollfd 				serv_poll;
 	
-	serv_poll.fd 		= _socServ;
+	serv_poll.fd 		= _servFd;
 	serv_poll.events 	= POLLIN;
 	poll_fds.push_back(serv_poll);
 	
 	while (server_shutdown == FALSE)
 	{
 		std::vector<pollfd>	tmp_poll;
-		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), timeout); // launch poll and check fails and timing
+		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), TIMEOUT); // launch poll and check fails and timing
 		checkPoll(rc);
 		std::vector<pollfd>::iterator	it = poll_fds.begin();
 		
@@ -35,7 +35,7 @@ void 	Server::manageConnections(void)
 			if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
 			{
 				// check if server socket is "readable" and loop to accept all incoming connections
-				if (it->fd == _socServ) // if it's the listening socket (server's)
+				if (it->fd == _servFd) // if it's the listening socket (server's)
 				{
 					if (addConnections(tmp_poll) == TRUE)
 						continue ;
@@ -55,10 +55,9 @@ void 	Server::manageConnections(void)
 			// POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
 			else if (it->revents & POLLERR) 
 			{
-				//managePollerrEvents()	
 				/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
 				std::cout << "[Server] FD " << it->fd << "disconnected \n";
-				delClient(poll_fds, it);
+				managePollerrEvents(it->fd);
 				break ;
 			}
 			++it;
@@ -69,19 +68,17 @@ void 	Server::manageConnections(void)
 
 bool 	Server::addConnections(std::vector<pollfd> tmpPoll)
 {
-	pollfd 		cliSocket;
+	int cliFd;
 	
-	cliSocket.fd = acceptConnection();
-	cliSocket.events = POLLIN;
-	
+	cliFd = acceptConnection();
 	if (_cliNb <= MAXCONN)
 	{
-		std::cout << "[Server] New incoming connection - " << cliSocket.fd << std::endl;
-		tmpPoll.push_back(cliSocket);
-		addClient(tmpPoll, cliSocket.fd);// function that fill the "_client" variable with all the client's infos
+		std::cout << "[Server] New incoming connection on fd n#" << cliFd << std::endl;
+		//tmpPoll.push_back(cliSocket);
+		addClient(tmpPoll, cliFd);// function that fill the "_client" variable with all the client's infos
 	}
 	else
-		cantAddClient(cliSocket.fd); // what do we do when we cannot add more client ?
+		cantAddClient(cliFd); // what do we do when we cannot add more client ?
 	return TRUE;
 }
 
@@ -94,7 +91,22 @@ void 	Server::manageExistingConn(pollfd fd)
 	std::cout << "In manage existing connection function" << fd.fd << std::endl;
 }
 
-/*  managePolloutEvent => send message */
+/*  managePolloutEvent(int cliFd) => client en mode ecoute 
+ 1- clear les msg enregistres du client concerne
+ 2- le server envoie un msg au client concerne selon le cas 
+     (msg collectif, accuse de reception, entree dans channel etc)
+ 2- verifier le statut du client pour un eventuel delete */
 
-//void or bool 		managePollerrEvents() => check if there is a disconnection;
+ /*  void managePollerrEvents() => si une erreur arrive sur les sockets
+ 1- si c'est la socket server => close
+ 2- si socket client, delete client concerne 
+ void	managePollerrEvent(int fd)
+ {
+	if (fd == _servFd)
+		close(_servFd);
+	else
+		delClient(poll_fds, fd);
+ }
+ */
+
 

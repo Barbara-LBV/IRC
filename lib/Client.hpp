@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 18:35:16 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 15:47:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class Client
 		
 		/**********    Connections Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
-		void			sendMsgtoServer();
+		void			sendMsgtoServer(std::string msg);
 		void			recvMsgfromServer();
 		
 		/**********    Channel Management    *********/

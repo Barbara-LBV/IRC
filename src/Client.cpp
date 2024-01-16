@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 18:35:40 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 11:44:40 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void			Client::setUsername(std::string user){_infos._username = user;}
 
 void			Client::setHost(std::string hostname){_infos._host = hostname;}
 
-void			Client::setHost(std::string hostname){_infos._host = hostname;}
+void			Client::setMsgSent(std::string msg){_completeMsg = msg;}
 
 void			Client::setPwd(std::string pwd){_infos._pwd = pwd;}
 
@@ -52,12 +52,12 @@ void			Client::setPwd(std::string pwd){_infos._pwd = pwd;}
 
 //}
 
-void				Client::sendMsgtoServer(void)
-{
-    
-}
+//void				Client::sendMsgtoServer(std::string msg)
+//{
 
-void				Client::recvMsgfromServer(void)
-{
+//}
+
+//void				Client::recvMsgfromServer(void)
+//{
     
-}
+//}

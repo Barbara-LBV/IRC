@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 18:59:39 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 15:00:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 void	Server::createServerSocket(void)
 {
 	int rc, on = 1;
-	_socServ = socket(AF_INET, SOCK_STREAM, 0);
+	_servFd = socket(AF_INET, SOCK_STREAM, 0);
 	memset(&_hints, 0, sizeof(_hints));
-	if (_socServ == ERROR)
+	if (_servFd == ERROR)
 	{
 		std::cerr << "[Server] Socket creation error" << std::endl;
 		server_shutdown = TRUE;
 		exit(ERROR);
 	}
-    rc = setsockopt(_socServ, SOL_SOCKET, SO_REUSEPORT, (const void*)&on, sizeof(on));
+    rc = setsockopt(_servFd, SOL_SOCKET, SO_REUSEPORT, (const void*)&on, sizeof(on));
 	if (rc == ERROR)
 	{
 		std::cerr << "[Server] Impossible to reuse the socket" << std::endl;
@@ -38,7 +38,7 @@ void	Server::bindServerSocket(int port)
 	_servInfo.sin_family = AF_INET;
 	_servInfo.sin_addr.s_addr = INADDR_ANY;
 	_servInfo.sin_port = htons(port);
-	if (bind(_socServ, (struct sockaddr *)&_servInfo, sizeof(_servInfo)) == ERROR)
+	if (bind(_servFd, (struct sockaddr *)&_servInfo, sizeof(_servInfo)) == ERROR)
 	{
 		std::cerr << "[Server] Socket impossible to bind" << std::endl;
 		server_shutdown = TRUE;
@@ -48,19 +48,19 @@ void	Server::bindServerSocket(int port)
 
 void	Server::listenForConnection(void)
 {
-	if (listen(_socServ, BACKLOG) ==  ERROR)
+	if (listen(_servFd, BACKLOG) ==  ERROR)
 	{
 		std::cerr << "[Server] Socket cannot listen" << std::endl;
 		server_shutdown = TRUE;
 		exit(ERROR);
 	}
-	std::cout << "[Server] Listening on socket fd: " << _socServ << std::endl;
+	std::cout << "[Server] Listening on socket fd: " << _servFd << std::endl;
 }
 
 int		Server::acceptConnection(void)
 {
 	socklen_t len = sizeof (_hints);
-	int cliFd = accept(_socServ, (struct sockaddr *)&_hints, &len);
+	int cliFd = accept(_servFd, (struct sockaddr *)&_hints, &len);
 	if (cliFd == ERROR)
 	{
 		std::cerr << "[Server] Socket cannot accept connection" << std::endl;
@@ -115,34 +115,5 @@ void	Server::checkReception(int rc)
 		std::cerr << "[Server] Connection closed." << std::endl;
 		server_shutdown = TRUE;
 		exit(ERROR);
-	}
-}
-
-void	Server::splitMsg(Client *cli, std::string msg)
-{
-	std::string tmp;
-	size_t	pos(0);
-	
-	while (pos < std::string::npos)
-	{
-		if (msg.find("PASS", pos) < std::string::npos)
-		{
-			//inserer PASS et sa suite dans une string tmp, puis setter le mdp
-			cli->setPwd(tmp);
-			pos += msg.find("PASS", pos);
-			tmp.clear();
-		}
-		if (msg.find("NICK", pos) < std::string::npos)
-		{
-        	cli->setNickname();
-			pos += msg.find("NICK", pos);
-		}
-		if (msg.find("USER", pos) < std::string::npos)
-		{
-			cli->setUsername();
-			pos += msg.find("USER", pos);
-		}
-		else
-			break ;
 	}
 }

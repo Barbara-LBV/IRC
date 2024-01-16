@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 18:38:14 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 15:14:41 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,6 @@
 # define MAXCHAN	10
 # define TRUE		1
 # define FALSE		0
+# define TIMEOUT	-1
 
 #endif

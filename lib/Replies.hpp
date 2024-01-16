@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 11:43:13 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 15:48:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 
 /*********************   NUMERIC REPLIES   **********************/
 // server reply to a successfull client connection
-# define RPL_WELCOME(user_id, nickname) (":localhost 001 " + nickname + " :Welcome to the Internet Relay Network " + user_id + "\r\n")
+# define RPL_WELCOME(user_id, nickname)(":localhost 001 " + nickname + " :Welcome to the Internet Relay Network " + user_id + "\r\n")
 
 
 

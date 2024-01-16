@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 18:53:29 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/16 15:00:14 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ class Server
 		void				sendMsg(void);
 		void				receiveMsg(Client *cli, int fd);
 		void				stockMsg(Client *cli, char *s);
-		void 				splitMsg(Client *cli, std::string msg);
+		void 				splitMsg(Client *cli, std::string msg); // for split the message from the commande
+		//void				parseMsg(std::string ); // to set the command 
 		
 		/*********    Channel management    *********/
 		void				addChannel(std::string topic);
@@ -84,7 +85,7 @@ class Server
 		Server(Server const &s);
 		Server &operator=(Server const &s);	
 		
-		int									_socServ;
+		int									_servFd; // server's fd
 		sockaddr_in 						_hints; // give indications for configure/initialize info linked to a network address
 		sockaddr_in 						_servInfo; // stock server's infos for listening for connections
 		std::string							_servPwd;
