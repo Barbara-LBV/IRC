@@ -182,7 +182,7 @@ main (int argc, char *argv[])
           /* failure on accept will cause us to end the        */
           /* server.                                           */
           /*****************************************************/
-          new_sd = accept(listen_sd, NULL, NULL);
+          new_sd = (listen_sd, NULL, NULL);
           if (new_sd < 0)
           {
             if (errno != EWOULDBLOCK)

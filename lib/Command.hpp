@@ -1,1 +1,19 @@
-/* For the different commands we have to implemente */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Command.hpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
+/*   Updated: 2024/01/17 14:31:15 by pmaimait         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+# ifndef COMMAND_HPP
+#define COMMAND_HPP
+
+#include "IrcLib.hpp"
+
+
+#endif
