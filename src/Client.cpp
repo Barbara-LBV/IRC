@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 11:44:40 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:55:39 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,13 @@ void			Client::setHost(std::string hostname){_infos._host = hostname;}
 void			Client::setMsgSent(std::string msg){_completeMsg = msg;}
 
 void			Client::setPwd(std::string pwd){_infos._pwd = pwd;}
+
+std::string     Client::getPrefix() const
+{
+	if (this->getNickname().empty())
+		return ("*");
+	return _infos._nickname + (_infos._username.empty() ? "" : "!" + _infos._username) + (_infos._host.empty() ? "" : "@" + _infos._host);
+}
 
 //void				Client::registringClient(std::string s)
 //{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 15:47:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:52:28 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ class Client
 		std::string			getMsgRecvd(void)const;
 		std::string			getPartialMsg(void)const;
 		std::string			getMsgSent(void)const;
+		std::string 		getPrefix() const;
 		void				setNickname(std::string);
 		void				setUsername(std::string);
 		void				setHost(std::string);
 		void				setPwd(std::string);
 		void 				setMsgSent(std::string);
 		void				setPartialMsg(std::string partialMsg);
+		
 		
 		/**********    Connections Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec

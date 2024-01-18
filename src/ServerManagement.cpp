@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/17 14:50:06 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/18 11:56:26 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void 	Server::manageConnections(void)
 				{
 					std::cout << RED "In soc server, before 'if' \n" DEFAULT;
 					if (addConnections(tmp_poll) == TRUE)
-						break ;
+						continue; ;
 				}
 				else // if it's a client already connected to server
 				{

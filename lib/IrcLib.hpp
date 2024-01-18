@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcLib.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 15:14:41 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:20:59 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 /****************** Includes *******************/
 
 #include "Replies.hpp"
-// # include "Command.hpp"
+#include "Command.hpp"
 
 /*********************  Colors *******************/
 
