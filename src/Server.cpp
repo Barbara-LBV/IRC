@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 15:00:27 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/18 18:14:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ Server::Server(std::string port, std::string pwd)
 	_servPwd = pwd;
 	_cliMsg = "";
 	_servPort = atoi(port.c_str());
-	//_result = 0;
-    //_remain = 0;
+	_servName = "Par & Bar IRC' Server";
+	_result = 0;
 	_cliNb = 0;
 }
 
@@ -30,12 +30,18 @@ Server::~Server()
 
 /*********************  Assessors !!  ************************/
 
-std::string Server::getMsg(void)const
-{
-	return _cliMsg;
-}
+Channel*  		Server::getChannel(std::string chan){ return _channels[chan];}
 
-void		Server::setMsg(std::string buf)
-{
-	_cliMsg = buf;
-}
+Client*			Server::getClient(int fd){return _clients[fd];}
+
+std::string		&Server::getPwd(void){ return _servPwd;}
+
+int				&Server::getPort(void){ return _servPort;}
+
+std::string 	&Server::getMsg(void){ return _cliMsg;}
+
+std::string		&Server::getServerName(void){return _servName;}
+
+std::string		&Server::getStartTime(void){ return _time;}
+
+void			Server::setMsg(std::string buf){_cliMsg = buf;}

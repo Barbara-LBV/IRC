@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 15:40:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/18 17:49:05 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,16 @@ void	Server::addClient(std::vector<pollfd> fds, int fd)
 	newFd.fd = fd;
 	newFd.events = POLLIN | POLLOUT;
 	fds.push_back(newFd);
-	receiveMsg(cli, fd);
-	std::cout << BLUE << _cliMsg << DEFAULT << std::endl;
-	//splitMsg(cli, cli->getMsgSent());
-	//add here the 1st msg sent by client to get the client info =>split
-	/* put here the registration client function ?? */
 	_clients.insert(std::pair<int, Client *>(fd, cli));
-	std::cout << "[Server] Added client #" << fd 
-		<< " successfully" << std::endl;
-	_cliMsg.clear();
+	std::cout << "[Server] Added client #" << fd << " successfully" << std::endl;
 	_cliNb++;
 }
 
 void	Server::cantAddClient(int cliSocket)
 {
-	std::cout << RED << ERR_FULL_SERV << DEFAULT << std::endl;
-	send(cliSocket, ERR_FULL_SERV, strlen(ERR_FULL_SERV) + 1, 0);
+	(void) cliSocket;
+	std::cout << RED << "[Server] You cannot join, the server is already full" << DEFAULT << std::endl;
+	send(cliSocket, "[Server] You cannot join, the server is already full", 53, 0);
 	close(_servFd); // really ?? do we still can recv/send msg with clients ??
 }
 
@@ -73,22 +67,5 @@ void	Server::cantAddClient(int cliSocket)
 	
 //}
 
-void	Server::receiveMsg(Client *cli, int fd)
-{
-	char	buf[MAXBUF];
-	
-	_result =  recv(fd, buf, MAXBUF, 0);
-	setMsg(buf);
-	if (_result == ERROR)
-	{
-		std::cerr << "[Server] Coudn't receive client's message." << std::endl;
-		exit(ERROR);
-	}
-	else if (_result == MAXBUF && !_cliMsg.find("\r\n")) // if the msg sent by client is longer than the MAXBUF
-		stockMsg(cli, buf); // to keep the msg until you manage to get the rest of the incoming msg
-	else 
-		cli->setMsgSent(getMsg());
-}
 
-//void or bool 		Server::managePolloutEvent(){}
-//void or bool 		Server::managePollerrEvents(){}
+
