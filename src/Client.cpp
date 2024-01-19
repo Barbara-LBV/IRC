@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 12:20:05 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 18:23:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,16 +98,16 @@ void	Client::welcomeClient(void)
 	reply("375 " + this->getNickname() + " :- " + this->_server->getServerName() + " Message of the day -");
 	reply("372 " + this->getNickname() + " :- Welcome to our IRC server!");
 	// personalize the "drawing" below
-	reply("- .-.-----------.-.");
-	reply("- | |--FT_IRC---|#|");
-	reply("- | |-----------| |");
-	reply("- | |-blefebvr--| |");
-	reply("- | |-pmaimait--| |");
-	reply("- | \"-42-Paris-' |");
-	reply("- |  .-----.-..   |");
-	reply("- |  |     | || |||");
-	reply("- |  |     | || \\/|");
-	reply("- \"--^-----^-^^---'");
+	reply("372 " + this->getNickname() + "- .-.-----------.-.");
+	reply("372 " + this->getNickname() + "- | |--FT_IRC---|#|");
+	reply("372 " + this->getNickname() + "- | |-----------| |");
+	reply("372 " + this->getNickname() + "- | |-blefebvr--| |");
+	reply("372 " + this->getNickname() + "- | |-pmaimait--| |");
+	reply("372 " + this->getNickname() + "- | \"-42-Paris-' |");
+	reply("372 " + this->getNickname() + "- |  .-----.-..   |");
+	reply("372 " + this->getNickname() + "- |  |     | || |||");
+	reply("372 " + this->getNickname() + "- |  |     | || \\/|");
+	reply("372 " + this->getNickname() + "- \"--^-----^-^^---'");
 
 	reply("376 " + this->getNickname() + " :End of MOTD command");
 }

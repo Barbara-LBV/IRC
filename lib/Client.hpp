@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 10:20:02 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 16:10:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ class Client
 			std::string		_nickname; // pseudo: usefull for channel operator
 			std::string		_oldNick; //if it's not the 1st nickname
 			std::string		_username; // user = personn who is using IRC Client software
+			std::string		_pwd;
 			std::string		_host; // IP adress: usefull for channel operator
-			std::string		_pwd; 
 		} t_names;
 
 		typedef struct s_status // the client status to check what to do

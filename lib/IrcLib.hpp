@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcLib.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 10:22:41 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:25:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 #include <ctime>
 #include <sys/types.h>
 #include <algorithm>
+#include <sstream>
 
 /****************** Includes *******************/
 

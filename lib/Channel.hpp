@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/15 12:14:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:51:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ class Channel
 		Channel &operator=(Channel const &c);
 		
 		std::string	_topic;
-		int			_status; // open/close status ??
+		std::string	_password;
+		bool		_privChannel; // true: channel with pwd / false: channel without pwd
+		int			_status; // open/close status ?? 1
 		//servOp		_ops; // one chanop per channel
 };
 

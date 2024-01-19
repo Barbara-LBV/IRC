@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/18 18:13:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/19 18:08:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Server
 		socklen_t 			&getServAddLen(void);
 		Channel*			getChannel(std::string chan);
 		Client*				getClient(int fd);
+		Client*				getClientByNickname(const std::string &nickname);
 		std::string			&getPwd(void);
 		std::string			&getServerName(void);
 		std::string			&getStartTime(void);
@@ -73,7 +74,7 @@ class Server
 		void 	splitMsg(Client *cli, std::string msg); // for split the message from the commande
 		bool	isValidNickname(std::string name);
 		int		checkRecv(int res, int fd);
-		//void	parseMsg(std::string ); // to set the command 
+		void	parseFirstMsg(std::string msg, int fd); // to set the command 
 		
 		/*********    Channel management    *********/
 		void	addChannel(std::string topic);
