@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/18 18:13:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:07:53 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Server
 		socklen_t 			&getServAddLen(void);
 		Channel*			getChannel(std::string chan);
 		Client*				getClient(int fd);
+		Client*				getClientByNickname(const std::string &nickname);
 		std::string			&getPwd(void);
 		std::string			&getServerName(void);
 		std::string			&getStartTime(void);

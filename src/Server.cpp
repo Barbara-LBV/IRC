@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/18 18:14:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:21:01 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,18 @@ Server::~Server()
 Channel*  		Server::getChannel(std::string chan){ return _channels[chan];}
 
 Client*			Server::getClient(int fd){return _clients[fd];}
+
+Client *Server::getClientByNickname(const std::string &nickname)
+{
+	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+		if (it->second->getNickname() == nickname) {
+			// Found the client with the given nickname
+			return it->second;
+		}
+	}
+	// Client not found
+	return nullptr; 
+}
 
 std::string		&Server::getPwd(void){ return _servPwd;}
 

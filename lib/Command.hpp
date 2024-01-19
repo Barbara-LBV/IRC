@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/18 15:34:14 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:31:27 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ public:
 class QuitCommand : public Command
 {
 public:
-	QuitCommand(Server *server, bool authRequired);
+	QuitCommand(Server *server);
 	~QuitCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
@@ -87,7 +87,7 @@ public:
 class NickCommand : public Command
 {
 public:
-	NickCommand(Server *server, bool authRequired);
+	NickCommand(Server *server);
 	~NickCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
@@ -96,7 +96,7 @@ public:
 class PassCommand : public Command
 {
 public:
-	PassCommand(Server *server, bool authRequired);
+	PassCommand(Server *server);
 	~PassCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
