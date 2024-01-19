@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 15:00:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:08:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,7 @@ int		Server::acceptConnection(void)
 	socklen_t len = sizeof (_hints);
 	int cliFd = accept(_servFd, (struct sockaddr *)&_hints, &len);
 	if (cliFd == ERROR)
-	{
 		std::cerr << "[Server] Socket cannot accept connection" << std::endl;
-		server_shutdown = TRUE;
-		exit(ERROR);
-	}
 	return (cliFd);
 }
 
@@ -99,6 +95,21 @@ void 	Server::checkPoll(int rc)
 	}
 }
 
+int		Server::checkRecv(int res, int fd)
+{
+	if (res == ERROR)
+	{
+		std::cout << "[Server] recv() error\n";
+		return BREAK;
+	}	
+	if (res == 0)
+	{
+		std::cout << "[Server] User #" << fd << " disconnected\n";
+		return BREAK;
+	}
+	return TRUE;
+}
+
 void	Server::checkReception(int rc)
 {
 	if (rc < 0)
@@ -116,4 +127,16 @@ void	Server::checkReception(int rc)
 		server_shutdown = TRUE;
 		exit(ERROR);
 	}
+}
+
+bool	Server::isValidNickname(std::string name)
+{
+	std::map<int, Client *>::iterator it = _clients.begin();
+	
+	while (it != _clients.end())
+	{
+		if (it->second->getNickname() == name)
+			return FALSE;	
+	}
+	return TRUE;
 }

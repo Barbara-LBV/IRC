@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 11:30:29 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/18 17:33:15 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,6 @@ bool checkArg(std::string port, std::string pwd)
 		return false;
 	}
 	return true;
-}
-
-void	Server::stockMsg(Client *cli, char *buf)
-{
-	std::string partialTmp = cli->getPartialMsg();
-	
-	if (partialTmp.empty())
-		cli->setPartialMsg(buf);
-	else
-	{
-		partialTmp.insert(partialTmp.size(), buf);
-		cli->setPartialMsg(partialTmp);
-	}
 }
 
 /*void	Server::splitMsg(Client *cli, std::string msg)

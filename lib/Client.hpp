@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/18 15:52:28 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 10:20:02 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Channel;
 class Client
 {
 	public:
-		Client(int fd);
+		Client(int fd, Server *server);
 		~Client();
 		
 		/**********    Structures    *********/
@@ -43,30 +43,36 @@ class Client
 			bool			_connectionPwd;
 			bool			_registred;
 			bool			_welcomed;
-			bool			_hasAllInfo; // is it different from registred ?
 			bool			_toDisconnect;
 		} t_status;
 		
 		/**********    Assessors     *********/
 		std::string			getNickname(void)const;
-		std::string			getUsername(void)const;
-		std::string			getHost(void)const;
-		std::string			getMsgRecvd(void)const;
-		std::string			getPartialMsg(void)const;
-		std::string			getMsgSent(void)const;
-		std::string 		getPrefix() const;
+		std::string			&getUsername(void);
+		std::string			&getHost(void);
+		std::string			&getMsgRecvd(void);
+		std::string			&getPartialMsg(void);
+		std::string			&getMsgSent(void);
+		std::string			getPrefix(void)const;
+		bool				&getConnPwd(void);
+		bool				&getRegistrationStatus(void);
+		bool				&getWelcomeStatus(void);
+		bool				&getDeconnStatus(void);
 		void				setNickname(std::string);
 		void				setUsername(std::string);
-		void				setHost(std::string);
-		void				setPwd(std::string);
-		void 				setMsgSent(std::string);
+		void				setHost(std::string hot);
+		void				setPwd(std::string pwd);
+		void 				setMsgSent(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
-		
+		void				welcomeClient(void);
+		void 				reply(const std::string &reply);
+		void				write(std::string s);
 		
 		/**********    Connections Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
-		void			sendMsgtoServer(std::string msg);
-		void			recvMsgfromServer();
+		bool				isRegistred(void);
+		void				sendMsgtoServer(std::string msg);
+		void				recvMsgfromServer();
 		
 		/**********    Channel Management    *********/
 		
@@ -81,6 +87,7 @@ class Client
 		std::string		_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
 		t_names			_infos; 
 		t_status		_state;
+		Server*			_server;
 };
 
 #endif
