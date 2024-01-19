@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 10:23:25 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 12:20:05 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ std::string		&Client::getMsgSent(void) {return _completeMsg;}
 bool			&Client::getRegistrationStatus(void) {return _state._registred;}
 
 bool			&Client::getConnPwd(void){return _state._connectionPwd;}
-
-bool			&Client::getRegistrationStatus(void){return _state._registred;}
 
 bool			&Client::getWelcomeStatus(void){return _state._welcomed;}
 
@@ -116,23 +114,23 @@ void	Client::welcomeClient(void)
 
 void	Client::reply(const std::string &reply) 
 {
-	this->write(":" + this->_server->getServerName() + " " + reply);
+	std::cout << this->_infos._cliFd << " : " + this->_server->getServerName() + " " + reply << std::endl;
 }
 
-void				Client::sendMsgtoServer(std::string msg)
-{
+// void				Client::sendMsgtoServer(std::string msg)
+// {
 
-}
+// }
 
-void				Client::recvMsgfromServer(void)
-{
+// void				Client::recvMsgfromServer(void)
+// {
     
-}
+// }
 
-void	Client::write(std::string s)
-{
+// void	Client::write(std::string s)
+// {
 	
-}
+// }
 
 //void				Client::registringClient(std::string s)
 //{

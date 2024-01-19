@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/18 17:33:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/19 12:13:29 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,47 @@ bool checkArg(std::string port, std::string pwd)
 	}
 	return true;
 }
+// void CommandHandler::invoke(Client *client, const std::string &message)
+// {
 
+// 	std::stringstream ssMessage(message);
+// 	std::string syntax;
+
+// 	while (std::getline(ssMessage, syntax))
+// 	{
+
+// 		syntax = syntax.substr(0, syntax[syntax.length() - 1] == '\r' ? syntax.length() - 1 : syntax.length());
+// 		std::string name = syntax.substr(0, syntax.find(' '));
+
+// 		try
+// 		{
+// 			Command *command = _commands.at(name);
+
+// 			std::vector<std::string> arguments;
+
+// 			std::string buf;
+// 			std::stringstream ss(syntax.substr(name.length(), syntax.length()));
+
+// 			while (ss >> buf)
+// 			{
+// 				arguments.push_back(buf);
+// 			}
+
+// 			if (command->authRequired() && !client->isRegistered())
+// 			{
+// 				client->reply(ERR_NOTREGISTERED(client->getNickName()));
+// 				return;
+// 			}
+
+// 			command->execute(client, arguments);
+// 		}
+// 		catch (const std::out_of_range &e)
+// 		{
+// 			if (name != "CAP")
+// 				client->reply(ERR_UNKNOWNCOMMAND(client->getNickName(), name));
+// 		}
+// 	}
+// }
 /*void	Server::splitMsg(Client *cli, std::string msg)
 {
 	std::string tmp;

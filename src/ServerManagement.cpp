@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 10:23:33 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 12:51:18 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,38 +33,40 @@ void 	Server::manageConnections(void)
 		{
 			// POLLIN => detects events from clients are coming through the socket; socket in readable mode
 			std::cout << RED "At the begining of the 2e loop\n" DEFAULT;
-			if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
+			if(it->revents == 0)
+				continue;
+			// if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
+			// {
+			// 	// check if server socket is "readable" and loop to accept all incoming connections
+			//std::cout << RED "In POLLIN, before 'if' \n" DEFAULT;
+			if (it->fd == _servFd) // if it's the listening socket (server's)
 			{
-				// check if server socket is "readable" and loop to accept all incoming connections
-				std::cout << RED "In POLLIN, before 'if' \n" DEFAULT;
-				if (it->fd == _servFd) // if it's the listening socket (server's)
-				{
-					std::cout << RED "In soc server, before 'if' \n" DEFAULT;
-					if (addConnections(tmp_poll) == CONTINUE)
-						continue;
-				}
-				else // if it's a client already connected to server
-				{
-					std::cout << RED "In manageExistingConn function\n" DEFAULT;
-					if (receiveMsg(_clients[it->fd], it->fd) == BREAK)// handle every new message => receive mode
-						break ;
-				}
+				std::cout << RED "In soc server, before 'if' \n" DEFAULT;
+				addConnections(tmp_poll);
+				//poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
 			}
+			else if (it->fd != _servFd)// if it's a client already connected to server
+			{
+				std::cout << RED "In manageExistingConn function\n" DEFAULT;
+				if (receiveMsg(_clients[it->fd], it->fd) == BREAK)// handle every new message => receive mode
+					break ;
+			}
+			//}
 			// POLLOUT => used to know when serv socket is ready to send messages to a client
-			else if (it->revents & POLLOUT) 
-			{
-				std::cout << RED "In managePollOut function\n" DEFAULT;
-				// if (managePolloutEvent() == BREAK)			
-				break ;
-			}
-			// POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
-			else if (it->revents & POLLERR) 
-			{
-				/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
-				std::cout << "[Server] FD " << it->fd << "disconnected \n";
-				if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
-				break ;
-			}
+			// else if (it->revents & POLLOUT) 
+			// {
+			// 	std::cout << RED "In managePollOut function\n" DEFAULT;
+			// 	// if (managePolloutEvent() == BREAK)			
+			// 	break ;
+			// }
+			// // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
+			// else if (it->revents & POLLERR) 
+			// {
+			// 	/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
+			// 	std::cout << "[Server] FD " << it->fd << "disconnected \n";
+			// 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
+			// 	break ;
+			// }
 			it++;
 		}
 		poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
@@ -105,13 +107,14 @@ int	Server::receiveMsg(Client *cli, int fd)
 	if (_result == MAXBUF && _cliMsg[_result] != '\n') // if the msg sent by client is longer than the MAXBUF
 	{
 		cli->setPartialMsg(buf); // to keep the msg until you manage to get the rest of the incoming msg
-		std::cout << "[Client] partial message received from " << _clients[fd]->getNickname() << " << " << cli->getPartialMsg() << std::endl;
+		std::cout << "[Client] partial message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		_cliMsg.clear();
 	}
 	else
 	{
 		//parse and handle commandes => handler.invoke();
-		std::cout << "[Client] Message received from " << _clients[fd]->getNickname() << " << " << cli->getPartialMsg() << std::endl;
+		cli->setPartialMsg(buf); 
+		std::cout << "[Client] Message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		_cliMsg.clear();
 	}
 	return TRUE;
@@ -124,8 +127,8 @@ int 	Server::managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::it
 		std::cout << "[Server] Did not found connexion to client sorry" << std::endl;
 	else
 	{
-		sendMsg(client->getMsgSent());
-		client->getMsgSent().clear();
+		// sendMsg(client->getMsgSent());
+		// client->getMsgSent().clear();
 		if (client->getDeconnStatus() == true)
 		{
 			delClient(fds, it);

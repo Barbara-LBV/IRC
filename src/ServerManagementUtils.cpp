@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagementUtils.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/18 17:49:05 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/19 12:52:22 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void		Server::delChannel(std::string topic)
 
 void	Server::addClient(std::vector<pollfd> fds, int fd)
 {
-	Client *cli = new Client(fd);
+	Client *cli = new Client(fd, this);
 	pollfd newFd;
 
 	newFd.fd = fd;
@@ -52,6 +52,10 @@ void	Server::addClient(std::vector<pollfd> fds, int fd)
 	_clients.insert(std::pair<int, Client *>(fd, cli));
 	std::cout << "[Server] Added client #" << fd << " successfully" << std::endl;
 	_cliNb++;
+	char buf[MAXBUF];
+	memset(buf, 0, 0);
+	_result = recv(fd, buf, MAXBUF, 0);
+	std::cout << buf << std::endl;
 }
 
 void	Server::cantAddClient(int cliSocket)
