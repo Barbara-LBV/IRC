@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 10:20:02 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 15:55:52 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ class Client
 			std::string		_nickname; // pseudo: usefull for channel operator
 			std::string		_oldNick; //if it's not the 1st nickname
 			std::string		_username; // user = personn who is using IRC Client software
+			std::string		_pwd;
 			std::string		_host; // IP adress: usefull for channel operator
-			std::string		_pwd; 
 		} t_names;
 
 		typedef struct s_status // the client status to check what to do
@@ -58,12 +58,14 @@ class Client
 		bool				&getRegistrationStatus(void);
 		bool				&getWelcomeStatus(void);
 		bool				&getDeconnStatus(void);
+		std::string			getChannelName();
 		void				setNickname(std::string);
 		void				setUsername(std::string);
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
 		void 				setMsgSent(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
+		void				setChannelName(std::string n);
 		void				welcomeClient(void);
 		void 				reply(const std::string &reply);
 		void				write(std::string s);
@@ -88,6 +90,7 @@ class Client
 		t_names			_infos; 
 		t_status		_state;
 		Server*			_server;
+		std::stack<std::string>		channelName;
 };
 
 #endif

@@ -6,12 +6,12 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:04:09 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/19 16:03:53 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 11:17:14 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IrcLib.hpp"
-#include "Client.hpp"
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Client.hpp"
 
 PassCommand::PassCommand(Server *server) : Command(server) {}
 

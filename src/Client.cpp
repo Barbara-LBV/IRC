@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 12:20:05 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 16:04:35 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ bool			&Client::getWelcomeStatus(void){return _state._welcomed;}
 
 bool			&Client::getDeconnStatus(void){return _state._toDisconnect;}
 
+std::string		Client::getChannelName(void){return channelName.top();}
+
 void			Client::setPartialMsg(std::string partialMsg){ _partialMsg += partialMsg;}
 
 void			Client::setNickname(std::string nick){_infos._nickname = nick;}
@@ -59,6 +61,8 @@ void			Client::setHost(std::string hostname){_infos._host = hostname;}
 void			Client::setMsgSent(std::string msg){_completeMsg += msg;}
 
 void			Client::setPwd(std::string pwd){_infos._pwd = pwd;}
+
+void			Client::setChannelName(std::string n){channelName.push(n);}
 
 std::string     Client::getPrefix(void) const
 {
@@ -98,16 +102,16 @@ void	Client::welcomeClient(void)
 	reply("375 " + this->getNickname() + " :- " + this->_server->getServerName() + " Message of the day -");
 	reply("372 " + this->getNickname() + " :- Welcome to our IRC server!");
 	// personalize the "drawing" below
-	reply("- .-.-----------.-.");
-	reply("- | |--FT_IRC---|#|");
-	reply("- | |-----------| |");
-	reply("- | |-blefebvr--| |");
-	reply("- | |-pmaimait--| |");
-	reply("- | \"-42-Paris-' |");
-	reply("- |  .-----.-..   |");
-	reply("- |  |     | || |||");
-	reply("- |  |     | || \\/|");
-	reply("- \"--^-----^-^^---'");
+	reply("372 " + this->getNickname() + "- .-.-----------.-.");
+	reply("372 " + this->getNickname() + "- | |--FT_IRC---|#|");
+	reply("372 " + this->getNickname() + "- | |-----------| |");
+	reply("372 " + this->getNickname() + "- | |-blefebvr--| |");
+	reply("372 " + this->getNickname() + "- | |-pmaimait--| |");
+	reply("372 " + this->getNickname() + "- | \"-42-Paris-' |");
+	reply("372 " + this->getNickname() + "- |  .-----.-..   |");
+	reply("372 " + this->getNickname() + "- |  |     | || |||");
+	reply("372 " + this->getNickname() + "- |  |     | || \\/|");
+	reply("372 " + this->getNickname() + "- \"--^-----^-^^---'");
 
 	reply("376 " + this->getNickname() + " :End of MOTD command");
 }

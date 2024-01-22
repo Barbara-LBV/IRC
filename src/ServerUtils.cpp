@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/18 15:08:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/19 18:38:25 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,4 +139,48 @@ bool	Server::isValidNickname(std::string name)
 			return FALSE;	
 	}
 	return TRUE;
+}
+
+void	Server::parseFirstMsg(std::string msg, int fd)
+{
+	std::stringstream	parse(msg);
+	std::string 		line, cmd, parse2, buf, name;
+	std::string			levels[4] = {"CAP", "NICK", "PASS", "USER"};
+
+	while (getline(parse, line))
+	{
+		int i;
+		line = line.substr(0, line[line.length() - 1] == '\r' ? line.length() - 1 : line.length());
+		cmd = line.substr(0, line.find(' '));
+		name = line.substr(cmd.length(), '\n');
+		
+		for (i = 0; i < 4 ; i++)
+		{
+			if (cmd == levels[i])
+				break ;
+		}
+		switch (i)
+		{
+			case 0:
+				break;
+			case 1:
+				_clients[fd]->setNickname(name);
+				break;
+			case 2:
+				_clients[fd]->setPwd(name);
+				break;
+			case 3:
+				_clients[fd]->setUsername(name);
+				break;
+			default:
+				break;
+		}
+	}
+	if (_clients[fd]->isRegistred() == TRUE)
+	{
+		std::string welcome = RPL_WELCOME(_clients[fd]->getNickname(), _clients[fd]->getPrefix());
+		_result = send(fd, welcome.c_str(), MAXBUF, 0);
+		if (_result < 0)
+			std::cout << "coudn't send Welcome message to Client\n";
+	}
 }

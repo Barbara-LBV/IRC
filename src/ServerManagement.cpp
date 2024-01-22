@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagement.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 12:51:18 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/19 18:18:57 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void 	Server::manageConnections(void)
 		checkPoll(rc);
 		std::vector<pollfd>::iterator	it = poll_fds.begin();
 		
-		while (it != poll_fds.end())
+		for (; it != poll_fds.end(); ++it)
 		{
 			// POLLIN => detects events from clients are coming through the socket; socket in readable mode
 			std::cout << RED "At the begining of the 2e loop\n" DEFAULT;
@@ -67,7 +67,7 @@ void 	Server::manageConnections(void)
 			// 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
 			// 	break ;
 			// }
-			it++;
+			//++it;
 		}
 		poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
 	}

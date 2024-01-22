@@ -6,12 +6,12 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/19 16:04:41 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 11:16:59 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IrcLib.hpp"
-#include "Client.hpp"
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Client.hpp"
 
 NickCommand::NickCommand(Server *server) : Command(server) {}
 

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 15:07:53 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 11:17:40 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ class Server
 		void 	splitMsg(Client *cli, std::string msg); // for split the message from the commande
 		bool	isValidNickname(std::string name);
 		int		checkRecv(int res, int fd);
-		//void	parseMsg(std::string ); // to set the command 
+		void	parseFirstMsg(std::string msg, int fd); // to set the command 
 		
 		/*********    Channel management    *********/
 		void	addChannel(std::string topic);
