@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 17:59:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:15:03 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Client
 		std::string			&getPartialMsg(void);
 		std::string			&getMsgSent(void);
 		std::string			getPrefix(void)const;
+		std::string			getChannelName();
 		bool				&getConnPwd(void);
 		bool				&getRegistrationStatus(void);
 		bool				&getWelcomeStatus(void);
@@ -62,6 +63,7 @@ class Client
 		void				setUsername(std::string);
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
+		void				setChannelName(std::string n);
 		void 				setMsgSent(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
 		void				welcomeClient(void);
@@ -86,6 +88,7 @@ class Client
 		t_names			_infos; 
 		t_status		_state;
 		Server*			_server;
+		std::stack<std::string>		_channelName;
 };
 
 #endif

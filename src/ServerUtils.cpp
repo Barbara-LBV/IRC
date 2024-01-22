@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 17:59:50 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:17:34 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,5 +164,5 @@ void 	Server::addToClientBuffer(Server *server, int cliFd, std::string reply)
 {
 	Client &client = server->findClient(cliFd);
 	
-	client->setMsg send(reply);
+	client->setMsgSend(reply);
 }

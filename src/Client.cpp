@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 16:12:12 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:15:49 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ bool			&Client::getWelcomeStatus(void){return _state._welcomed;}
 
 bool			&Client::getDeconnStatus(void){return _state._toDisconnect;}
 
+std::string		Client::getChannelName(void){return _channelName.top();}
+
 void			Client::setPartialMsg(std::string partialMsg){ _partialMsg += partialMsg;}
 
 void			Client::setNickname(std::string nick){_infos._nickname = nick;}
@@ -59,6 +61,8 @@ void			Client::setHost(std::string hostname){_infos._host = hostname;}
 void			Client::setMsgSent(std::string msg){_completeMsg += msg;}
 
 void			Client::setPwd(std::string pwd){_infos._pwd = pwd;}
+
+void			Client::setChannelName(std::string n){_channelName.push(n);}
 
 std::string     Client::getPrefix(void) const
 {
@@ -106,28 +110,3 @@ void	Client::welcomeClient(void)
 
 	reply("376 " + this->getNickname() + " :End of MOTD command");
 }
-
-void	Client::reply(const std::string &reply) 
-{
-	std::cout << this->_infos._cliFd << " : " + this->_server->getServerName() + " " + reply << std::endl;
-}
-
-// void				Client::sendMsgtoServer(std::string msg)
-// {
-
-// }
-
-// void				Client::recvMsgfromServer(void)
-// {
-    
-// }
-
-// void	Client::write(std::string s)
-// {
-	
-// }
-
-//void				Client::registringClient(std::string s)
-//{
-
-//}

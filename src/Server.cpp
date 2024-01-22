@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 13:21:26 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:07:04 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ std::string		&Server::getServerName(void){return _servName;}
 
 std::string		&Server::getStartTime(void){ return _time;}
 
-Client *Server::getClientByNickname(const std::string &nickname)
+Client 			*Server::getClientByNickname(const std::string &nickname)
 {
 	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 		if (it->second->getNickname() == nickname) {

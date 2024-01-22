@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 17:52:46 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 18:18:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void 	Server::manageConnections(void)
 			 else if (it->revents & POLLOUT) 
 			 {
 			 	std::cout << RED "In managePollOut function\n" DEFAULT;
-			 	if (managePolloutEvent() == BREAK)			
+			 	if (managePolloutEvent(poll_fds, it, it->fd) == BREAK)			
 			 		break ;
 			 }
 			 // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
