@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 15:35:48 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 13:26:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@
 #define ERR_INVITEONLYCHAN(source, channel)				"473 " + source + " " + channel + " :Cannot join channel (+i)"
 
 /*********************   NUMERIC REPLIES   **********************/
-#define RPL_WELCOME(source, prefix)										"001 " + source + " :Welcome to the Internet Relay Network " + prefix
-#define RPL_YOURHOST(source, servername, version)						"002 " + source + " :Your host is " + servername + ", running version " + version
-#define RPL_CREATED(source, date)										"003 " + source + " :This server was created " + date
-#define RPL_MYINFO(source, servername, version, usermodes, chanmodes)	"004 " + source + " :" + servername + " " + version + " " + usermodes + " " + chanmodes
+#define RPL_WELCOME(source, prefix)										":localhost 001 " + source + " :Welcome to the Internet Relay Network " + prefix
+#define RPL_YOURHOST(source, servername, version)						":localhost 002 " + source + " :Your host is " + servername + ", running version " + version
+#define RPL_CREATED(source, date)										":localhost 003 " + source + " :This server was created " + date
+#define RPL_MYINFO(source, servername, version, usermodes, chanmodes)	":localhost 004 " + source + " :" + servername + " " + version + " " + usermodes + " " + chanmodes
 
 #define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 18:39:16 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 17:54:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,11 @@ void	Server::addClient(std::vector<pollfd> fds, int fd)
 	_clients.insert(std::pair<int, Client *>(fd, cli));
 	std::cout << "[Server] Added client #" << fd << " successfully" << std::endl;
 	_cliNb++;
-	char buf[MAXBUF];
-	memset(buf, 0, 0);
-	_result = recv(fd, buf, MAXBUF, 0);
-	std::cout << "buf = "<<buf << std::endl;
-	parseFirstMsg(buf, fd);
+	//char buf[MAXBUF];
+	//memset(buf, 0, 0);
+	//_result = recv(fd, buf, MAXBUF, 0);
+	//std::cout << "buf = "<<buf << std::endl;
+	//parseFirstMsg(buf, fd);
 }
 
 void	Server::cantAddClient(int cliSocket)
@@ -67,10 +67,6 @@ void	Server::cantAddClient(int cliSocket)
 	close(_servFd); // really ?? do we still can recv/send msg with clients ??
 }
 
-//void	Server::sendMsg(void)
-//{
-	
-//}
 
 
 

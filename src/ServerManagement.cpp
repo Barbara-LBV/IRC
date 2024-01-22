@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 18:18:57 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 17:52:46 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,22 @@ void 	Server::manageConnections(void)
 				if (receiveMsg(_clients[it->fd], it->fd) == BREAK)// handle every new message => receive mode
 					break ;
 			}
-			//}
-			// POLLOUT => used to know when serv socket is ready to send messages to a client
-			// else if (it->revents & POLLOUT) 
-			// {
-			// 	std::cout << RED "In managePollOut function\n" DEFAULT;
-			// 	// if (managePolloutEvent() == BREAK)			
-			// 	break ;
-			// }
-			// // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
-			// else if (it->revents & POLLERR) 
-			// {
-			// 	/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
-			// 	std::cout << "[Server] FD " << it->fd << "disconnected \n";
-			// 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
-			// 	break ;
-			// }
-			//++it;
+			 //POLLOUT => used to know when serv socket is ready to send messages to a client
+			 else if (it->revents & POLLOUT) 
+			 {
+			 	std::cout << RED "In managePollOut function\n" DEFAULT;
+			 	if (managePolloutEvent() == BREAK)			
+			 		break ;
+			 }
+			 // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
+			 else if (it->revents & POLLERR) 
+			 {
+			 	/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
+			 	std::cout << "[Server] FD " << it->fd << "disconnected \n";
+			 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
+			 		break ;
+			 }
+			++it;
 		}
 		poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
 	}
@@ -110,10 +109,10 @@ int	Server::receiveMsg(Client *cli, int fd)
 		std::cout << "[Client] partial message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		_cliMsg.clear();
 	}
-	else
+	else if (_cliMsg[_result] == '\n')
 	{
-		//parse and handle commandes => handler.invoke();
-		cli->setPartialMsg(buf); 
+		parseMsg(_cliMsg, fd); // and handle commandes => handler.invoke();
+		cli->setPartialMsg(buf);
 		std::cout << "[Client] Message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		_cliMsg.clear();
 	}
@@ -124,11 +123,11 @@ int 	Server::managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::it
 {
 	Client *client = getClient(fd);
 	if (!client)
-		std::cout << "[Server] Did not found connexion to client sorry" << std::endl;
+		std::cout << "[Server] Didn't find connexion to client sorry" << std::endl;
 	else
 	{
-		// sendMsg(client->getMsgSent());
-		// client->getMsgSent().clear();
+		sendReply(fd, client->getMsgSent());
+		client->getMsgSent().clear();
 		if (client->getDeconnStatus() == true)
 		{
 			delClient(fds, it);

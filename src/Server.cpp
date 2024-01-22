@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 18:09:45 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 13:21:26 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Server::Server(std::string port, std::string pwd)
 	_servPwd = pwd;
 	_cliMsg = "";
 	_servPort = atoi(port.c_str());
-	_servName = "Par & Bar IRC' Server";
+	_servName = "localhost";
 	_result = 0;
 	_cliNb = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 18:23:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 16:12:12 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,6 @@ bool			Client::isRegistred(void)
 		return FALSE;
 	if (this->_state._registred == FALSE)
 		this->_state._registred = TRUE;
-	if (this->_state._welcomed == FALSE)
-	{
-		this->_state._welcomed = TRUE;
-		this->welcomeClient();
-	}
 	return TRUE;	
 }
 

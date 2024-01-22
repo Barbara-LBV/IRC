@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:48 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/18 16:20:56 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 16:27:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IrcLib.hpp"
-#include "Client.hpp"
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Client.hpp"
 
 UserCommand::UserCommand(Server *server) : Command(server) {}
 

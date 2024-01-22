@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 16:10:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 17:59:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ class Client
 		void 				setMsgSent(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
 		void				welcomeClient(void);
-		void 				reply(const std::string &reply);
-		void				write(std::string s);
 		
 		/**********    Connections Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
