@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 16:04:35 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 10:03:23 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,6 @@ bool			Client::isRegistred(void)
 		return FALSE;
 	if (this->_state._registred == FALSE)
 		this->_state._registred = TRUE;
-	if (this->_state._welcomed == FALSE)
-	{
-		this->_state._welcomed = TRUE;
-		this->welcomeClient();
-	}
 	return TRUE;	
 }
 

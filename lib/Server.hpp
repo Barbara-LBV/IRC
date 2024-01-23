@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 11:17:40 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 10:03:29 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,21 @@ class Server
 		int		managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd);
 		int		managePollerrEvents(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd);
 
+		
 		/*********    Client management    *********/
 		void 	addClient(std::vector<pollfd> fds,int fd);
 		void	cantAddClient(int fd);
 		void	delClient(std::vector <pollfd> fds, std::vector <pollfd>::iterator &it);
-		void	sendMsg(void);
+		bool	sendReply(int fd, std::string s);
 		int		receiveMsg(Client *cli, int fd);
 		void	stockMsg(Client *cli, char *s);
-		void 	splitMsg(Client *cli, std::string msg); // for split the message from the commande
 		bool	isValidNickname(std::string name);
 		int		checkRecv(int res, int fd);
-		void	parseFirstMsg(std::string msg, int fd); // to set the command 
-		
+		void	parseMsg(std::string msg, int fd); // to set the command 
+		void	fillClient(Client *cli, std::vector <std::string> cmds); // with first
+		void	parseCmd(Client *cli, std::vector <std::string> cmds);
+		void	addToClientBuffer(Server *s, Client *cli, std::string reply);
+				
 		/*********    Channel management    *********/
 		void	addChannel(std::string topic);
 		void	delChannel(std::string topic);
@@ -99,6 +102,7 @@ class Server
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
 };
 
-bool checkArg(std::string port, std::string pwd);
+bool 	checkArg(std::string port, std::string pwd);
+void 	splitMsg(std::string msg, std::vector<std::string> cmds); // for split the message from the commande
 
 #endif

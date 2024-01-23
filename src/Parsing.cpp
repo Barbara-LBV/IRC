@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 12:13:29 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/22 17:54:36 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,78 +40,43 @@ bool checkArg(std::string port, std::string pwd)
 	}
 	return true;
 }
-// void CommandHandler::invoke(Client *client, const std::string &message)
-// {
 
-// 	std::stringstream ssMessage(message);
-// 	std::string syntax;
-
-// 	while (std::getline(ssMessage, syntax))
-// 	{
-
-// 		syntax = syntax.substr(0, syntax[syntax.length() - 1] == '\r' ? syntax.length() - 1 : syntax.length());
-// 		std::string name = syntax.substr(0, syntax.find(' '));
-
-// 		try
-// 		{
-// 			Command *command = _commands.at(name);
-
-// 			std::vector<std::string> arguments;
-
-// 			std::string buf;
-// 			std::stringstream ss(syntax.substr(name.length(), syntax.length()));
-
-// 			while (ss >> buf)
-// 			{
-// 				arguments.push_back(buf);
-// 			}
-
-// 			if (command->authRequired() && !client->isRegistered())
-// 			{
-// 				client->reply(ERR_NOTREGISTERED(client->getNickName()));
-// 				return;
-// 			}
-
-// 			command->execute(client, arguments);
-// 		}
-// 		catch (const std::out_of_range &e)
-// 		{
-// 			if (name != "CAP")
-// 				client->reply(ERR_UNKNOWNCOMMAND(client->getNickName(), name));
-// 		}
-// 	}
-// }
-/*void	Server::splitMsg(Client *cli, std::string msg)
+void	Server::parseMsg(std::string msg, int fd)
 {
-	std::string tmp;
-	size_t	pos(0);
-	
-	while (pos < std::string::npos)
-	{
-		if (msg.find("PASS", pos) < std::string::npos)
-		{
-			//inserer PASS et sa suite dans une string tmp, puis setter le mdp
-			cli->setPwd(tmp);
-			pos += msg.find("PASS", pos);
-			tmp.clear();
-		}
-		if (msg.find("NICK", pos) < std::string::npos)
-		{
-        	cli->setNickname();
-			pos += msg.find("NICK", pos);
-		}
-		if (msg.find("USER", pos) < std::string::npos)
-		{
-			cli->setUsername();
-			pos += msg.find("USER", pos);
-		}
-		else
-			break ;
-	}
-}*/
+	std::stringstream	parse(msg);
+	std::string 		line, buf, name;
+	std::vector<std::string> args;
 
-//std::string	Server::parseMsg()
-//{
-	//return msg;
-//}
+	while (getline(parse, name))
+	{
+		line = line.substr(0, line[line.length() - 1] == '\r' ? line.length() - 1 : line.length());
+		name = line.substr(0, line.find(' '));
+
+		try
+		{
+			Command *command = _commands.at(name);
+			td::string buf;
+			std::stringstream ss(syntax.substr(name.length(), syntax.length()));
+			
+			while (ss >> buf)
+				arguments.push_back(buf);
+			if (!client->isRegistered())
+			{
+				addToClientBuffer(this, _clients[fd], ERR_NOTREGISTERED(client->getNickName()));
+				return;
+			}
+			command->execute(client, arguments);
+		}
+		catch (const std::out_of_range &e)
+		{
+			if (name != "CAP")
+				addToClientBuffer(this, _client[fd], ERR_UNKNOWNCOMMAND(client->getNickName(), name));
+		}
+	}
+}
+
+void	Server::parseCmd(Client *cli, std::vector <std::string> cmds)
+{
+	
+}
 

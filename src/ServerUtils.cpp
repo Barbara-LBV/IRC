@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/19 18:38:25 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/22 17:59:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	Server::checkReception(int rc)
 	{
 		if (errno != EWOULDBLOCK)
 		{
-			std::cerr << "[Server] Reception/Sending failed.";
+			std::cerr << "[Server] Reception/Sending failed.\n";
 			server_shutdown = TRUE;
 			exit(ERROR);
 		}
@@ -141,46 +141,28 @@ bool	Server::isValidNickname(std::string name)
 	return TRUE;
 }
 
-void	Server::parseFirstMsg(std::string msg, int fd)
+bool	Server::sendReply(int fd, std::string s)
 {
-	std::stringstream	parse(msg);
-	std::string 		line, cmd, parse2, buf, name;
-	std::string			levels[4] = {"CAP", "NICK", "PASS", "USER"};
+	int res;
 
-	while (getline(parse, line))
+	res = send(fd, s.c_str(), MAXBUF, 0);
+	if (res == ERROR)
 	{
-		int i;
-		line = line.substr(0, line[line.length() - 1] == '\r' ? line.length() - 1 : line.length());
-		cmd = line.substr(0, line.find(' '));
-		name = line.substr(cmd.length(), '\n');
-		
-		for (i = 0; i < 4 ; i++)
-		{
-			if (cmd == levels[i])
-				break ;
-		}
-		switch (i)
-		{
-			case 0:
-				break;
-			case 1:
-				_clients[fd]->setNickname(name);
-				break;
-			case 2:
-				_clients[fd]->setPwd(name);
-				break;
-			case 3:
-				_clients[fd]->setUsername(name);
-				break;
-			default:
-				break;
-		}
+		std::cerr << "[Server] Sending reply failed.\n";
+		exit(ERROR);
 	}
-	if (_clients[fd]->isRegistred() == TRUE)
+	if (res == 0)
 	{
-		std::string welcome = RPL_WELCOME(_clients[fd]->getNickname(), _clients[fd]->getPrefix());
-		_result = send(fd, welcome.c_str(), MAXBUF, 0);
-		if (_result < 0)
-			std::cout << "coudn't send Welcome message to Client\n";
+		std::cerr << "[Server] Client n#" << fd << " has disconnected\n";
+		//delClient(vector pollfd, fd);
+		return FALSE;
 	}
+	return TRUE;
+}
+
+void 	Server::addToClientBuffer(Server *server, int cliFd, std::string reply)
+{
+	Client &client = server->findClient(cliFd);
+	
+	client->setMsg send(reply);
 }

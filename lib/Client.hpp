@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 15:55:52 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 10:03:34 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ class Client
 		void				setPartialMsg(std::string partialMsg);
 		void				setChannelName(std::string n);
 		void				welcomeClient(void);
-		void 				reply(const std::string &reply);
-		void				write(std::string s);
 		
 		/**********    Connections Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
