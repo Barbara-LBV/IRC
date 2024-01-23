@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 16:14:22 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 15:55:41 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,97 +16,89 @@ Channel::Channel(std::string const &name, std::string const &password, Client* o
 					: _name(name) , _l(1000), _i(false), _password(password), _server(server), _topic(NULL){_ops.push_back(ops);}
 Channel::~Channel() {}
 
-// std::vector<std::string>	Channel::getNickNames()
-// {
-// 	std::vector<std::string> nicknames;
-// 	std::vector<Client *>::iterator it = _clients.begin();
+const std::string 	Channel::getName(void) const {return _name;};
 
-// 	while (it != _clients.end())
-// 	{
-// 		Client *client = it.operator*();
-// 		nicknames.push_back((_admin == client ? "@" : "") + (*it)->getNickName());
-// 		it++;
-// 	}
-// 	return nicknames;
-// }
+std::vector<std::string> Channel::getNickNames()
+{
+    std::vector<std::string> nicknames;
+    std::vector<Client*>::iterator it = _clients.begin();
 
-// void Channel::broadcast(const std::string &message)
-// {
-// 	// std::vector<Client *>::iterator it;;
-// 	// for (it = _clients.begin(); it != _clients.end(); it++)
-// 	// 	(*it)->write(message);
-// 	this->_server->broadcastChannel(message, this);
-// }
+    while (it != _clients.end())
+    {
+        Client* client = *it;
 
-// void Channel::broadcast(const std::string &message, Client *exclude)
-// {
-// 	// std::vector<Client *>::iterator it;;
-// 	// for (it = _clients.begin(); it != _clients.end(); it++)
-// 	// {
-// 	// 	if (*it == exclude)
-// 	// 		continue;
-// 	// 	(*it)->write(message);
-// 	// }
-// 	this->_server->broadcastChannel(message, exclude->getFD(), this);
-// }
+        // Check if client is in the _ops vector
+        if (std::find(_ops.begin(), _ops.end(), client) != _ops.end()) {
+            nicknames.push_back("@");  // Client is in _ops
+        } else {
+            nicknames.push_back("");   // Client is not in _ops
+        }
 
-// Client *Channel::getClient(const std::string &nickname)
-// {
-// 	std::vector<Client *>::iterator it = _clients.begin();
+        nicknames.back() += client->getNickname();
+        it++;
+    }
+    return nicknames;
+}
 
-// 	while (it != _clients.end())
-// 	{
-// 		if ((*it)->getNickName() == nickname)
-// 			return *it;
-// 		it++;
-// 	}
-// 	return NULL;
-// }
 
-// int Channel::is_oper(Client *client)
-// {
-// 	std::vector<Client *> opers_chan = this->getChanOpers();
-// 	std::vector<Client *>:: iterator it_oper = opers_chan.begin();
+Client *Channel::getClient(const std::string &nickname)
+{
+	std::vector<Client *>::iterator it = _clients.begin();
 
-// 	while (it_oper != opers_chan.end())
-// 	{
-// 		Client *oper = it_oper.operator*();
-// 		if (oper == client)
-// 			return 1;
-// 		++it_oper;
-// 	}
-// 	if (it_oper == opers_chan.end())
-// 		return 0;
-// 	return 0;
-// }
+	while (it != _clients.end())
+	{
+		if ((*it)->getNickname() == nickname)
+			return *it;
+		it++;
+	}
+	return NULL;
+}
 
-// void Channel::removeClient(Client *client, std::string reason)
-// {
-// 	std::string clientPrefix = client->getPrefix();
 
-// 	if (reason.empty())
-// 		this->broadcast(RPL_PART(clientPrefix, this->getName()));
-// 	else
-// 		this->broadcast(RPL_PART_REASON(clientPrefix, this->getName(), reason));
-// 	reason.clear();
+bool    Channel::is_oper(Client *client)
+{
+	std::vector<Client *> opers_chan = this->getOperator();
+	std::vector<Client *>:: iterator it_oper = opers_chan.begin();
 
-// 	if (!_oper_clients.empty())
-// 		_oper_clients.erase(this->_oper_clients.begin() + this->_clientIndex(_oper_clients, client));
-// 	if (!_clients.empty())
-// 		_clients.erase(this->_clients.begin() + this->_clientIndex(_clients, client));
-// 	client->leave(this, 1, reason);
+	while (it_oper != opers_chan.end())
+	{
+		Client *oper = *it_oper;
+		if (oper == client)
+			return TRUE;
+		++it_oper;
+	}
+	if (it_oper == opers_chan.end())
+		return FALSE;
+	return FALSE;
+}
 
-// 	if (_clients.empty())
-// 	{
-// 		// free chan and remove it from server
-// 		return;
-// 	}
+void Channel::partChannel(Client* cli)
+{
+    for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if ((*it)->getNickname() == cli->getNickname())
+        {
+            _clients.erase(it);			// delete from list of client in this channel
+			if ()
+			cli->getChannelName().pop();   // remove the name of channel in  the client
+            break; 
+        }
+    }
+	
+	 
 
-// 	if (_admin == client)
-// 		_admin = _clients.begin().operator*();
+	for (std::vector<Client*>::iterator it = _ops.begin(); it != _ops.end(); ++it)
+    {
+        if ((*it)->getNickname() == cli->getNickname())
+        {
+            _ops.erase(it);
+            break; // delete from list of ops in this channel
+        }
+    }
 
-// 	// message to say that there is a new admin
-// }
+	
+}
+
 
 // void Channel::removeOper(Client *client)
 // {

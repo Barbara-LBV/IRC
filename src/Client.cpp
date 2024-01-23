@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 10:03:23 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 15:08:07 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ Client::Client(int fd, Server *server)
 }
 
 Client::~Client(){}
+
+int				Client::getFD(void) const {return (_infos._cliFd);}
 
 std::string		Client::getNickname(void) const {return (_infos._nickname);}
 
@@ -114,6 +116,11 @@ void	Client::welcomeClient(void)
 void	Client::reply(const std::string &reply) 
 {
 	std::cout << this->_infos._cliFd << " : " + this->_server->getServerName() + " " + reply << std::endl;
+}
+
+std::string		getChannelName()
+{
+	return 
 }
 
 // void				Client::sendMsgtoServer(std::string msg)

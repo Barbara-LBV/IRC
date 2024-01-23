@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 10:03:34 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 15:09:22 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Client
 		} t_status;
 		
 		/**********    Assessors     *********/
+		int			getFD(void)const;
 		std::string			getNickname(void)const;
 		std::string			&getUsername(void);
 		std::string			&getHost(void);
@@ -75,6 +76,7 @@ class Client
 		void				recvMsgfromServer();
 		
 		/**********    Channel Management    *********/
+		
 		
 		//which "mode" : chanOp, simple user, disconnected, username a incrementer
 

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 10:03:16 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 15:10:11 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,3 +69,11 @@ Client *Server::getClientByNickname(const std::string &nickname)
 }
 
 void			Server::setMsg(std::string buf){_cliMsg = buf;}
+
+
+void Server::broadcastChannel(std::string message, Channel* channel) const
+{
+    for (std::vector<Client*>::iterator it = channel->getClients().begin(); it != channel->getClients().end(); ++it)
+        if (channel->getName() == (*it)->getChannelName())
+            this->send(message, (*it)->getFD());
+}

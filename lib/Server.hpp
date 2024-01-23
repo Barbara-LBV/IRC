@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 10:03:29 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 14:53:34 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ class Server
 		void	addToClientBuffer(Server *s, Client *cli, std::string reply);
 				
 		/*********    Channel management    *********/
+		void	broadcastChannel(std::string message, Channel *channel) const;
 		void	addChannel(std::string topic);
 		void	delChannel(std::string topic);
 		void	cantAddChannel(void);
