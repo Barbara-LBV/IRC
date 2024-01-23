@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/22 12:07:07 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:17:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,3 +43,16 @@
 //    TOPIC #test                     ; Command to check the topic for
 //                                    #test.
 
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Server.hpp"
+
+TopicCommand::TopicCommand(Server *server) : Command(server) {}
+
+TopicCommand::~TopicCommand() {}
+
+void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
+{
+	(void)client;
+	(void)arguments;
+	std::cout << " Execute Topic Command\n";
+}

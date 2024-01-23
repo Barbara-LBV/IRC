@@ -3,10 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   List.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:06:25 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/18 15:06:26 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:18:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Server.hpp"
+
+ListCommand::ListCommand(Server *server) : Command(server) {}
+
+ListCommand::~ListCommand() {}
+
+void ListCommand::execute(Client *client, std::vector<std::string> arguments)
+{
+	(void)client;
+	(void)arguments;
+	std::cout << " Execute List Command\n";
+}

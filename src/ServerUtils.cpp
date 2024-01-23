@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 18:17:34 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:40:57 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,12 @@ int		Server::checkRecv(int res, int fd)
 	if (res == ERROR)
 	{
 		std::cout << "[Server] recv() error\n";
-		return BREAK;
+		return ERROR;
 	}	
 	if (res == 0)
 	{
 		std::cout << "[Server] User #" << fd << " disconnected\n";
-		return BREAK;
+		return ERROR;
 	}
 	return TRUE;
 }
@@ -141,28 +141,13 @@ bool	Server::isValidNickname(std::string name)
 	return TRUE;
 }
 
-bool	Server::sendReply(int fd, std::string s)
+void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
 {
-	int res;
-
-	res = send(fd, s.c_str(), MAXBUF, 0);
-	if (res == ERROR)
-	{
-		std::cerr << "[Server] Sending reply failed.\n";
-		exit(ERROR);
-	}
-	if (res == 0)
-	{
-		std::cerr << "[Server] Client n#" << fd << " has disconnected\n";
-		//delClient(vector pollfd, fd);
-		return FALSE;
-	}
-	return TRUE;
-}
-
-void 	Server::addToClientBuffer(Server *server, int cliFd, std::string reply)
-{
-	Client &client = server->findClient(cliFd);
+	Client *client = server->getClient(cliFd);
 	
-	client->setMsgSend(reply);
+	if (client)
+		client->setRecvMsg(reply);
+	//else
+	//	server->delClient();
 }
+

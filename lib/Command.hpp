@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/22 16:47:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:20:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Command
 {
     protected :
         Server *_server;
-		std::map<std::string, Command *> _commands;
+
     public :
         Command(Server *server){_server = server;};
         virtual ~Command(){};
@@ -166,7 +166,14 @@ public:
 	void execute(Client *client, std::vector<std::string> arguments);
 };
 
+class TopicCommand : public Command
+{
+public:
+	TopicCommand(Server *server);
+	~TopicCommand();
 
+	void execute(Client *client, std::vector<std::string> arguments);
+};
 
 
 #endif

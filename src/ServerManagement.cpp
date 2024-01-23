@@ -6,13 +6,13 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 18:18:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:46:27 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-void 	Server::manageConnections(void)
+int	Server::manageConnections(void)
 {
 	int	rc;
 	std::vector<pollfd>	poll_fds; // struct { int fd; short events; short revents;}
@@ -29,28 +29,29 @@ void 	Server::manageConnections(void)
 		checkPoll(rc);
 		std::vector<pollfd>::iterator	it = poll_fds.begin();
 		
-		for (; it != poll_fds.end(); ++it)
+		while (it != poll_fds.end())
 		{
 			// POLLIN => detects events from clients are coming through the socket; socket in readable mode
 			std::cout << RED "At the begining of the 2e loop\n" DEFAULT;
-			if(it->revents == 0)
-				continue;
-			// if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
-			// {
-			// 	// check if server socket is "readable" and loop to accept all incoming connections
-			//std::cout << RED "In POLLIN, before 'if' \n" DEFAULT;
-			if (it->fd == _servFd) // if it's the listening socket (server's)
-			{
-				std::cout << RED "In soc server, before 'if' \n" DEFAULT;
-				addConnections(tmp_poll);
-				//poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
-			}
-			else if (it->fd != _servFd)// if it's a client already connected to server
-			{
-				std::cout << RED "In manageExistingConn function\n" DEFAULT;
-				if (receiveMsg(_clients[it->fd], it->fd) == BREAK)// handle every new message => receive mode
-					break ;
-			}
+			 if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
+			 {
+			 	// check if server socket is "readable" and loop to accept all incoming connections
+				std::cout << RED "In POLLIN, before 'if' \n" DEFAULT;
+				if (it->fd == _servFd) // if it's the listening socket (server's)
+				{
+					std::cout << RED "In soc server, before 'if' \n" DEFAULT;
+					if (addConnections(tmp_poll) == CONTINUE)
+						continue ;
+					else
+						break ;
+				}
+				else // if it's a client already connected to server
+				{
+					std::cout << RED "In manageExistingConn function\n" DEFAULT;
+					if (receiveMsg(poll_fds, it->fd) == BREAK)// handle every new message => receive mode
+						break ;
+				}
+			 }
 			 //POLLOUT => used to know when serv socket is ready to send messages to a client
 			 else if (it->revents & POLLOUT) 
 			 {
@@ -61,15 +62,18 @@ void 	Server::manageConnections(void)
 			 // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
 			 else if (it->revents & POLLERR) 
 			 {
-			 	/* the socket is diconnected so we clear the right Client node, clear the current fd etc */
+			 	// the socket is diconnected so we clear the right Client node, clear the current fd etc
 			 	std::cout << "[Server] FD " << it->fd << "disconnected \n";
 			 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
 			 		break ;
+				else
+					return ERROR;
 			 }
-			++it;
+			it++;
 		}
 		poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
 	}
+	return TRUE;
 }
 
 int 	Server::addConnections(std::vector<pollfd> tmpPoll)
@@ -86,21 +90,22 @@ int 	Server::addConnections(std::vector<pollfd> tmpPoll)
 		addClient(tmpPoll, cliFd);// function that fill the "_client" variable with all the client's infos
 	}
 	else
-	{
 		cantAddClient(cliFd); // what do we do when we cannot add more client ?
-		return FALSE;
-	}
 	return TRUE;
 }
 
-int	Server::receiveMsg(Client *cli, int fd)
+int	Server::receiveMsg(std::vector<pollfd> fds, int fd)
 {
 	char	buf[MAXBUF];
-	
+	Client *cli = _clients[fd];
 	memset(buf, 0, sizeof(buf));
+	(void)fds;
 	_result =  recv(fd, buf, MAXBUF, 0);
-	if (checkRecv(_result, fd) == BREAK)
+	if (checkRecv(_result, fd) == ERROR)
+	{
+		//delClient(fds, it);
 		return BREAK;
+	}
 	buf[_result] = '\0';
 	setMsg(buf);
 	if (_result == MAXBUF && _cliMsg[_result] != '\n') // if the msg sent by client is longer than the MAXBUF
@@ -111,8 +116,10 @@ int	Server::receiveMsg(Client *cli, int fd)
 	}
 	else if (_cliMsg[_result] == '\n')
 	{
-		parseMsg(_cliMsg, fd); // and handle commandes => handler.invoke();
-		cli->setPartialMsg(buf);
+		std::vector<std::string> cmds = splitMsg(_cliMsg, '\n');
+		for(size_t i = 0; i < cmds.size() - 1; i++)
+			_handler->invoke(this, cli, _cliMsg);
+		cli->setPartialMsg("");
 		std::cout << "[Client] Message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		_cliMsg.clear();
 	}
@@ -126,8 +133,7 @@ int 	Server::managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::it
 		std::cout << "[Server] Didn't find connexion to client sorry" << std::endl;
 	else
 	{
-		sendReply(fd, client->getMsgSent());
-		client->getMsgSent().clear();
+		client->sendReply(fd);
 		if (client->getDeconnStatus() == true)
 		{
 			delClient(fds, it);

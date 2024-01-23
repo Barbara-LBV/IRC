@@ -6,25 +6,26 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 18:07:04 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:51:12 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-Server::Server(std::string port, std::string pwd)
-{
-    _servFd = -1;
-	_servPwd = pwd;
-	_cliMsg = "";
-	_servPort = atoi(port.c_str());
-	_servName = "localhost";
-	_result = 0;
-	_cliNb = 0;
-}
+Server::Server(std::string port, std::string pwd):
+ 	_servFd(-1),
+	_servPort(atoi(port.c_str())),
+	_cliNb(0),
+	_servPwd(pwd),
+	_cliMsg(""),
+	_servName("localhost"),
+	_result(0),
+	_handler (new CmdHandler(this))
+{}
 
 Server::~Server()
 {
+	delete _handler;
 	close(_servFd );
 }
 
@@ -56,4 +57,11 @@ Client 			*Server::getClientByNickname(const std::string &nickname)
 	return NULL; 
 }
 
-void			Server::setMsg(std::string buf){_cliMsg = buf;}
+void			Server::setMsg(std::string buf){_cliMsg += buf;}
+
+void Server::broadcastChannel(std::string message, Channel* channel) const
+{
+    for (std::vector<Client*>::iterator it = channel->getClients().begin(); it != channel->getClients().end(); ++it)
+        if (channel->getName() == (*it)->getChannelName())
+            this->send(message, (*it)->getFD());
+}

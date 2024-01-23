@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 18:15:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:54:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include <iostream>
 #include "Server.hpp"
 #include "IrcLib.hpp"
-#include "Channel.hpp"
+//#include "Channel.hpp"
 
 class Server;
-class Channel; 
+//class Channel; 
 
 class Client
 {
@@ -59,20 +59,23 @@ class Client
 		bool				&getRegistrationStatus(void);
 		bool				&getWelcomeStatus(void);
 		bool				&getDeconnStatus(void);
+		int					&getFd(void);
+		Server				*getServer(void);
 		void				setNickname(std::string);
 		void				setUsername(std::string);
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
 		void				setChannelName(std::string n);
-		void 				setMsgSent(std::string msg);
+		void 				setRecvMsg(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
-		void				welcomeClient(void);
-		
-		/**********    Connections Management     *********/
+		bool				sendReply(int fd);
+
+		/**********    Messages Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
 		bool				isRegistred(void);
 		void				sendMsgtoServer(std::string msg);
 		void				recvMsgfromServer();
+		void				welcomeClient(Server *serv);			
 		
 		/**********    Channel Management    *********/
 		
@@ -81,15 +84,16 @@ class Client
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);
-		
-		std::string		_completeMsg; // each client has its own send buffer.
-		std::string		_partialMsg; 
-		std::string		_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
-		t_names			_infos; 
-		t_status		_state;
-		Server*			_server;
-		std::stack<std::string>		_channelName;
+
+		std::string				_partialMsg; 
+		std::string				_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
+		t_names					_infos; 
+		t_status				_state;
+		Server*					_server;
+		std::stack<std::string>	_channelName;
 };
+
+void	addToClientBuffer(Server *server, int cliFd, std::string reply);
 
 #endif
 

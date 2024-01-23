@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 17:54:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/23 18:48:03 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ void		Server::delClient(std::vector <pollfd> fds, std::vector <pollfd>::iterator
 
 void		Server::delChannel(std::string topic)
 {
-	/* quid =>*/
-	
 	// 1- withdraw chanop privigeles to the admin-client => change its status
 	// 2- reduce the server's channel variable _channel
 	std::map<std::string, Channel *>::iterator it = _channels.begin();
@@ -47,16 +45,11 @@ void	Server::addClient(std::vector<pollfd> fds, int fd)
 	pollfd newFd;
 
 	newFd.fd = fd;
-	newFd.events = POLLIN | POLLOUT;
+	newFd.events = POLLIN; // | POLLOUT;
 	fds.push_back(newFd);
 	_clients.insert(std::pair<int, Client *>(fd, cli));
 	std::cout << "[Server] Added client #" << fd << " successfully" << std::endl;
 	_cliNb++;
-	//char buf[MAXBUF];
-	//memset(buf, 0, 0);
-	//_result = recv(fd, buf, MAXBUF, 0);
-	//std::cout << "buf = "<<buf << std::endl;
-	//parseFirstMsg(buf, fd);
 }
 
 void	Server::cantAddClient(int cliSocket)
