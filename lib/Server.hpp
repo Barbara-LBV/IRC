@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 14:53:34 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:23:37 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class Server
 		/*********    Assessors    *********/
 		struct sockaddr_in 	&getServAdd(void);	
 		socklen_t 			&getServAddLen(void);
-		Channel*			getChannel(std::string chan);
+		
 		Client*				getClient(int fd);
 		Client*				getClientByNickname(const std::string &nickname);
 		std::string			&getPwd(void);
@@ -81,6 +81,8 @@ class Server
 				
 		/*********    Channel management    *********/
 		void	broadcastChannel(std::string message, Channel *channel) const;
+		bool	isValidChannelName(std::string cName);
+		Channel*	getChannel(const std::string& cName);
 		void	addChannel(std::string topic);
 		void	delChannel(std::string topic);
 		void	cantAddChannel(void);

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 15:09:22 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:24:45 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,17 @@ class Client
 		bool				&getRegistrationStatus(void);
 		bool				&getWelcomeStatus(void);
 		bool				&getDeconnStatus(void);
-		std::string			getChannelName();
+		std::string			getActiveChannel();
+		void			    deleteChannelName(const std::string& cName) const;
 		void				setNickname(std::string);
 		void				setUsername(std::string);
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
 		void 				setMsgSent(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
-		void				setChannelName(std::string n);
+		void				setChannelName(const std::string cName);
 		void				welcomeClient(void);
+		void				partAllChannel();
 		
 		/**********    Connections Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
@@ -90,7 +92,7 @@ class Client
 		t_names			_infos; 
 		t_status		_state;
 		Server*			_server;
-		std::stack<std::string>		channelName;
+		mutable std::deque<std::string> _channelName;
 };
 
 #endif

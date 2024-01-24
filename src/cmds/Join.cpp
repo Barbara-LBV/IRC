@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/22 13:48:03 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:36:35 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,14 @@
 
 //    JOIN #foobar                    ; Command to join channel #foobar.
 
-//    JOIN &foo fubar                 ; Command to join channel &foo using
-//                                    key "fubar".
-
-
-
-//    JOIN #foo,&bar fubar            ; Command to join channel #foo using
-//                                    key "fubar" and &bar using no key.
-
-//    JOIN #foo,#bar fubar,foobar     ; Command to join channel #foo using
-//                                    key "fubar", and channel #bar using
-//                                    key "foobar".
-
-//    JOIN #foo,#bar                  ; Command to join channels #foo and
-//                                    #bar.
-
 //    JOIN 0                          ; Leave all currently joined
 //                                    channels.
 
 //    :WiZ!jto@tolsun.oulu.fi JOIN #Twilight_zone ; JOIN message from WiZ
 //                                    on channel #Twilight_zone
 
-
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Client.hpp"
 
 JoinCommand::JoinCommand(Server *server) : Command(server) {}
 
@@ -87,4 +73,37 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
     
+	std::string name = arguments[0];
+
+	if (name == "0")
+	{
+		client->partAllChannel();
+		return;
+	}
+		
+	
+	name[0] == '#' ? name : "#" + name;
+	std::string password = arguments.size() > 1 ? arguments[1] : "";
+
+	if (_server->isValidChannelName(name))
+	{
+        Channel* channel = new Channel(name, password, client, _server);
+		client->setChannelName(name);
+	}
+    else 
+	{
+		Channel* channel = _server->getChannel(name);
+		if(channel->getI() == true)
+		{
+			client->reply(ERR_INVITONLYCHAN(client->getPrefix(), name));
+			return ;
+		}
+		else if ((channel->getL() - channel->getClients().size()) > 0)
+		{
+			channel->joinChannel(client);
+			client->setChannelName(name);
+		}
+		else
+			client->reply(ERR_CHANNELISFULL(client->getPrefix(), name));
+	}
 }

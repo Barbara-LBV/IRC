@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 15:10:11 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:03:30 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,17 @@ Server::~Server()
 
 /*********************  Assessors !!  ************************/
 
-Channel*  		Server::getChannel(std::string chan){ return _channels[chan];}
+Channel* Server::getChannel(const std::string& cName)
+{
+    std::map<std::string, Channel*>::iterator it = _channels.find(cName);
+
+    if (it != _channels.end())
+        return it->second;     // Channel found, return the pointer
+    else
+        
+        return nullptr;       // Channel not found, return nullptr
+}
+
 
 Client*			Server::getClient(int fd){return _clients[fd];}
 

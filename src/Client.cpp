@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 15:08:07 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:32:35 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,14 @@ bool			&Client::getWelcomeStatus(void){return _state._welcomed;}
 
 bool			&Client::getDeconnStatus(void){return _state._toDisconnect;}
 
-std::string		Client::getChannelName(void){return channelName.top();}
+
+std::string		Client::getActiveChannel(void)
+{
+    if (!_channelName.empty())
+        return (_channelName.back()); 
+    return NULL;
+}
+
 
 void			Client::setPartialMsg(std::string partialMsg){ _partialMsg += partialMsg;}
 
@@ -64,7 +71,15 @@ void			Client::setMsgSent(std::string msg){_completeMsg += msg;}
 
 void			Client::setPwd(std::string pwd){_infos._pwd = pwd;}
 
-void			Client::setChannelName(std::string n){channelName.push(n);}
+void			Client::setChannelName(const std::string cName){_channelName.push_back(cName);}
+
+
+
+void			Client::deleteChannelName(const std::string& cName) const
+{
+    std::deque<std::string>::iterator it = std::remove(_channelName.begin(), _channelName.end(), cName);
+    _channelName.erase(it, _channelName.end());
+}
 
 std::string     Client::getPrefix(void) const
 {
@@ -118,9 +133,15 @@ void	Client::reply(const std::string &reply)
 	std::cout << this->_infos._cliFd << " : " + this->_server->getServerName() + " " + reply << std::endl;
 }
 
-std::string		getChannelName()
+void	Client::partAllChannel()
 {
-	return 
+	while (getActiveChannel())
+	{
+		Channel* channel = _server->getChannel(getActiveChannel());
+		channel->partChannel(this);
+		deleteChannelName(getActiveChannel());
+	}
+	
 }
 
 // void				Client::sendMsgtoServer(std::string msg)

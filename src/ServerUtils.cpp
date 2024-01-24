@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 17:59:50 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:20:13 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,21 @@ bool	Server::isValidNickname(std::string name)
 	}
 	return TRUE;
 }
+bool	Server::isValidChannelName(std::string cName)
+{
+    cName[0] == '#' ? cName : cName = "#" + cName;
+    std::map<std::string, Channel*>::iterator it = _channels.begin();
+
+    while (it != _channels.end())
+    {
+        if (it->first == cName)
+            return false;
+        ++it;
+    } 
+    return true;
+}
+
+
 
 bool	Server::sendReply(int fd, std::string s)
 {
