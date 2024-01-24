@@ -6,16 +6,22 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:48:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:40:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-void		Server::delClient(std::vector <pollfd> fds, std::vector <pollfd>::iterator &it)
+void		Server::delClient(std::vector <pollfd> fds, size_t i)
 {
-	int cliFd = it->fd;
-	_clients.erase(it->fd);
+	int cliFd = fds[i].fd;
+	std::vector<pollfd>::iterator it = fds.begin();
+	for (; it != fds.end(); it++)
+	{
+		if (it->fd == fds[i].fd)
+			break ;
+	}
+	_clients.erase(fds[i].fd);
 	fds.erase(it);
 	close(cliFd);
 	_cliNb--;
@@ -39,15 +45,18 @@ void		Server::delChannel(std::string topic)
 	}
 }
 
-void	Server::addClient(std::vector<pollfd> fds, int fd)
+void	Server::addClient(std::vector<pollfd> fds, int fd, size_t i)
 {
 	Client *cli = new Client(fd, this);
 	pollfd newFd;
 
+	fcntl(fd, F_SETFL, O_NONBLOCK);
 	newFd.fd = fd;
-	newFd.events = POLLIN; // | POLLOUT;
+	newFd.events = POLLIN | POLLOUT;
 	fds.push_back(newFd);
 	_clients.insert(std::pair<int, Client *>(fd, cli));
+	if (receiveMsg(fds, fd, i) == BREAK)
+		exit(ERROR);
 	std::cout << "[Server] Added client #" << fd << " successfully" << std::endl;
 	_cliNb++;
 }

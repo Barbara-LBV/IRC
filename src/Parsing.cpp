@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 14:47:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:20:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,13 @@ bool checkArg(std::string port, std::string pwd)
 std::vector<std::string>	splitMsg(std::string msg, char c)
 {
 	std::vector<std::string> cmd;
+	std::stringstream	parse(msg);
 	std::string				 line;
-	size_t pos(0);
 
-	while (pos < std::string::npos)
+	while (getline(parse, line, c))
 	{
-		pos = msg.find(c);
-		line = msg.substr(0, pos);
+		std::cout << "In split function, line = " << line << std::endl;
 		cmd.push_back(line);
-		msg.erase(0, pos);
 		line.clear();
 	}
 	return cmd;

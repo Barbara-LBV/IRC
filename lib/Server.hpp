@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:39:49 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:51:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class CmdHandler;
 class Server
 {
 	public:
-		Server(std::string port, std::string pwd);
+		Server(std::string port, std::string pwd, struct tm * time);
 		~Server();
 		
 		/*********    Assessors    *********/
@@ -46,6 +46,7 @@ class Server
 		std::string 		&getMsg(void);
 		void				setPwd(std::string pwd);
 		void				setMsg(std::string buf);
+		void				setDatetime(struct tm *timeinfo);
 		//void 				setChannel(Channel *c);
 		//void				setClient(Client *c);
 		
@@ -60,29 +61,30 @@ class Server
 		void				checkReception(int rc);
 		int 				manageConnections(void);
 		int					manageExistingConn(std::vector<pollfd> fds, std::vector<pollfd>::iterator it);
-		int 				addConnections(std::vector<pollfd> fd);
+		int 				addConnections(std::vector<pollfd> fds, size_t i);
 		int					handleExistingConn(void);
-		int					managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd);
-		int					managePollerrEvents(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd);
+		int					managePolloutEvent(std::vector<pollfd> fds, int fd,size_t i);
+		int					managePollerrEvents(std::vector<pollfd> fds, size_t i);
 
 		/*********    Client management    *********/
-		void 				addClient(std::vector<pollfd> fds,int fd);
+		void 				addClient(std::vector<pollfd> fds, int fd, size_t i);
 		void				cantAddClient(int fd);
-		void				delClient(std::vector <pollfd> fds, std::vector <pollfd>::iterator &it);
-		bool				sendReply(int fd);
-		int					receiveMsg(std::vector<pollfd> fds, int fd);
+		void				delClient(std::vector <pollfd> fds, size_t i);
+		//bool				sendReply(int fd);
+		int					receiveMsg(std::vector<pollfd> fds, int fd, size_t i);
 		void				stockMsg(Client *cli, char *s);
 		bool				isValidNickname(std::string name);
 		int					checkRecv(int res, int fd);
 		void				parseMsg(std::string msg, int fd); // to set the command 
 		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
 		void				parseCmd(Client *cli, std::vector <std::string> cmds);
-		void				addToClientBuffer(Server *s, Client *cli, std::string reply);
+		//void				addToClientBuffer(Server *s, Client *cli, std::string reply);
 
 		/*********    Channel management    *********/
 		void				addChannel(std::string topic);
 		void				delChannel(std::string topic);
 		void				cantAddChannel(void);
+		void 				broadcastChannel(std::string message, Channel* channel);
 		
 	private:
 		Server(Server const &s);

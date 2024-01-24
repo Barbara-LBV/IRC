@@ -6,14 +6,14 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/23 15:53:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:02:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Client.hpp"
 
-NickCommand::NickCommand(Server *server) : Command(server) {}
+NickCommand::NickCommand(Server *server, bool auth) : Command(server, auth) {}
 
 NickCommand::~NickCommand() {}
 
@@ -21,7 +21,7 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments[0].empty())
 	{
-		addToClientBuffer(client->getServer(), client->getCliFd(), ERR_NONICKNAMEGIVEN(client->getPrefix()));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NONICKNAMEGIVEN(client->getPrefix()));
 		return;
 	}
 
@@ -29,9 +29,10 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	if (_server->getClientByNickname(nickname))
 	{
-		addToClientBuffer(client->getServer(), client->getCliFd(), ERR_NICKNAMEINUSE(client->getPrefix(), nickname));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NICKNAMEINUSE(client->getPrefix(), nickname));
 		return;
 	}
+	//std::cout << "In nick function, if nickname doesn't exist, nickname = " << nickname << std::endl;
 	client->setNickname(nickname);
-	client->isRegistred();
+	client->welcomeClient(client->getServer());
 }

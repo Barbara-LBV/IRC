@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:54:38 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:50:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,54 +27,61 @@ Client::Client(int fd, Server *server)
 
 Client::~Client(){}
 
-std::string		Client::getNickname(void) const {return (_infos._nickname);}
+std::string	const 	&Client::getNickname(void) const {return (_infos._nickname);}
 
-std::string		&Client::getUsername(void) {return (_infos._username);}
+std::string	const 	&Client::getUsername(void) const {return (_infos._username);}
 
-std::string		&Client::getHost(void) {return (_infos._host);}
+std::string const 	&Client::getRealName()const {return (_infos._realname);}
 
-std::string		&Client::getMsgRecvd(void) {return (_recvdFromServ);}
+std::string	const 	&Client::getHost(void)const  {return (_infos._host);}
 
-std::string		&Client::getPartialMsg(void) {return (_partialMsg);}
+std::string	const 	&Client::getMsgRecvd(void)const  {return (_recvdFromServ);}
 
-bool			&Client::getRegistrationStatus(void) {return _state._registred;}
+std::string	const 	&Client::getPartialMsg(void)const  {return (_partialMsg);}
 
-bool			&Client::getConnPwd(void){return _state._connectionPwd;}
+bool const			&Client::getRegistrationStatus(void)const {return _state._registred;}
 
-bool			&Client::getWelcomeStatus(void){return _state._welcomed;}
+bool	const		&Client::getConnPwd(void)const {return _state._connectionPwd;}
 
-bool			&Client::getDeconnStatus(void){return _state._toDisconnect;}
+bool	const		&Client::getDeconnStatus(void)const{return _state._toDisconnect;}
 
-std::string		Client::getChannelName(void){return _channelName.top();}
+bool const			&Client::getWelcomeStatus(void) const {return _state._welcomed;}
 
-int				&Client::getFd(void){return _infos._cliFd;}
+std::string	const	&Client::getChannelName(void)const{return _channelName.top();}
 
-Server			*Client::getServer(void){return _server;}
+int	const			&Client::getFd(void)const{return _infos._cliFd;}
 
-void			Client::setPartialMsg(std::string partialMsg){ _partialMsg += partialMsg;}
+Server				*Client::getServer(void){return _server;}
 
-void			Client::setNickname(std::string nick){_infos._nickname = nick;}
+void				Client::setPartialMsg(std::string partialMsg){ _partialMsg += partialMsg;}
 
-void			Client::setUsername(std::string user){_infos._username = user;}
+void				Client::setNickname(std::string nick){_infos._nickname = nick;}
 
-void			Client::setHost(std::string hostname){_infos._host = hostname;}
+void				Client::setUsername(std::string user){_infos._username = user;}
 
-void			Client::setRecvMsg(std::string msg){_recvdFromServ += msg;}
+void				Client::setRealName(std::string realUser){_infos._realname = realUser;}
 
-void			Client::setPwd(std::string pwd){_infos._pwd = pwd;}
+void				Client::setHost(std::string hostname){_infos._host = hostname;}
 
-void			Client::setChannelName(std::string n){_channelName.push(n);}
+void				Client::setRecvMsg(std::string msg){_recvdFromServ += msg;}
 
-std::string     Client::getPrefix(void) const
+void				Client::setPwd(std::string pwd){_infos._pwd = pwd;}
+
+void				Client::setWelcomeStatus(bool b){_state._welcomed = b;}
+
+void				Client::setChannelName(std::string n){_channelName.push(n);}
+
+std::string  		Client::getPrefix(void)const
 {
 	if (this->getNickname().empty())
 		return ("*");
 	return _infos._nickname + (_infos._username.empty() ? "" : "!" + _infos._username) + (_infos._host.empty() ? "" : "@" + _infos._host);
 }
 
-bool	Client::sendReply(int fd)
+bool	Client::sendReply(std::vector<pollfd> fds, int fd, size_t i)
 {
 	int res;
+	std::cout << "msg sent to client = " << getMsgRecvd() << std::endl;
 	res = send(fd, getMsgRecvd().c_str(), MAXBUF, 0);
 	if (res == ERROR)
 	{
@@ -84,10 +91,10 @@ bool	Client::sendReply(int fd)
 	if (res == 0)
 	{
 		std::cerr << "[Server] Client n#" << fd << " has disconnected\n";
-		//delClient(vector pollfd, fd);
+		getServer()->delClient(fds, i);
 		return FALSE;
 	}
-	getMsgRecvd().clear();
+	setRecvMsg("");
 	return TRUE;
 }
 
@@ -95,44 +102,31 @@ bool			Client::isRegistred(void)
 {
 	if (this->_state._registred == TRUE)
 		return TRUE;
-	if (_infos._nickname.empty())
-		return FALSE;
-	if (_infos._username.empty())
-		return FALSE;
-	if (_infos._pwd.empty())
-		return FALSE;
-	if (this->_state._registred == FALSE)
-	{
-		this->_state._registred = TRUE;
-		if (this->_state._welcomed == FALSE)
-		{
-			this->welcomeClient(this->getServer());
-			this->_state._welcomed = TRUE;
-		}
-	}
-	return TRUE;	
+	if (!_infos._nickname.empty() && !_infos._username.empty() && !_infos._pwd.empty() && !_infos._realname.empty())
+		return TRUE;
+	return FALSE;	
 }
 
 void	Client::welcomeClient(Server *serv)
 {
-	if (!this->isRegistred())
+	if (this->isRegistred() == FALSE)
 		return ;
-	addToClientBuffer(serv, this->getCliFd(), RPL_WELCOME(this->getNickname(), this->getPrefix()));
-	addToClientBuffer(serv, this->getCliFd(), RPL_YOURHOST(this->getNickname(), this->_server->getServerName(), "0.1"));
-	addToClientBuffer(serv, this->getCliFd(), RPL_CREATED(this->getNickname(), this->_server->getStartTime()));
-	addToClientBuffer(serv, this->getCliFd(), RPL_MYINFO(this->getNickname(), this->_server->getServerName(), "0.1", "aiorsw", "IObeiklmnopstv"));
+	addToClientBuffer(serv, this->getFd(), RPL_WELCOME(this->getNickname(), this->getPrefix()));
+	addToClientBuffer(serv, this->getFd(), RPL_YOURHOST(this->getNickname(), this->_server->getServerName(), "0.1"));
+	addToClientBuffer(serv, this->getFd(), RPL_CREATED(this->getNickname(), this->_server->getStartTime()));
+	addToClientBuffer(serv, this->getFd(), RPL_MYINFO(this->getNickname(), this->_server->getServerName(), "1.1", "io", "kost", "k"));
 	
-	addToClientBuffer(serv, this->getCliFd(), "375 " + this->getNickname() + " :- " + this->_server->getServerName() + " Message of the day -");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + " :- Welcome to our IRC server!");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- .-.-----------.-.");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- | |--FT_IRC---|#|");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- | |-----------| |");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- | |-blefebvr--| |");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- | |-pmaimait--| |");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- | \"-42-Paris-' |");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- |  .-----.-..   |");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- |  |     | || |||");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- |  |     | || \\/|");
-	addToClientBuffer(serv, this->getCliFd(), "372 " + this->getNickname() + "- \"--^-----^-^^---'");
-	addToClientBuffer(serv, this->getCliFd(), "376 " + this->getNickname() + " :End of MOTD command");
+	addToClientBuffer(serv, this->getFd(), "375 " + this->getNickname() + " :- " + this->_server->getServerName() + " Message of the day -");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + " :- Welcome to our IRC server!");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- .-.-----------.-.");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |--FT_IRC---|#|");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |-----------| |");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |-blefebvr--| |");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |-pmaimait--| |");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | \"-42-Paris-' |");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- |  .-----.-..   |");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- |  |     | || |||");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- |  |     | || \\/|");
+	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- \"--^-----^-^^---'");
+	addToClientBuffer(serv, this->getFd(), "376 " + this->getNickname() + " :End of MOTD command");
 }

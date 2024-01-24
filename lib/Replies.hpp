@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 13:26:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:47:12 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@
 #define ERR_INVITEONLYCHAN(source, channel)				"473 " + source + " " + channel + " :Cannot join channel (+i)"
 
 /*********************   NUMERIC REPLIES   **********************/
-#define RPL_WELCOME(source, prefix)										":localhost 001 " + source + " :Welcome to the Internet Relay Network " + prefix
-#define RPL_YOURHOST(source, servername, version)						":localhost 002 " + source + " :Your host is " + servername + ", running version " + version
-#define RPL_CREATED(source, date)										":localhost 003 " + source + " :This server was created " + date
-#define RPL_MYINFO(source, servername, version, usermodes, chanmodes)	":localhost 004 " + source + " :" + servername + " " + version + " " + usermodes + " " + chanmodes
 
+# define RPL_WELCOME(user_id, nickname) (":localhost 001 " + nickname + " :Welcome to the Internet Relay Network " + user_id + "\r\n")
+# define RPL_YOURHOST(client, servername, version) (":localhost 002 " + client + " :Your host is " + servername + " (localhost), running version " + version + "\r\n")
+# define RPL_CREATED(client, datetime) (":localhost 003 " + client + " :This server was created " + datetime + "\r\n")
+# define RPL_MYINFO(client, servername, version, user_modes, chan_modes, chan_param_modes) (":localhost 004 " + client + " " + servername + " " + version + " " + user_modes + " " + chan_modes + " " + chan_param_modes + "\r\n")
 #define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."
 #define RPL_INVITING(source, channel, target)			"341 " + source + " " + channel + " " + target

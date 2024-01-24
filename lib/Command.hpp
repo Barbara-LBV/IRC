@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/23 18:20:32 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:51:34 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,11 @@ class Command
 {
     protected :
         Server *_server;
-
+		bool 	_authRequired;
     public :
-        Command(Server *server){_server = server;};
+        Command(Server *server, bool authRequired = true) : _server(server), _authRequired(authRequired) {};
         virtual ~Command(){};
+		bool getAuthRequired() const { return _authRequired; };
         virtual void execute(Client *client, std::vector<std::string> arguments) = 0;  
 };
 
@@ -61,7 +62,7 @@ public:
 class QuitCommand : public Command
 {
 public:
-	QuitCommand(Server *server);
+	QuitCommand(Server *server, bool auth);
 	~QuitCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
@@ -79,7 +80,7 @@ public:
 class UserCommand : public Command
 {
 public:
-	UserCommand(Server *server);
+	UserCommand(Server *server, bool auth);
 	~UserCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
@@ -88,7 +89,7 @@ public:
 class NickCommand : public Command
 {
 public:
-	NickCommand(Server *server);
+	NickCommand(Server *server, bool auth);
 	~NickCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
@@ -97,7 +98,7 @@ public:
 class PassCommand : public Command
 {
 public:
-	PassCommand(Server *server);
+	PassCommand(Server *server, bool auth);
 	~PassCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);

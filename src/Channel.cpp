@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 17:36:48 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:37:19 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void Channel::partChannel(Client* cli)
         if ((*it)->getNickname() == cli->getNickname())
         {
             _clients.erase(it);			// delete from list of client in this channel
-			if ()
-			cli->getChannelName().pop();   // remove the name of channel in  the client
+			//if ()
+			//cli->getChannelName().pop();   // remove the name of channel in  the client
             break; 
         }
     }
@@ -95,8 +95,6 @@ void Channel::partChannel(Client* cli)
             break; // delete from list of ops in this channel
         }
     }
-
-	
 }
 
 

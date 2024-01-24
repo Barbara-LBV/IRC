@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:54:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:50:27 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class Client
 			std::string		_nickname; // pseudo: usefull for channel operator
 			std::string		_oldNick; //if it's not the 1st nickname
 			std::string		_username; // user = personn who is using IRC Client software
+			std::string 	_realname;
 			std::string		_pwd;
 			std::string		_host; // IP adress: usefull for channel operator
 		} t_names;
@@ -47,28 +48,31 @@ class Client
 		} t_status;
 		
 		/**********    Assessors     *********/
-		std::string			getNickname(void)const;
-		std::string			&getUsername(void);
-		std::string			&getHost(void);
-		std::string			&getMsgRecvd(void);
-		std::string			&getPartialMsg(void);
-		std::string			&getMsgSent(void);
-		std::string			getPrefix(void)const;
-		std::string			getChannelName();
-		bool				&getConnPwd(void);
-		bool				&getRegistrationStatus(void);
-		bool				&getWelcomeStatus(void);
-		bool				&getDeconnStatus(void);
-		int					&getFd(void);
+		std::string	const 	&getNickname(void)const;
+		std::string	const 	&getUsername(void)const ;
+		std::string const 	&getRealName()const ;
+		std::string	const 	&getHost(void)const ;
+		std::string	const 	&getMsgRecvd(void)const ;
+		std::string	const 	&getPartialMsg(void)const ;
+		std::string	const 	&getMsgSent(void)const ;
+		std::string			getPrefix(void)const ;
+		std::string	const	&getChannelName()const ;
+		bool const			&getConnPwd(void) const ;
+		bool const			&getWelcomeStatus(void) const ;
+		bool const			&getRegistrationStatus(void)const ;
+		bool const			&getDeconnStatus(void)const ;
+		int	const			&getFd(void)const ;
 		Server				*getServer(void);
 		void				setNickname(std::string);
 		void				setUsername(std::string);
+		void				setRealName(std::string);
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
+		void				setWelcomeStatus(bool);
 		void				setChannelName(std::string n);
 		void 				setRecvMsg(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
-		bool				sendReply(int fd);
+		bool				sendReply(std::vector<pollfd> fds, int fd, size_t i);
 
 		/**********    Messages Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec

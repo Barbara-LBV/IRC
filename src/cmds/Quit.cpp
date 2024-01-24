@@ -6,14 +6,14 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:18:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:19:04 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Server.hpp"
 
-QuitCommand::QuitCommand(Server *server) : Command(server) {}
+QuitCommand::QuitCommand(Server *server, bool auth) : Command(server, auth){}
 
 QuitCommand::~QuitCommand() {}
 

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/23 17:28:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 11:40:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 {
     if (arguments.empty())
 	{
-		addToClientBuffer(client->getServer(), client->getCliFd(), ERR_NEEDMOREPARAMS(client->getPrefix(), "JOIN"));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getPrefix(), "JOIN"));
 		return;
 	}
     

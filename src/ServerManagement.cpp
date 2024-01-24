@@ -6,11 +6,72 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:46:27 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:51:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
+
+//int	Server::manageConnections(void)
+//{
+//	int	rc;
+//	std::vector<pollfd>	poll_fds; // struct { int fd; short events; short revents;}
+//	pollfd 				serv_poll;
+	
+//	serv_poll.fd 		= _servFd;
+//	serv_poll.events 	= POLLIN;
+//	poll_fds.push_back(serv_poll);
+	
+//	while (server_shutdown == FALSE)
+//	{
+//		std::vector<pollfd>	tmp_poll;
+//		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), TIMEOUT); // launch poll and check fails and timing
+//		checkPoll(rc);
+//		std::vector<pollfd>::iterator	it = poll_fds.begin();
+//		for (;it != poll_fds.end(); ++it)
+//		{
+//			// POLLIN => detects events from clients are coming through the socket; socket in readable mode
+//			 if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
+//			 {
+//			 	// check if server socket is "readable" and loop to accept all incoming connections
+//				std::cout << RED "In POLLIN, bp #1" DEFAULT;
+//				if (it->fd == _servFd) // if it's the listening socket (server's)
+//				{
+//					if (addConnections(tmp_poll, it) == CONTINUE)
+//						continue ;
+//				}
+//				else // if it's a client already connected to server
+//				{
+//					std::cout << RED "In soc server, bp#2 \n" DEFAULT;
+//					if (receiveMsg(poll_fds, it, it->fd) == BREAK)// handle every new message => receive mode
+//						break ;
+//				}
+//			 }
+//			 //POLLOUT => used to know when serv socket is ready to send messages to a client
+//			 else if (it->revents & POLLOUT) 
+//			 {
+//				std::cout << RED "In soc server, bp#6 \n" DEFAULT;
+//			 	if (managePolloutEvent(poll_fds, it, it->fd) == BREAK)			
+//			 		break ;
+//			 }
+//			 // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
+//			 else if (it->revents & POLLERR) 
+//			 {
+//			 	// the socket is diconnected so we clear the right Client node, clear the current fd etc
+//				std::cout << RED "In soc server, bp#7 \n" DEFAULT;
+//			 	std::cout << "[Server] FD " << it->fd << "disconnected \n";
+//			 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
+//			 		break ;
+//				else
+//					return ERROR;
+//			 }
+//			 std::cout << RED "In soc server, bp#8 \n" DEFAULT;
+//			//++it;
+//		}
+//		poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
+//	}
+//	return TRUE;
+//}
 
 int	Server::manageConnections(void)
 {
@@ -24,59 +85,49 @@ int	Server::manageConnections(void)
 	
 	while (server_shutdown == FALSE)
 	{
-		std::vector<pollfd>	tmp_poll;
+		//std::vector<pollfd>	tmp_poll;
 		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), TIMEOUT); // launch poll and check fails and timing
 		checkPoll(rc);
-		std::vector<pollfd>::iterator	it = poll_fds.begin();
-		
-		while (it != poll_fds.end())
+		//std::vector<pollfd>::iterator	it = poll_fds.begin();
+		for (size_t i = 0 ;i < poll_fds.size(); i++)
 		{
+			if (poll_fds[i].revents == 0)
+				continue ;
 			// POLLIN => detects events from clients are coming through the socket; socket in readable mode
-			std::cout << RED "At the begining of the 2e loop\n" DEFAULT;
-			 if (it->revents & POLLIN) // syntaxe = test if the revents bit is equal to 1
-			 {
-			 	// check if server socket is "readable" and loop to accept all incoming connections
-				std::cout << RED "In POLLIN, before 'if' \n" DEFAULT;
-				if (it->fd == _servFd) // if it's the listening socket (server's)
-				{
-					std::cout << RED "In soc server, before 'if' \n" DEFAULT;
-					if (addConnections(tmp_poll) == CONTINUE)
-						continue ;
-					else
-						break ;
-				}
-				else // if it's a client already connected to server
-				{
-					std::cout << RED "In manageExistingConn function\n" DEFAULT;
-					if (receiveMsg(poll_fds, it->fd) == BREAK)// handle every new message => receive mode
-						break ;
-				}
-			 }
-			 //POLLOUT => used to know when serv socket is ready to send messages to a client
-			 else if (it->revents & POLLOUT) 
-			 {
-			 	std::cout << RED "In managePollOut function\n" DEFAULT;
-			 	if (managePolloutEvent(poll_fds, it, it->fd) == BREAK)			
-			 		break ;
-			 }
-			 // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
-			 else if (it->revents & POLLERR) 
-			 {
-			 	// the socket is diconnected so we clear the right Client node, clear the current fd etc
-			 	std::cout << "[Server] FD " << it->fd << "disconnected \n";
-			 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
-			 		break ;
-				else
-					return ERROR;
-			 }
-			it++;
+			if (poll_fds[i].fd == _servFd) // if it's the listening socket (server's)
+				addConnections(poll_fds, i);
+			else if (i > 0)// if it's a client already connected to server
+			{
+				std::cout << RED "In soc server, bp#2 \n" DEFAULT;
+				receiveMsg(poll_fds, poll_fds[i].fd ,i);
+			}
+			// //POLLOUT => used to know when serv socket is ready to send messages to a client
+			// else if (it->revents & POLLOUT) 
+			// {
+			//	std::cout << RED "In soc server, bp#6 \n" DEFAULT;
+			// 	if (managePolloutEvent(poll_fds, it, it->fd) == BREAK)			
+			// 		break ;
+			// }
+			// // POLLERR => set for a fd referring to the write end of a pipe when the read end has been closed.
+			// else if (it->revents & POLLERR) 
+			// {
+			// 	// the socket is diconnected so we clear the right Client node, clear the current fd etc
+			//	std::cout << RED "In soc server, bp#7 \n" DEFAULT;
+			// 	std::cout << "[Server] FD " << it->fd << "disconnected \n";
+			// 	if (managePollerrEvents(poll_fds, it, it->fd) == BREAK)
+			// 		break ;
+			//	else
+			//		return ERROR;
+			// }
+			// std::cout << RED "In soc server, bp#8 \n" DEFAULT;
+			////++it;
 		}
-		poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
+		//poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
 	}
 	return TRUE;
 }
 
-int 	Server::addConnections(std::vector<pollfd> tmpPoll)
+int 	Server::addConnections(std::vector<pollfd> fds, size_t i)
 {
 	int cliFd;
 	
@@ -86,24 +137,24 @@ int 	Server::addConnections(std::vector<pollfd> tmpPoll)
 	if (_cliNb <= MAXCONN)
 	{
 		std::cout << "[Server] New incoming connection on fd n#" << cliFd << std::endl;
-		//tmpPoll.push_back(cliSocket);
-		addClient(tmpPoll, cliFd);// function that fill the "_client" variable with all the client's infos
+		//fds, size_t i.push_back(cliFd);
+		addClient(fds, cliFd, i);// function that fill the "_client" variable with all the client's infos
 	}
 	else
 		cantAddClient(cliFd); // what do we do when we cannot add more client ?
 	return TRUE;
 }
 
-int	Server::receiveMsg(std::vector<pollfd> fds, int fd)
+int	Server::receiveMsg(std::vector<pollfd> fds, int fd, size_t i)
 {
 	char	buf[MAXBUF];
 	Client *cli = _clients[fd];
 	memset(buf, 0, sizeof(buf));
 	(void)fds;
-	_result =  recv(fd, buf, MAXBUF, 0);
+	_result = recv(fd, buf, MAXBUF, 0);
 	if (checkRecv(_result, fd) == ERROR)
 	{
-		//delClient(fds, it);
+		delClient(fds, i);
 		return BREAK;
 	}
 	buf[_result] = '\0';
@@ -111,32 +162,39 @@ int	Server::receiveMsg(std::vector<pollfd> fds, int fd)
 	if (_result == MAXBUF && _cliMsg[_result] != '\n') // if the msg sent by client is longer than the MAXBUF
 	{
 		cli->setPartialMsg(buf); // to keep the msg until you manage to get the rest of the incoming msg
-		std::cout << "[Client] partial message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		_cliMsg.clear();
+		return TRUE;
 	}
-	else if (_cliMsg[_result] == '\n')
+	else if (_cliMsg[_result - 1] == '\n')
 	{
 		std::vector<std::string> cmds = splitMsg(_cliMsg, '\n');
-		for(size_t i = 0; i < cmds.size() - 1; i++)
-			_handler->invoke(this, cli, _cliMsg);
-		cli->setPartialMsg("");
+		for(size_t i = 0; i < cmds.size(); i++)
+			_handler->invoke(this, cli, cmds[i]);
+		if (_clients[fd]->getWelcomeStatus() == FALSE)
+		{
+			_clients[fd]->sendReply(fds, fd, i);
+			_clients[fd]->setWelcomeStatus(TRUE);
+		}
+		cli->setPartialMsg(_cliMsg);
 		std::cout << "[Client] Message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
+		cli->setPartialMsg("");
 		_cliMsg.clear();
+		return TRUE;
 	}
-	return TRUE;
+	return FALSE;
 }
 
-int 	Server::managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd) //=> client en mode ecoute
+int 	Server::managePolloutEvent(std::vector<pollfd> fds, int fd, size_t i) //=> client en mode ecoute
 {
-	Client *client = getClient(fd);
+	Client *client = getClient(fds[i].fd);
 	if (!client)
 		std::cout << "[Server] Didn't find connexion to client sorry" << std::endl;
 	else
 	{
-		client->sendReply(fd);
+		client->sendReply(fds, fd, i);
 		if (client->getDeconnStatus() == true)
 		{
-			delClient(fds, it);
+			delClient(fds, i);
 			return (BREAK);
 		}
 	}
@@ -147,16 +205,16 @@ int 	Server::managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::it
      (msg collectif, accuse de reception, entree dans channel etc)
  2- verifier le statut du client pour un eventuel delete */
 
- int	Server::managePollerrEvents(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd)
+ int	Server::managePollerrEvents(std::vector<pollfd> fds, size_t i)
  {
-	if (fd == _servFd)
+	if (fds[i].fd == _servFd)
 	{
 		close(_servFd);
 		exit(ERROR);
 	}
-	if (fd != _servFd)
+	if (fds[i].fd != _servFd)
 	{
-		delClient(fds, it);
+		delClient(fds, i);
 		return BREAK;
 	}
 	return TRUE;
