@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 18:50:08 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 14:47:24 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Client::Client(int fd, Server *server)
 	_partialMsg = "";
 	_recvdFromServ = "";
    	_infos._cliFd = fd;
+	_infos._host = "localhost";
 	_state._connectionPwd = FALSE;
 	_state._registred = FALSE;
 	_state._welcomed = FALSE;
@@ -47,7 +48,7 @@ bool	const		&Client::getDeconnStatus(void)const{return _state._toDisconnect;}
 
 bool const			&Client::getWelcomeStatus(void) const {return _state._welcomed;}
 
-std::string	const	&Client::getChannelName(void)const{return _channelName.top();}
+//std::string	const	&Client::getActiveChannel(void)const{return _channelName.top();}
 
 int	const			&Client::getFd(void)const{return _infos._cliFd;}
 
@@ -69,16 +70,29 @@ void				Client::setPwd(std::string pwd){_infos._pwd = pwd;}
 
 void				Client::setWelcomeStatus(bool b){_state._welcomed = b;}
 
-void				Client::setChannelName(std::string n){_channelName.push(n);}
+void				Client::setChannelName(const std::string cName){_channelName.push_back(cName);}
 
 std::string  		Client::getPrefix(void)const
 {
 	if (this->getNickname().empty())
 		return ("*");
-	return _infos._nickname + (_infos._username.empty() ? "" : "!" + _infos._username) + (_infos._host.empty() ? "" : "@" + _infos._host);
+	return _infos._nickname + "!" + _infos._username + "@" + _infos._host;
 }
 
-bool	Client::sendReply(std::vector<pollfd> fds, int fd, size_t i)
+std::string		Client::getActiveChannel(void)
+{
+    if (!_channelName.empty())
+        return (_channelName.back()); 
+    return NULL;
+}
+
+void				Client::deleteChannelName(const std::string& cName) const
+{
+    std::deque<std::string>::iterator it = std::remove(_channelName.begin(), _channelName.end(), cName);
+    _channelName.erase(it, _channelName.end());
+}
+
+bool				Client::sendReply(std::vector<pollfd> fds, int fd, size_t i)
 {
 	int res;
 	std::cout << "msg sent to client = " << getMsgRecvd() << std::endl;
@@ -86,6 +100,7 @@ bool	Client::sendReply(std::vector<pollfd> fds, int fd, size_t i)
 	if (res == ERROR)
 	{
 		std::cerr << "[Server] Sending reply failed.\n";
+		setRecvMsg("");
 		exit(ERROR);
 	}
 	if (res == 0)
@@ -94,11 +109,10 @@ bool	Client::sendReply(std::vector<pollfd> fds, int fd, size_t i)
 		getServer()->delClient(fds, i);
 		return FALSE;
 	}
-	setRecvMsg("");
 	return TRUE;
 }
 
-bool			Client::isRegistred(void)
+bool				Client::isRegistred(void)
 {
 	if (this->_state._registred == TRUE)
 		return TRUE;
@@ -107,7 +121,7 @@ bool			Client::isRegistred(void)
 	return FALSE;	
 }
 
-void	Client::welcomeClient(Server *serv)
+void				Client::welcomeClient(Server *serv)
 {
 	if (this->isRegistred() == FALSE)
 		return ;
@@ -116,17 +130,27 @@ void	Client::welcomeClient(Server *serv)
 	addToClientBuffer(serv, this->getFd(), RPL_CREATED(this->getNickname(), this->_server->getStartTime()));
 	addToClientBuffer(serv, this->getFd(), RPL_MYINFO(this->getNickname(), this->_server->getServerName(), "1.1", "io", "kost", "k"));
 	
-	addToClientBuffer(serv, this->getFd(), "375 " + this->getNickname() + " :- " + this->_server->getServerName() + " Message of the day -");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + " :- Welcome to our IRC server!");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- .-.-----------.-.");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |--FT_IRC---|#|");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |-----------| |");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |-blefebvr--| |");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | |-pmaimait--| |");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- | \"-42-Paris-' |");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- |  .-----.-..   |");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- |  |     | || |||");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- |  |     | || \\/|");
-	addToClientBuffer(serv, this->getFd(), "372 " + this->getNickname() + "- \"--^-----^-^^---'");
-	addToClientBuffer(serv, this->getFd(), "376 " + this->getNickname() + " :End of MOTD command");
+	addToClientBuffer(serv, this->getFd(), RPL_MOTDSTART(this->getNickname(), "42_Ftirc (localhost)"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), " :- Welcome to our IRC server!"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- .-.-----------.-."));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |--FT_IRC---|#|"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-----------| |"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-blefebvr--| |"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-pmaimait--| |"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | \"-42-Paris-' |"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  .-----.-..   |"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  |     | || |||"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  |     | || \\/|"));
+	addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- \"--^-----^-^^---'"));
+	addToClientBuffer(serv, this->getFd(), RPL_ENDOFMOTD(this->getNickname()));
+}
+
+void				Client::partAllChannel(void)
+{
+	while (!getActiveChannel().empty())
+	{
+		Channel* channel = _server->getChannel(getActiveChannel());
+		channel->partChannel(this);
+		deleteChannelName(getActiveChannel());
+	}
 }

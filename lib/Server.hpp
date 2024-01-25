@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 18:51:42 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 11:19:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ class Server
 		void				delChannel(std::string topic);
 		void				cantAddChannel(void);
 		void 				broadcastChannel(std::string message, Channel* channel);
+		bool				isValidChannelName(std::string cName);
 		
 	private:
 		Server(Server const &s);

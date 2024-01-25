@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 18:51:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 14:53:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,6 @@ int	Server::receiveMsg(std::vector<pollfd> fds, int fd, size_t i)
 	char	buf[MAXBUF];
 	Client *cli = _clients[fd];
 	memset(buf, 0, sizeof(buf));
-	(void)fds;
 	_result = recv(fd, buf, MAXBUF, 0);
 	if (checkRecv(_result, fd) == ERROR)
 	{
@@ -175,10 +174,13 @@ int	Server::receiveMsg(std::vector<pollfd> fds, int fd, size_t i)
 			_clients[fd]->sendReply(fds, fd, i);
 			_clients[fd]->setWelcomeStatus(TRUE);
 		}
+		else
+			_clients[fd]->sendReply(fds, fd, i);
 		cli->setPartialMsg(_cliMsg);
 		std::cout << "[Client] Message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		cli->setPartialMsg("");
 		_cliMsg.clear();
+		memset(buf, 0, sizeof(buf));
 		return TRUE;
 	}
 	return FALSE;

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 17:09:48 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 11:26:00 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void			Server::setDatetime(struct tm *timeinfo)
 	
 //    for (; it != channel->getClients().end(); ++it)
 //    {
-//		if (channel->getName() == (*it)->getChannelName())
+//		if (channel->getName() == (*it)->getActiveChannel())
 //		{
 //			addToClientBuffer(this, (*it)->getFd(), message);
 //            this->sendReply((*it)->getFd());

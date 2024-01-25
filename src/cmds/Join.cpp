@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/24 11:40:42 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 11:52:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,38 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
     
+	std::string name = arguments[0];
+
+	if (name == "0")
+	{
+		client->partAllChannel();
+		return;
+	}
+		
+	
+	name[0] == '#' ? name : "#" + name;
+	std::string password = arguments.size() > 1 ? arguments[1] : "";
+
+	if (_server->isValidChannelName(name))
+	{
+        Channel* channel = new Channel(name, password, client, _server);
+		client->setChannelName(name);
+		channel->joinChannel(client);
+	}
+    else 
+	{
+		Channel* channel = _server->getChannel(name);
+		if(channel->getI() == true)
+		{
+			addToClientBuffer(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
+			return ;
+		}
+		else if ((channel->getL() - channel->getClients().size()) > 0)
+		{
+			channel->joinChannel(client);
+			client->setChannelName(name);
+		}
+		else
+			addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), name));
+	}
 }

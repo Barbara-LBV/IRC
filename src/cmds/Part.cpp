@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/23 18:18:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 11:29:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,16 @@ PartCommand::~PartCommand() {}
 
 void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	(void)client;
-	(void)arguments;
-	std::cout << " Execute Part Command\n";
+
+	if (arguments.empty())
+	{
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PART"));
+		return;
+	}
+
+    std::string name = arguments[0];
+    name[0] == '#' ? name : "#" + name;
+
+    Channel* 	channel = _server->getChannel(name);
+    channel->partChannel(client);
 }

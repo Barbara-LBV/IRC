@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 18:50:27 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 11:26:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ class Client
 		std::string	const 	&getPartialMsg(void)const ;
 		std::string	const 	&getMsgSent(void)const ;
 		std::string			getPrefix(void)const ;
-		std::string	const	&getChannelName()const ;
 		bool const			&getConnPwd(void) const ;
 		bool const			&getWelcomeStatus(void) const ;
 		bool const			&getRegistrationStatus(void)const ;
@@ -69,20 +68,23 @@ class Client
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
 		void				setWelcomeStatus(bool);
-		void				setChannelName(std::string n);
 		void 				setRecvMsg(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
-		bool				sendReply(std::vector<pollfd> fds, int fd, size_t i);
-
+		
 		/**********    Messages Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
 		bool				isRegistred(void);
 		void				sendMsgtoServer(std::string msg);
-		void				recvMsgfromServer();
+		void				recvMsgfromServer(void);
 		void				welcomeClient(Server *serv);			
+		bool				sendReply(std::vector<pollfd> fds, int fd, size_t i);
 		
 		/**********    Channel Management    *********/
-		
+		//std::string	const	&getChannelName()const;
+		std::string			getActiveChannel(void);
+		void				setChannelName(std::string n);
+		void				partAllChannel(void);
+		void			    deleteChannelName(const std::string& cName) const;
 		//which "mode" : chanOp, simple user, disconnected, username a incrementer
 
 	private:
@@ -94,7 +96,7 @@ class Client
 		t_names					_infos; 
 		t_status				_state;
 		Server*					_server;
-		std::stack<std::string>	_channelName;
+		mutable std::deque<std::string> _channelName;
 };
 
 void	addToClientBuffer(Server *server, int cliFd, std::string reply);

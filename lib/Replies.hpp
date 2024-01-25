@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 18:47:12 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:20:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 #ifndef REPLIES_HPP
 # define REPLIES_HPP
+
+#define CLIENT_ID(nickname, username, host, command)(":" + nickname + "!" + username + "@" + host + " " + command + " ")
 
 /*********************   ERRORS   **********************/
 
@@ -44,6 +46,11 @@
 # define RPL_YOURHOST(client, servername, version) (":localhost 002 " + client + " :Your host is " + servername + " (localhost), running version " + version + "\r\n")
 # define RPL_CREATED(client, datetime) (":localhost 003 " + client + " :This server was created " + datetime + "\r\n")
 # define RPL_MYINFO(client, servername, version, user_modes, chan_modes, chan_param_modes) (":localhost 004 " + client + " " + servername + " " + version + " " + user_modes + " " + chan_modes + " " + chan_param_modes + "\r\n")
+#define RPL_MOTDSTART(client, servername) (":localhost 375 " + client + " :- " + servername + " Message of the day - \r\n")
+#define RPL_MOTD(client, motd_line) (":localhost 372 " + client + " :" + motd_line + "\r\n")
+#define RPL_ENDOFMOTD(client) (":localhost 376 " + client + " :End of /MOTD command.\r\n")
+#define NICK(nickname, username, new_nickname) (CLIENT_ID(nickname, username, "localhost","NICK") + ":" + new_nickname + "\r\n")
+
 #define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."
 #define RPL_INVITING(source, channel, target)			"341 " + source + " " + channel + " " + target

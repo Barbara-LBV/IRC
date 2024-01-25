@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 18:40:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 13:40:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	Server::cantAddClient(int cliSocket)
 	(void) cliSocket;
 	std::cout << RED << "[Server] You cannot join, the server is already full" << DEFAULT << std::endl;
 	send(cliSocket, "[Server] You cannot join, the server is already full", 53, 0);
+	close (cliSocket);
 	close(_servFd); // really ?? do we still can recv/send msg with clients ??
 }
 

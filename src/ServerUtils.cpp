@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:40:57 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 11:46:29 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,25 @@ bool	Server::isValidNickname(std::string name)
 	return TRUE;
 }
 
+bool	Server::isValidChannelName(std::string cName)
+{
+    cName[0] == '#' ? cName : cName = "#" + cName;
+    std::map<std::string, Channel*>::iterator it = _channels.begin();
+
+    while (it != _channels.end())
+    {
+        if (it->first == cName)
+            return false;
+        ++it;
+    } 
+    return true;
+}
+
 void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
 {
 	Client *client = server->getClient(cliFd);
 	
 	if (client)
 		client->setRecvMsg(reply);
-	//else
-	//	server->delClient();
 }
 

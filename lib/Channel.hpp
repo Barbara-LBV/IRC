@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:52:49 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 12:00:28 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,41 +28,43 @@ class Channel
 		~Channel();
 
 		/***********   Assessors   ***********/
-		const std::string 			getName(void) const;
+		const std::string 			getName(void) const {return _name;};
 		const std::string 			&getTopic(void) const;
-		bool                		getStatus(int);
-		std::vector<Client*>       getOperator(void){return _ops;};
-		std::string         		getStatus(void);
-		std::vector<std::string>	getNickNames();
+		std::vector<Client*>        getOperator(void){return _ops;};
 		std::vector<Client*>  		getClients(){return _clients;};
+		std::vector<std::string>	getNicknames();
 		Client*						getClient(const std::string &nickname);
-		
-		void 				setName(const std::string &name);
-		void 				setTopic(const std::string &topic);
-		void 				setStatus(std::string &status);
+		size_t						getL(){return _l;};
+		bool						getI(){return _i;};
+		bool						getT(){return _t;};
+				
+		void 						setTopic(const std::string &topic);
+		void						setL(size_t N){_l = (N != 0) ? N : 1; };
+		void						setI(int b){_i = b;};
+		void						setT(int b){_t = b;};
 		
 		/***********   Functions   ***********/
-		void 				joinChannel(Client *cli);
-   		void 				partChannel(Client *cli);
-    	void 				invitationChannel(Client *cli);
-		bool    			is_oper(Client *client);
-
+		void 						joinChannel(Client *cli){_clients.push_back(cli);};
+   		void 						partChannel(Client *cli);
+		bool    					is_oper(Client *client);
+		void 						removeOpe(Client *client);
+		bool						isInChannel(Client *client);
+		void						addOperator(Client *client){_ops.push_back(client);};
+		
 	private:
 		Channel(Channel const &name);
 		Channel &operator=(Channel const &c);
 		
 		const std::string	_name;
-		const std::string	_topic;
-		const std::string	_password;
-		Server*			_server;
+		std::string			_topic;
+		std::string			_password;
+		Server*				_server;
 		std::vector<Client *>_clients;
 		std::vector<Client *>_ops;
-		int		_l;		//Set/remove the user limit to channel
-		bool	_i;     //Set/remove Invite-only channel
-		bool	_t;		//Set/remove the restrictions of the TOPIC command to channel operator
-
-		//bool		_privChannel; // true: channel with pwd / false: channel without pwd
-		//int			_status; // open/close status ?? 1
+		size_t				_l;		//Set/remove the user limit to channel
+		bool				_i;     //Set/remove Invite-only channel, true is invite only
+		bool				_t;		//Set/remove the restrictions of the TOPIC command to channel operator
+		                        	//true is only operator can set topic
 };
 
 #endif

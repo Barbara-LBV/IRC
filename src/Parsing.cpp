@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 17:20:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 12:04:55 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ std::vector<std::string>	splitMsg(std::string msg, char c)
 
 	while (getline(parse, line, c))
 	{
-		std::cout << "In split function, line = " << line << std::endl;
 		cmd.push_back(line);
 		line.clear();
 	}
