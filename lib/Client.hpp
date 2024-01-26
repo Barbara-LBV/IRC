@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 11:26:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 14:54:57 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ class Client
 		void				sendMsgtoServer(std::string msg);
 		void				recvMsgfromServer(void);
 		void				welcomeClient(Server *serv);			
-		bool				sendReply(std::vector<pollfd> fds, int fd, size_t i);
+		bool				sendReply(int fd);
 		
 		/**********    Channel Management    *********/
 		//std::string	const	&getChannelName()const;

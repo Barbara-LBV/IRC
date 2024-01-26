@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 14:47:24 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 14:55:15 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void				Client::deleteChannelName(const std::string& cName) const
     _channelName.erase(it, _channelName.end());
 }
 
-bool				Client::sendReply(std::vector<pollfd> fds, int fd, size_t i)
+bool				Client::sendReply(int fd)
 {
 	int res;
 	std::cout << "msg sent to client = " << getMsgRecvd() << std::endl;
@@ -106,9 +106,11 @@ bool				Client::sendReply(std::vector<pollfd> fds, int fd, size_t i)
 	if (res == 0)
 	{
 		std::cerr << "[Server] Client n#" << fd << " has disconnected\n";
-		getServer()->delClient(fds, i);
+		getServer()->delClient(fd);
+		setRecvMsg("");		
 		return FALSE;
 	}
+	setRecvMsg("");
 	return TRUE;
 }
 
@@ -153,4 +155,12 @@ void				Client::partAllChannel(void)
 		channel->partChannel(this);
 		deleteChannelName(getActiveChannel());
 	}
+}
+
+void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
+{
+	Client *client = server->getClient(cliFd);
+	
+	if (client)
+		client->setRecvMsg(reply);
 }

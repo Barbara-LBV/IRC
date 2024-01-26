@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/25 18:25:01 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 14:16:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 		while (_server->getClientByNickname(nickname))
 		{
 			std::cout << "in nick function bp#2 \n";
-			nickname = nickname + "0";
+			nickname = nickname + "_";
+			std::cout << "auth = " << getAuthRequired() << std::endl;
+			std::cout << "auth = " << client->getUsername() << std::endl;
 		}
-		if (!client->getUsername().empty() && getAuthRequired() == FALSE)
+		if (!client->getUsername().empty())
 		{
 			addToClientBuffer(client->getServer(), client->getFd(), NICK(nickname, client->getUsername(), nickname));
 			client->setNickname(nickname);
@@ -43,10 +45,11 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 			std::cout << "in nick function bp#3 \n";
 			client->welcomeClient(client->getServer());
 			std::cout << "in nick function bp#4 \n";
+			client->setRecvMsg("");
 			return;
 		}	
 	}
-	else if (_server->getClientByNickname(nickname))
+	else if (_server->getClientByNickname(nickname) && client->getNickname() == nickname)
 	{
 		std::cout << "in nick function bp#0 \n";
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_NICKNAMEINUSE(client->getPrefix(), nickname));
@@ -55,9 +58,12 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 	client->setNickname(nickname);
 	if (!client->getUsername().empty() && getAuthRequired() == FALSE)
 	{
+		std::cout << "in nick function bp#5 \n";
 		addToClientBuffer(client->getServer(), client->getFd(), NICK(nickname, client->getUsername(), nickname));
 		send(client->getFd(), client->getMsgRecvd().c_str(), MAXBUF, 0);
 		_authRequired = TRUE;
+		client->setRecvMsg("");
 	}
+	std::cout << "in nick function bp#6 \n";
 	client->welcomeClient(client->getServer());
 }

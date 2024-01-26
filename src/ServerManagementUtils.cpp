@@ -6,27 +6,25 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 13:40:42 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 15:09:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-void		Server::delClient(std::vector <pollfd> fds, size_t i)
+void		Server::delClient(int fd)
 {
-	int cliFd = fds[i].fd;
-	std::vector<pollfd>::iterator it = fds.begin();
-	for (; it != fds.end(); it++)
+	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		if (it->fd == fds[i].fd)
+		if (_clients[fd])
 			break ;
 	}
-	_clients.erase(fds[i].fd);
-	fds.erase(it);
-	close(cliFd);
+	_clients.erase(fd);
+	close(fd);
 	_cliNb--;
-	std::cout << BLUE << "[Server] Client #" << cliFd
-		<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
+	std::cout << BLUE << "[Server] Client #" << fd 
+		<< " successfully disconnected. There is now " << _cliNb 
+			<< " active connections." DEFAULT << std::endl;
 }
 
 void		Server::delChannel(std::string topic)
@@ -45,17 +43,17 @@ void		Server::delChannel(std::string topic)
 	}
 }
 
-void	Server::addClient(std::vector<pollfd> fds, int fd, size_t i)
+void	Server::addClient(int fd)
 {
 	Client *cli = new Client(fd, this);
-	pollfd newFd;
-
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-	newFd.fd = fd;
-	newFd.events = POLLIN | POLLOUT;
-	fds.push_back(newFd);
+	std::cout << "bp#0 in addClient function"<< std::endl;
 	_clients.insert(std::pair<int, Client *>(fd, cli));
-	if (receiveMsg(fds, fd, i) == BREAK)
+	std::cout << "bp#1 in addClient function"<< std::endl;
+	std::cout << "size of vector clients = " << _clients.size() << std::endl;
+	constructFds();
+	std::cout << "bp#2 in addClient function"<< std::endl;
+	if (receiveMsg(fd) == BREAK)
 		exit(ERROR);
 	std::cout << "[Server] Added client #" << fd << " successfully" << std::endl;
 	_cliNb++;

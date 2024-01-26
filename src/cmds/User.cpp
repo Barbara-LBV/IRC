@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:48 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/25 18:24:49 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 14:20:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,17 @@ void UserCommand::execute(Client *client, std::vector<std::string> arguments)
 	//std::cout << "in user function USER = " << arguments[0] << std::endl;
 	client->setUsername(arguments[0]);
 	client->setRealName(arguments[3].substr(1) + " " + arguments[4]);
+	std::cout << "in user function bp#1 \n";
 	//std::cout << "in user function REAL USER = " << client->getRealName() << std::endl;
 	if (!client->getNickname().empty() && getAuthRequired() == FALSE)
 	{
+		std::cout << "in user function bp#2 \n";
+		std::cout << "auth = " << getAuthRequired() << std::endl;
+		std::cout << "auth = " << client->getNickname() << std::endl;
 		addToClientBuffer(client->getServer(), client->getFd(), NICK(client->getNickname(), arguments[0], client->getNickname()));
 		_authRequired = TRUE;
 		send(client->getFd(), client->getMsgRecvd().c_str(), MAXBUF, 0);
+		client->setRecvMsg("");
 	}
 	client->welcomeClient(client->getServer());
 }

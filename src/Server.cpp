@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 11:26:00 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 16:56:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (n
 	_cliMsg = "";
 	_servName = "localhost";
 	this->setDatetime(time);
-	_result = 0;	
+	_result = 0;
+	_clientsFds = new pollfd();
 }
 
 Server::~Server()

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 11:19:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 16:55:41 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class Server
 		//void				setClient(Client *c);
 		
 		/*********    Socket and connections management    *********/
+		void				constructFds(void);
 		void 				initializeServer(int port);
 		void 				createServerSocket(void);
 		void				bindServerSocket(int port);
@@ -61,24 +62,22 @@ class Server
 		void				checkReception(int rc);
 		int 				manageConnections(void);
 		int					manageExistingConn(std::vector<pollfd> fds, std::vector<pollfd>::iterator it);
-		int 				addConnections(std::vector<pollfd> fds, size_t i);
+		int 				addConnections();
 		int					handleExistingConn(void);
-		int					managePolloutEvent(std::vector<pollfd> fds, int fd,size_t i);
-		int					managePollerrEvents(std::vector<pollfd> fds, size_t i);
+		int					managePolloutEvent(int fd);
+		int					managePollerrEvents( int fd);
 
 		/*********    Client management    *********/
-		void 				addClient(std::vector<pollfd> fds, int fd, size_t i);
+		void 				addClient(int fd);
 		void				cantAddClient(int fd);
-		void				delClient(std::vector <pollfd> fds, size_t i);
-		//bool				sendReply(int fd);
-		int					receiveMsg(std::vector<pollfd> fds, int fd, size_t i);
+		void				delClient(int fd);
+		int					receiveMsg(int fd);
 		void				stockMsg(Client *cli, char *s);
 		bool				isValidNickname(std::string name);
 		int					checkRecv(int res, int fd);
 		void				parseMsg(std::string msg, int fd); // to set the command 
 		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
 		void				parseCmd(Client *cli, std::vector <std::string> cmds);
-		//void				addToClientBuffer(Server *s, Client *cli, std::string reply);
 
 		/*********    Channel management    *********/
 		void				addChannel(std::string topic);
@@ -102,6 +101,7 @@ class Server
 		std::string							_time;
 		ssize_t     						_result; // variable qui retourne le nb de bytes envoyes par le client
 		std::map<int, Client *>				_clients; //client id, client class
+		pollfd *				_clientsFds; 
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
 		CmdHandler							*_handler;
 };

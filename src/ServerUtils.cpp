@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 11:46:29 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 17:00:51 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,11 +155,24 @@ bool	Server::isValidChannelName(std::string cName)
     return true;
 }
 
-void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
+void	Server::constructFds(void)
 {
-	Client *client = server->getClient(cliFd);
+	std::cout << "bp#0 in constrFD function"<< std::endl;
+	if (_clientsFds)
+		delete [] _clientsFds;
 	
-	if (client)
-		client->setRecvMsg(reply);
+	_clientsFds = new pollfd[_clients.size() + 1];
+	_clientsFds[0].fd = _servFd;
+	_clientsFds[0].events = POLLIN;
+	
+	std::cout << "bp#2 in constrFD function"<< std::endl;
+	std::map<int, Client *>::iterator it = _clients.begin();
+	for (size_t i = 0; i < _clients.size() && it != _clients.end(); ++i)
+	{
+		std::cout << "bp#3-1 in constrFD function"<< std::endl;
+		_clientsFds[i + 1].fd = it->first;
+		_clientsFds[i + 1].events = POLLIN | POLLOUT;
+		++it;
+	}
+	std::cout << "bp#4 in constrFD function"<< std::endl;
 }
-

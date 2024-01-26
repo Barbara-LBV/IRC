@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 17:20:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 14:24:19 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #ifndef REPLIES_HPP
 # define REPLIES_HPP
 
-#define CLIENT_ID(nickname, username, host, command)(":" + nickname + "!" + username + "@" + host + " " + command + " ")
+#define CLIENT_ID(nickname, username, host, command)(nickname + "!" + username + "@" + host + " " + command + " ")
 
 /*********************   ERRORS   **********************/
 
@@ -49,7 +49,7 @@
 #define RPL_MOTDSTART(client, servername) (":localhost 375 " + client + " :- " + servername + " Message of the day - \r\n")
 #define RPL_MOTD(client, motd_line) (":localhost 372 " + client + " :" + motd_line + "\r\n")
 #define RPL_ENDOFMOTD(client) (":localhost 376 " + client + " :End of /MOTD command.\r\n")
-#define NICK(nickname, username, new_nickname) (CLIENT_ID(nickname, username, "localhost","NICK") + ":" + new_nickname + "\r\n")
+#define NICK(nickname, username, new_nickname) (CLIENT_ID(nickname, username, "localhost","NICK") + new_nickname + "\r\n")
 
 #define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."

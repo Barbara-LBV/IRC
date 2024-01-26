@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 14:53:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/26 17:09:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,31 +75,33 @@
 
 int	Server::manageConnections(void)
 {
-	int	rc;
-	std::vector<pollfd>	poll_fds; // struct { int fd; short events; short revents;}
-	pollfd 				serv_poll;
+	int	rc(0);
 	
-	serv_poll.fd 		= _servFd;
-	serv_poll.events 	= POLLIN;
-	poll_fds.push_back(serv_poll);
+	_clientsFds->fd 	= _servFd;
+	_clientsFds->events = POLLIN;
 	
 	while (server_shutdown == FALSE)
 	{
-		//std::vector<pollfd>	tmp_poll;
-		rc = poll((pollfd*)&poll_fds[0], (unsigned int)poll_fds.size(), TIMEOUT); // launch poll and check fails and timing
+		rc = poll(_clientsFds, (unsigned int)_clients.size() + 1, TIMEOUT); // launch poll and check fails and timing
 		checkPoll(rc);
-		//std::vector<pollfd>::iterator	it = poll_fds.begin();
-		for (size_t i = 0 ;i < poll_fds.size(); i++)
+		std::cout << "bp#1 in loop function"<< std::endl;
+		size_t i = 0;
+		while (i < _clients.size() + 1)
 		{
-			if (poll_fds[i].revents == 0)
+			std::cout << "bp#2 in loop function"<< std::endl;
+			if (_clientsFds[i].revents == 0)
 				continue ;
 			// POLLIN => detects events from clients are coming through the socket; socket in readable mode
-			if (poll_fds[i].fd == _servFd) // if it's the listening socket (server's)
-				addConnections(poll_fds, i);
+			if (_clientsFds[i].fd == _servFd) // if it's the listening socket (server's)
+			{
+				addConnections();
+				std::cout << RED "bp#1 in loop function i= " << i << std::endl;
+			}
 			else if (i > 0)// if it's a client already connected to server
 			{
 				std::cout << RED "In soc server, bp#2 \n" DEFAULT;
-				receiveMsg(poll_fds, poll_fds[i].fd ,i);
+				std::cout << RED "bp#2 in loop function i= " DEFAULT << i << std::endl;
+				receiveMsg(_clientsFds[i].fd);
 			}
 			// //POLLOUT => used to know when serv socket is ready to send messages to a client
 			// else if (it->revents & POLLOUT) 
@@ -120,14 +122,14 @@ int	Server::manageConnections(void)
 			//		return ERROR;
 			// }
 			// std::cout << RED "In soc server, bp#8 \n" DEFAULT;
-			////++it;
+			++i;
 		}
 		//poll_fds.insert(poll_fds.end(), tmp_poll.begin(), tmp_poll.end());
 	}
 	return TRUE;
 }
 
-int 	Server::addConnections(std::vector<pollfd> fds, size_t i)
+int 	Server::addConnections(void)
 {
 	int cliFd;
 	
@@ -138,22 +140,25 @@ int 	Server::addConnections(std::vector<pollfd> fds, size_t i)
 	{
 		std::cout << "[Server] New incoming connection on fd n#" << cliFd << std::endl;
 		//fds, size_t i.push_back(cliFd);
-		addClient(fds, cliFd, i);// function that fill the "_client" variable with all the client's infos
+		addClient(cliFd);// function that fill the "_client" variable with all the client's infos
+	
 	}
 	else
 		cantAddClient(cliFd); // what do we do when we cannot add more client ?
 	return TRUE;
 }
 
-int	Server::receiveMsg(std::vector<pollfd> fds, int fd, size_t i)
+int	Server::receiveMsg(int fd)
 {
 	char	buf[MAXBUF];
 	Client *cli = _clients[fd];
 	memset(buf, 0, sizeof(buf));
+	std::cout << "in received function fd =" << fd << std::endl;
 	_result = recv(fd, buf, MAXBUF, 0);
 	if (checkRecv(_result, fd) == ERROR)
 	{
-		delClient(fds, i);
+		delClient(fd);
+		memset(buf, 0, sizeof(buf));
 		return BREAK;
 	}
 	buf[_result] = '\0';
@@ -171,11 +176,11 @@ int	Server::receiveMsg(std::vector<pollfd> fds, int fd, size_t i)
 			_handler->invoke(this, cli, cmds[i]);
 		if (_clients[fd]->getWelcomeStatus() == FALSE)
 		{
-			_clients[fd]->sendReply(fds, fd, i);
+			_clients[fd]->sendReply(fd);
 			_clients[fd]->setWelcomeStatus(TRUE);
 		}
 		else
-			_clients[fd]->sendReply(fds, fd, i);
+			_clients[fd]->sendReply(fd);
 		cli->setPartialMsg(_cliMsg);
 		std::cout << "[Client] Message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
 		cli->setPartialMsg("");
@@ -186,17 +191,17 @@ int	Server::receiveMsg(std::vector<pollfd> fds, int fd, size_t i)
 	return FALSE;
 }
 
-int 	Server::managePolloutEvent(std::vector<pollfd> fds, int fd, size_t i) //=> client en mode ecoute
+int 	Server::managePolloutEvent(int fd) //=> client en mode ecoute
 {
-	Client *client = getClient(fds[i].fd);
+	Client *client = getClient(fd);
 	if (!client)
 		std::cout << "[Server] Didn't find connexion to client sorry" << std::endl;
 	else
 	{
-		client->sendReply(fds, fd, i);
+		client->sendReply(fd);
 		if (client->getDeconnStatus() == true)
 		{
-			delClient(fds, i);
+			delClient(fd);
 			return (BREAK);
 		}
 	}
@@ -207,20 +212,17 @@ int 	Server::managePolloutEvent(std::vector<pollfd> fds, int fd, size_t i) //=> 
      (msg collectif, accuse de reception, entree dans channel etc)
  2- verifier le statut du client pour un eventuel delete */
 
- int	Server::managePollerrEvents(std::vector<pollfd> fds, size_t i)
+ int	Server::managePollerrEvents(int fd)
  {
-	if (fds[i].fd == _servFd)
+	if (fd == _servFd)
 	{
 		close(_servFd);
 		exit(ERROR);
 	}
-	if (fds[i].fd != _servFd)
+	if (fd != _servFd)
 	{
-		delClient(fds, i);
+		delClient(fd);
 		return BREAK;
 	}
 	return TRUE;
  }
- 
-
-
