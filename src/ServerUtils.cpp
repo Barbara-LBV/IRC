@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 17:20:13 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/29 11:07:11 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,12 @@ int		Server::checkRecv(int res, int fd)
 	if (res == ERROR)
 	{
 		std::cout << "[Server] recv() error\n";
-		return BREAK;
+		return ERROR;
 	}	
 	if (res == 0)
 	{
 		std::cout << "[Server] User #" << fd << " disconnected\n";
-		return BREAK;
+		return ERROR;
 	}
 	return TRUE;
 }
@@ -156,28 +156,25 @@ bool	Server::isValidChannelName(std::string cName)
 
 
 
-bool	Server::sendReply(int fd, std::string s)
+bool	Server::isValidChannelName(std::string cName)
 {
-	int res;
+    cName[0] == '#' ? cName : cName = "#" + cName;
+    std::map<std::string, Channel*>::iterator it = _channels.begin();
 
-	res = send(fd, s.c_str(), MAXBUF, 0);
-	if (res == ERROR)
-	{
-		std::cerr << "[Server] Sending reply failed.\n";
-		exit(ERROR);
-	}
-	if (res == 0)
-	{
-		std::cerr << "[Server] Client n#" << fd << " has disconnected\n";
-		//delClient(vector pollfd, fd);
-		return FALSE;
-	}
-	return TRUE;
+    while (it != _channels.end())
+    {
+        if (it->first == cName)
+            return false;
+        ++it;
+    } 
+    return true;
 }
 
-void 	Server::addToClientBuffer(Server *server, int cliFd, std::string reply)
+void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
 {
-	Client &client = server->findClient(cliFd);
+	Client *client = server->getClient(cliFd);
 	
-	client->setMsg send(reply);
+	if (client)
+		client->setRecvMsg(reply);
 }
+

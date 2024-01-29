@@ -12,8 +12,24 @@ SRCS_NAME 	= main.cpp \
 			ServerManagement.cpp \
 			ServerManagementUtils.cpp \
 			ServerUtils.cpp \
-			#Event.cpp \
-			#Channel.cpp
+			CmdHandler.cpp \
+			cmds/Invite.cpp \
+			cmds/Kick.cpp \
+			cmds/Pass.cpp \
+			cmds/User.cpp \
+			cmds/Nick.cpp \
+			cmds/Ping.cpp \
+			cmds/Pong.cpp \
+			cmds/PrivMsg.cpp \
+			cmds/Quit.cpp \
+			cmds/Topic.cpp \
+			cmds/Who.cpp \
+			cmds/List.cpp \
+			cmds/Part.cpp \
+			cmds/Mode.cpp \
+			cmds/Join.cpp \
+			cmds/Notice.cpp \
+			Channel.cpp
 			
 SRCS		= $(shell find $(SRCS_DIR) -name "*.cpp") # SRCS        = $(wildcard $(SRCS_DIR)*.cpp) 
 
@@ -40,10 +56,15 @@ all: $(NAME)
 $(NAME): $(OBJS) title
 	@$(COMP) $(FLAGS) ${HEADER} ${OBJS} -o $(NAME)
 	@echo ${GREEN}${BOLD}Compilation ${NC}[${GREEN}OK${NC}]
-	
+
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 	@mkdir -p $(OBJS_DIR)
 	@$(COMP) $(FLAGS) $(HEADER) -c $< -o $@ 
+	@echo ${BOLD}Object Files Creation ${NC}[${GREEN}OK${NC}]
+
+$(OBJS_DIR)cmds/%.o: $(SRCS_DIR)cmds/%.cpp
+	@mkdir -p $(@D)
+	@$(COMP) $(FLAGS) $(HEADER) -c $< -o $@
 	@echo ${BOLD}Object Files Creation ${NC}[${GREEN}OK${NC}]
 
 # Target to clean the object files

@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   List.cpp                                           :+:      :+:    :+:   */
+/*   Notice.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/18 15:06:25 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/23 18:18:23 by blefebvr         ###   ########.fr       */
+/*   Created: 2024/01/23 18:11:32 by blefebvr          #+#    #+#             */
+/*   Updated: 2024/01/23 18:20:28 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
-#include "../../lib/Server.hpp"
+#include "../../lib/Client.hpp"
 
-ListCommand::ListCommand(Server *server) : Command(server) {}
+NoticeCommand::NoticeCommand(Server *server) : Command(server) {}
 
-ListCommand::~ListCommand() {}
+NoticeCommand::~NoticeCommand() {}
 
-void ListCommand::execute(Client *client, std::vector<std::string> arguments)
+void NoticeCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	(void)client;
 	(void)arguments;
-	std::cout << " Execute List Command\n";
+	std::cout << " Execute Notice Command\n";
 }

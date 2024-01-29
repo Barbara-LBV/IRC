@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 15:23:37 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/29 12:01:17 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,19 @@
 #include "IrcLib.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "Command.hpp"
+#include "CmdHandler.hpp"
 
 extern bool server_shutdown;
 
 class Client;
 class Channel;
-class Command;
+class CmdHandler;
 
 class Server
 {
 	public:
-		Server(std::string port, std::string pwd);
+		Server(std::string port, std::string pwd, struct tm * time);
 		~Server();
 		
 		/*********    Assessors    *********/
@@ -44,48 +46,48 @@ class Server
 		std::string 		&getMsg(void);
 		void				setPwd(std::string pwd);
 		void				setMsg(std::string buf);
+		void				setDatetime(struct tm *timeinfo);
 		//void 				setChannel(Channel *c);
 		//void				setClient(Client *c);
 		
-
 		/*********    Socket and connections management    *********/
-		void 	initializeServer(int port);
-		void 	createServerSocket(void);
-		void	bindServerSocket(int port);
-		void	listenForConnection(void);
-		void	closeServFd(void);
-		int		acceptConnection(void);
-		void 	checkPoll(int rc);
-		void	checkReception(int rc);
-		void 	manageConnections(void);
-		int		manageExistingConn(std::vector<pollfd> fds, std::vector<pollfd>::iterator it);
-		int 	addConnections(std::vector<pollfd> fd);
-		int		handleExistingConn(void);
-		int		managePolloutEvent(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd);
-		int		managePollerrEvents(std::vector<pollfd> fds, std::vector<pollfd>::iterator it, int fd);
+		void 				initializeServer(int port);
+		void 				createServerSocket(void);
+		void				bindServerSocket(int port);
+		void				listenForConnection(void);
+		void				closeServFd(void);
+		int					acceptConnection(void);
+		void 				checkPoll(int rc);
+		void				checkReception(int rc);
+		int 				manageConnections(void);
+		int					manageExistingConn(std::vector<pollfd> fds, std::vector<pollfd>::iterator it);
+		int 				addConnections(std::vector<pollfd> fds, size_t i);
+		int					handleExistingConn(void);
+		int					managePolloutEvent(std::vector<pollfd> fds, int fd,size_t i);
+		int					managePollerrEvents(std::vector<pollfd> fds, size_t i);
 
-		
 		/*********    Client management    *********/
-		void 	addClient(std::vector<pollfd> fds,int fd);
-		void	cantAddClient(int fd);
-		void	delClient(std::vector <pollfd> fds, std::vector <pollfd>::iterator &it);
-		bool	sendReply(int fd, std::string s);
-		int		receiveMsg(Client *cli, int fd);
-		void	stockMsg(Client *cli, char *s);
-		bool	isValidNickname(std::string name);
-		int		checkRecv(int res, int fd);
-		void	parseMsg(std::string msg, int fd); // to set the command 
-		void	fillClient(Client *cli, std::vector <std::string> cmds); // with first
-		void	parseCmd(Client *cli, std::vector <std::string> cmds);
-		void	addToClientBuffer(Server *s, Client *cli, std::string reply);
-				
+		void 				addClient(std::vector<pollfd> fds, int fd, size_t i);
+		void				cantAddClient(int fd);
+		void				delClient(std::vector <pollfd> fds, size_t i);
+		void				delClient(int cliFd);
+		//bool				sendReply(int fd);
+		int					receiveMsg(std::vector<pollfd> fds, int fd, size_t i);
+		void				stockMsg(Client *cli, char *s);
+		bool				isValidNickname(std::string name);
+		int					checkRecv(int res, int fd);
+		void				parseMsg(std::string msg, int fd); // to set the command 
+		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
+		void				parseCmd(Client *cli, std::vector <std::string> cmds);
+		//void				addToClientBuffer(Server *s, Client *cli, std::string reply);
+
 		/*********    Channel management    *********/
-		void	broadcastChannel(std::string message, Channel *channel) const;
-		bool	isValidChannelName(std::string cName);
-		Channel*	getChannel(const std::string& cName);
-		void	addChannel(std::string topic);
-		void	delChannel(std::string topic);
-		void	cantAddChannel(void);
+		void				addChannel(std::string topic);
+		void				delChannel(std::string topic);
+		void				cantAddChannel(void);
+		Channel* 			getChannel(const std::string& cName);
+		void 				broadcastChannel(std::string message, Channel* channel);
+		bool				isValidChannelName(std::string cName);
 		
 	private:
 		Server(Server const &s);
@@ -103,9 +105,10 @@ class Server
 		ssize_t     						_result; // variable qui retourne le nb de bytes envoyes par le client
 		std::map<int, Client *>				_clients; //client id, client class
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
+		CmdHandler							*_handler;
 };
 
-bool 	checkArg(std::string port, std::string pwd);
-void 	splitMsg(std::string msg, std::vector<std::string> cmds); // for split the message from the commande
+bool 						checkArg(std::string port, std::string pwd);
+std::vector<std::string> 	splitMsg(std::string msg, char c); // for split the message from the commande
 
 #endif

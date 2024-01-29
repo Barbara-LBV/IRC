@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 17:24:45 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/29 11:04:04 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include <iostream>
 #include "Server.hpp"
 #include "IrcLib.hpp"
-#include "Channel.hpp"
+//#include "Channel.hpp"
 
 class Server;
-class Channel; 
+//class Channel; 
 
 class Client
 {
@@ -34,6 +34,7 @@ class Client
 			std::string		_nickname; // pseudo: usefull for channel operator
 			std::string		_oldNick; //if it's not the 1st nickname
 			std::string		_username; // user = personn who is using IRC Client software
+			std::string 	_realname;
 			std::string		_pwd;
 			std::string		_host; // IP adress: usefull for channel operator
 		} t_names;
@@ -47,53 +48,58 @@ class Client
 		} t_status;
 		
 		/**********    Assessors     *********/
-		int			getFD(void)const;
-		std::string			getNickname(void)const;
-		std::string			&getUsername(void);
-		std::string			&getHost(void);
-		std::string			&getMsgRecvd(void);
-		std::string			&getPartialMsg(void);
-		std::string			&getMsgSent(void);
-		std::string			getPrefix(void)const;
-		bool				&getConnPwd(void);
-		bool				&getRegistrationStatus(void);
-		bool				&getWelcomeStatus(void);
-		bool				&getDeconnStatus(void);
-		std::string			getActiveChannel();
-		void			    deleteChannelName(const std::string& cName) const;
+		std::string	const 	&getNickname(void)const;
+		std::string	const 	&getUsername(void)const ;
+		std::string const 	&getRealName()const ;
+		std::string	const 	&getHost(void)const ;
+		std::string	const 	&getMsgRecvd(void)const ;
+		std::string	const 	&getPartialMsg(void)const ;
+		std::string	const 	&getMsgSent(void)const ;
+		std::string			getPrefix(void)const ;
+		bool const			&getConnPwd(void) const ;
+		bool const			&getWelcomeStatus(void) const ;
+		bool const			&getRegistrationStatus(void)const ;
+		bool const			&getDeconnStatus(void)const ;
+		int	const			&getFd(void)const ;
+		Server				*getServer(void);
 		void				setNickname(std::string);
 		void				setUsername(std::string);
+		void				setRealName(std::string);
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
-		void 				setMsgSent(std::string msg);
+		void				setWelcomeStatus(bool);
+		void 				setRecvMsg(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
-		void				setChannelName(const std::string cName);
-		void				welcomeClient(void);
-		void				partAllChannel();
 		
-		/**********    Connections Management     *********/
+		/**********    Messages Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
 		bool				isRegistred(void);
 		void				sendMsgtoServer(std::string msg);
-		void				recvMsgfromServer();
+		void				recvMsgfromServer(void);
+		void				welcomeClient(Server *serv);			
+		bool				sendReply(std::vector<pollfd> fds, int fd, size_t i);
 		
 		/**********    Channel Management    *********/
-		
-		
+		//std::string	const	&getChannelName()const;
+		std::string			getActiveChannel(void);
+		void				setChannelName(std::string n);
+		void				partAllChannel(void);
+		void			    deleteChannelName(const std::string& cName) const;
 		//which "mode" : chanOp, simple user, disconnected, username a incrementer
 
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);
-		
-		std::string		_completeMsg; // each client has its own send buffer.
-		std::string		_partialMsg; 
-		std::string		_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
-		t_names			_infos; 
-		t_status		_state;
-		Server*			_server;
+
+		std::string				_partialMsg; 
+		std::string				_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
+		t_names					_infos; 
+		t_status				_state;
+		Server*					_server;
 		mutable std::deque<std::string> _channelName;
 };
+
+void	addToClientBuffer(Server *server, int cliFd, std::string reply);
 
 #endif
 

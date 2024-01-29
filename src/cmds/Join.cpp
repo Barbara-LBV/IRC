@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/24 17:36:35 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/29 16:12:04 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,27 @@
 
 //    JOIN #foobar                    ; Command to join channel #foobar.
 
+//    JOIN &foo fubar                 ; Command to join channel &foo using
+//                                    key "fubar".
+
+
+
+//    JOIN #foo,&bar fubar            ; Command to join channel #foo using
+//                                    key "fubar" and &bar using no key.
+
+//    JOIN #foo,#bar fubar,foobar     ; Command to join channel #foo using
+//                                    key "fubar", and channel #bar using
+//                                    key "foobar".
+
+//    JOIN #foo,#bar                  ; Command to join channels #foo and
+//                                    #bar.
+
 //    JOIN 0                          ; Leave all currently joined
 //                                    channels.
 
 //    :WiZ!jto@tolsun.oulu.fi JOIN #Twilight_zone ; JOIN message from WiZ
 //                                    on channel #Twilight_zone
 
-#include "../../lib/IrcLib.hpp"
-#include "../../lib/Client.hpp"
 
 JoinCommand::JoinCommand(Server *server) : Command(server) {}
 
@@ -69,7 +82,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 {
     if (arguments.empty())
 	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getPrefix(), "JOIN"));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getPrefix(), "JOIN"));
 		return;
 	}
     
@@ -89,21 +102,22 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 	{
         Channel* channel = new Channel(name, password, client, _server);
 		client->setChannelName(name);
+		channel->joinChannel(client);
 	}
     else 
 	{
 		Channel* channel = _server->getChannel(name);
 		if(channel->getI() == true)
 		{
-			client->reply(ERR_INVITONLYCHAN(client->getPrefix(), name));
+			addToClientBuffer(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
 			return ;
 		}
-		else if ((channel->getL() - channel->getClients().size()) > 0)
+		else if (((channel->getL() - channel->getClients().size()) > 0))
 		{
 			channel->joinChannel(client);
 			client->setChannelName(name);
 		}
 		else
-			client->reply(ERR_CHANNELISFULL(client->getPrefix(), name));
+			addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), name));
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/22 17:54:36 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 12:04:55 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,42 +41,22 @@ bool checkArg(std::string port, std::string pwd)
 	return true;
 }
 
-void	Server::parseMsg(std::string msg, int fd)
+std::vector<std::string>	splitMsg(std::string msg, char c)
 {
+	std::vector<std::string> cmd;
 	std::stringstream	parse(msg);
-	std::string 		line, buf, name;
-	std::vector<std::string> args;
+	std::string				 line;
 
-	while (getline(parse, name))
+	while (getline(parse, line, c))
 	{
-		line = line.substr(0, line[line.length() - 1] == '\r' ? line.length() - 1 : line.length());
-		name = line.substr(0, line.find(' '));
-
-		try
-		{
-			Command *command = _commands.at(name);
-			td::string buf;
-			std::stringstream ss(syntax.substr(name.length(), syntax.length()));
-			
-			while (ss >> buf)
-				arguments.push_back(buf);
-			if (!client->isRegistered())
-			{
-				addToClientBuffer(this, _clients[fd], ERR_NOTREGISTERED(client->getNickName()));
-				return;
-			}
-			command->execute(client, arguments);
-		}
-		catch (const std::out_of_range &e)
-		{
-			if (name != "CAP")
-				addToClientBuffer(this, _client[fd], ERR_UNKNOWNCOMMAND(client->getNickName(), name));
-		}
+		cmd.push_back(line);
+		line.clear();
 	}
+	return cmd;
 }
 
-void	Server::parseCmd(Client *cli, std::vector <std::string> cmds)
-{
+//void	Server::parseCmd(Client *cli, std::vector <std::string> cmds)
+//{
 	
-}
+//}
 

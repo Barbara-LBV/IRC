@@ -6,24 +6,22 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:56:07 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/24 17:49:55 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/29 11:10:30 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../lib/Client.hpp"
-
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Server.hpp"
 
 KickCommand::KickCommand(Server *server) : Command(server) {}
 
 KickCommand::~KickCommand() {}
 
-// format: KICK <channel> <user> 
-
 void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2)
 	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "KICK"));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "KICK"));
 		return;
 	}
 
@@ -33,13 +31,13 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 
     if (_server->isValidNickname(target))
 	{
-		client->reply(ERR_NOSUCHNICK(client->getNickName(), target));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
 		return ;
 	}
     
     if (_server->isValidChannelName(chan_name))
     {
-        client->reply(ERR_NOSUCHCHANNEL(client->getNickName(), target));
+        addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), target));
 		return ;
     }
     
@@ -47,9 +45,9 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	Client*		client_target = _server->getClientByNickname(target); 
     
     if (!channel->is_oper(client))
-		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), chan_name));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
     else if (!channel->isInChannel(client_target))
-		client->reply(ERR_USERNOTINCHANNEL(client->getNickName(), target, chan_name));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getNickname(), target, chan_name));
     else
         channel->partChannel(client_target);
 }

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/16 14:42:28 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/25 13:37:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	signal_handler(int signal)
 	(void)signal;
 	server_shutdown = true;
 	std::cout << "[Server] Shutting down...\n";
-	exit(ERROR);
+	//exit(ERROR);
 }
 
 int main(int ac, char **av)
@@ -32,9 +32,15 @@ int main(int ac, char **av)
 		std::cerr << "Usage: " << av[0] << " <port> <password>\n";
 		return 1;
 	}
+	time_t rawtime;
+	struct tm * timeinfo;
+
+	time (&rawtime);
+	timeinfo = localtime(&rawtime);
+
 	if (checkArg(av[1], av[2]) == false)
 		return 2;
-	Server server(av[1], av[2]);
+	Server server(av[1], av[2], timeinfo);
 	server.initializeServer(atoi(av[1]));
 	signal(SIGINT, signal_handler);
 	try
@@ -44,7 +50,7 @@ int main(int ac, char **av)
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
-		//serv.closeServFd();
+		//server.closeServFd();
 		//cli.closeCliFd();
 	}
 	return 0;

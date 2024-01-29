@@ -6,19 +6,18 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 17:12:04 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:29:07 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Channel.hpp"
 
 Channel::Channel(std::string const &name, std::string const &password, Client* ops, Server *server)
-					: _name(name) , _l(1000), _password(password), _server(server), _topic(NULL){_ops.push_back(ops);}
+					: _name(name), _topic(""),_password(password), _server(server), \
+                     _l(1000),_i(FALSE), _t(TRUE){_ops.push_back(ops);}
 Channel::~Channel() {}
 
-
-
-std::vector<std::string> Channel::getNickNames()
+std::vector<std::string> Channel::getNicknames()
 {
     std::vector<std::string> nicknames;
     std::vector<Client*>::iterator it = _clients.begin();
@@ -40,8 +39,7 @@ std::vector<std::string> Channel::getNickNames()
     return nicknames;
 }
 
-
-Client *Channel::getClient(const std::string &nickname)
+Client  *Channel::getClient(const std::string &nickname)
 {
 	std::vector<Client *>::iterator it = _clients.begin();
 
@@ -54,7 +52,10 @@ Client *Channel::getClient(const std::string &nickname)
 	return NULL;
 }
 
-
+void 	 Channel::setTopic(const std::string &topic)
+{
+    _topic = topic;
+}
 
 bool    Channel::is_oper(Client *client)
 {
@@ -73,7 +74,7 @@ bool    Channel::is_oper(Client *client)
 	return FALSE;
 }
 
-void Channel::partChannel(Client* cli)
+void    Channel::partChannel(Client* cli)
 {
     for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
@@ -92,7 +93,7 @@ void Channel::partChannel(Client* cli)
     }
 }
 
-void Channel::removeOpe(Client *client)
+void    Channel::removeOpe(Client *client)
 {
     for (std::vector<Client*>::iterator it = _ops.begin(); it != _ops.end(); ++it)
     {
@@ -106,20 +107,6 @@ void Channel::removeOpe(Client *client)
     }
 }
 
-// void Channel::kick(Client *client, Client *target, std::string reason)
-// {
-// 	broadcast(RPL_KICK(client->getPrefix(), _name, target->getNickName(), reason));
-// 	reason.clear();
-// 	removeClient(target, reason);
-// }
-
-// void Channel::invit(Client *client, Client *target)
-// {
-// 	client->reply(RPL_INVITING(client->getNickName(), target->getNickName(), this->_name));
-// 	target->write(RPL_INVITE(client->getPrefix(), target->getNickName(), this->_name));
-// 	target->join(this);
-// }
-
 bool	Channel::isInChannel(Client *client)
 {
 	for  (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
@@ -130,18 +117,16 @@ bool	Channel::isInChannel(Client *client)
 	return false;
 }
 
-
-// unsigned long Channel::_clientIndex(std::vector<Client *> clients, Client *client)
-// {
-// 	unsigned long i = 0;
-// 	std::vector<Client *>::iterator it = clients.begin();
-
-// 	while (it != clients.end())
-// 	{
-// 		if (*it == client)
-// 			return i;
-// 		it++;
-// 		i++;
-// 	}
-// 	return 0;
-// }
+void 	Channel::broadcastChannel(std::string message)
+{
+	std::vector<Client*>::iterator it = getClients().begin();
+	
+   for (; it != getClients().end(); ++it)
+   {
+		if (getName() == (*it)->getActiveChannel())
+		{
+			addToClientBuffer(getServer(), (*it)->getFd(), message);
+            // (*it)->getFd()->sendReply((*it)->getFd());
+		}
+	}
+}

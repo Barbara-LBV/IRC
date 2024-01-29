@@ -6,23 +6,23 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/24 17:55:00 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/29 11:11:13 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../lib/Client.hpp"
+#include "../../lib/IrcLib.hpp"
+#include "../../lib/Server.hpp"
 
 PartCommand::PartCommand(Server *server) : Command(server) {}
 
 PartCommand::~PartCommand() {}
 
-// format: PART <channel>
-void PartCommand::execute(Client *client, std::vector<std::string> arguments) 
+void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 
 	if (arguments.empty())
 	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "PART"));
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PART"));
 		return;
 	}
 
