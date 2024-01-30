@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 11:06:55 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/30 15:13:12 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ Client *Server::getClientByNickname(const std::string &nickname)
 			return it->second;
 		}
 	}
-	// Client not found
+	// std::cout <<  ERR_NOSUCHNICK(nickname, NULL);
 	return nullptr; 
 }
 
@@ -76,7 +76,7 @@ Client 			*Server::getClientByNickname(const std::string &nickname)
 			return it->second;
 		}
 	}
-	// Client not found
+	// addToClientBuffer(this, nickname, ERR_NOSUCHNICK(client->getNickname(), target));
 	return NULL; 
 }
 
@@ -90,16 +90,4 @@ void			Server::setDatetime(struct tm *timeinfo)
   	std::string str(buffer);
 	_time = str;
 }
-//void 	Server::broadcastChannel(std::string message, Channel* channel)
-//{
-//	std::vector<Client*>::iterator it = channel->getClients().begin();
-	
-//    for (; it != channel->getClients().end(); ++it)
-//    {
-//		if (channel->getName() == (*it)->getActiveChannel())
-//		{
-//			addToClientBuffer(this, (*it)->getFd(), message);
-//            this->sendReply((*it)->getFd());
-//		}
-//	}
-//}
+

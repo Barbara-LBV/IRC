@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 15:28:53 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/30 14:36:03 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Channel
 		/***********   Assessors   ***********/
 		const std::string 			getName(void) const {return _name;};
 		const std::string 			&getTopic(void) const;
+		std::string					getPassword(){return _password;};
 		std::vector<Client*>        getOperator(void){return _ops;};
 		std::vector<Client*>  		getClients(){return _clients;};
 		std::vector<std::string>	getNicknames();
@@ -40,6 +41,7 @@ class Channel
 		bool						getT(){return _t;};
 				
 		void 						setTopic(const std::string &topic);
+		void						setPassword(std::string password){_password = password;};
 		void						setL(size_t N){_l = (N != 0) ? N : 1; };
 		void						setI(int b){_i = b;};
 		void						setT(int b){_t = b;};

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/29 16:12:04 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/30 11:35:13 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		
 	
 	name[0] == '#' ? name : "#" + name;
-	std::string password = arguments.size() > 1 ? arguments[1] : "";
+	std::string password = arguments.size() > 1 ? arguments[1] : NULL;
 
 	if (_server->isValidChannelName(name))
 	{
@@ -114,8 +114,14 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		}
 		else if (((channel->getL() - channel->getClients().size()) > 0))
 		{
-			channel->joinChannel(client);
-			client->setChannelName(name);
+			if (password == channel->getPassword())
+			{
+				channel->joinChannel(client);
+				client->setChannelName(name);
+			}
+			else
+				addToClientBuffer(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));
+			
 		}
 		else
 			addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), name));

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 12:22:31 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/30 11:37:06 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,5 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	client->partAllChannel();
 	_server->delClient(client->getFd());
-	(void)arguments;
 	addToClientBuffer(client->getServer(), client->getFd(), "User" + client->getNickname() + "has quit IRC" +  reason);
 }
