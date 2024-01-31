@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 11:46:29 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/31 14:14:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	Server::createServerSocket(void)
 {
 	int rc, on = 1;
 	_servFd = socket(AF_INET, SOCK_STREAM, 0);
-	memset(&_hints, 0, sizeof(_hints));
 	if (_servFd == ERROR)
 	{
 		std::cerr << "[Server] Socket creation error" << std::endl;
@@ -44,6 +43,7 @@ void	Server::bindServerSocket(int port)
 		server_shutdown = TRUE;
 		exit(ERROR);
 	}
+	fcntl(_servFd, F_SETFL, O_NONBLOCK);
 }
 
 void	Server::listenForConnection(void)
@@ -62,7 +62,14 @@ int		Server::acceptConnection(void)
 	socklen_t len = sizeof (_hints);
 	int cliFd = accept(_servFd, (struct sockaddr *)&_hints, &len);
 	if (cliFd == ERROR)
-		std::cerr << "[Server] Socket cannot accept connection" << std::endl;
+	{
+		if (errno != EWOULDBLOCK)
+		{
+			std::cerr << "[Server] Socket cannot accept connection" << std::endl;
+			return BREAK ;
+		}
+	}
+	fcntl(cliFd, F_SETFL, O_NONBLOCK);
 	return (cliFd);
 }
 
@@ -74,25 +81,21 @@ void Server::initializeServer(int port)
 	std::cout << "[Server] Waiting for connections... " << std::endl;
 }
 
-void 	Server::checkPoll(int rc)
+int 	Server::checkPoll(int rc)
 {
 	if (rc == ERROR && server_shutdown == TRUE)
-	{
 		exit(ERROR);
-		server_shutdown = TRUE;
-	}
 	if (rc == ERROR)
 	{
 		std::cerr << "[Server] Poll failed" << std::endl;
-		server_shutdown = TRUE;
-		exit(ERROR);
+		return BREAK ;
 	}
 	if (rc == 0)
 	{
 		std::cerr << "[Server] Poll timed out." << std::endl;
-		server_shutdown = TRUE;
-		exit(ERROR);
+		return BREAK ;
 	}
+	return TRUE;
 }
 
 int		Server::checkRecv(int res, int fd)
@@ -105,6 +108,7 @@ int		Server::checkRecv(int res, int fd)
 	if (res == 0)
 	{
 		std::cout << "[Server] User #" << fd << " disconnected\n";
+		delClient(fd);
 		return ERROR;
 	}
 	return TRUE;
@@ -159,7 +163,6 @@ void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
 {
 	Client *client = server->getClient(cliFd);
 	
-	if (client)
+	if (client && !reply.empty())
 		client->setRecvMsg(reply);
 }
-

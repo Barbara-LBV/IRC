@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 15:19:04 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:57:57 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ QuitCommand::~QuitCommand() {}
 
 void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	(void)client;
 	(void)arguments;
 	std::cout << " Execute Quit Command\n";
+	client->getServer()->delClient(0);
 }

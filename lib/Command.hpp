@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/24 14:51:34 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:23:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ class Command
         Server *_server;
 		bool 	_authRequired;
     public :
-        Command(Server *server, bool authRequired = true) : _server(server), _authRequired(authRequired) {};
+        explicit Command(Server *server, bool authRequired = true) : _server(server), _authRequired(authRequired) {};
         virtual ~Command(){};
+		
 		bool getAuthRequired() const { return _authRequired; };
         virtual void execute(Client *client, std::vector<std::string> arguments) = 0;  
 };
