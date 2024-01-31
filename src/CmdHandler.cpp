@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/24 16:02:40 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:37:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,15 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 		try
 		{
 			Command *command = _commands.at(name);
-			//std::cout << "name command = " << name << std::endl;
 			std::string buf;
 			std::stringstream ss(line.substr(name.length(), line.length()));
 			
 			while (ss >> buf)
 				args.push_back(buf);
-			if (command->getAuthRequired() && client->isRegistred() == FALSE)
+			if (command->getAuthRequired() == TRUE && client->isRegistred() == FALSE)
 			{
 				addToClientBuffer(serv, client->getFd(), ERR_NOTREGISTERED(client->getNickname()));
-				return;
+				return ;
 			}
 			command->execute(client, args);
 		}

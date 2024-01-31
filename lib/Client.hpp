@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 11:04:04 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:48:48 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
+#ifndef CLIENT_HPPetAuthRequired() == TRUE 
 #define CLIENT_HPP
 
 #include <iostream>
@@ -52,9 +52,9 @@ class Client
 		std::string	const 	&getUsername(void)const ;
 		std::string const 	&getRealName()const ;
 		std::string	const 	&getHost(void)const ;
-		std::string	const 	&getMsgRecvd(void)const ;
-		std::string	const 	&getPartialMsg(void)const ;
-		std::string	const 	&getMsgSent(void)const ;
+		std::string		 	getMsgRecvd(void)const ;
+		std::string		 	getPartialMsg(void)const ;
+		std::string		 	getMsgSent(void)const ;
 		std::string			getPrefix(void)const ;
 		bool const			&getConnPwd(void) const ;
 		bool const			&getWelcomeStatus(void) const ;
@@ -77,7 +77,7 @@ class Client
 		void				sendMsgtoServer(std::string msg);
 		void				recvMsgfromServer(void);
 		void				welcomeClient(Server *serv);			
-		bool				sendReply(std::vector<pollfd> fds, int fd, size_t i);
+		bool				sendReply(int fd);
 		
 		/**********    Channel Management    *********/
 		//std::string	const	&getChannelName()const;

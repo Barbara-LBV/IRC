@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 12:01:17 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:51:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class Server
 		std::string			&getServerName(void);
 		std::string			&getStartTime(void);
 		int					&getPort(void);
+		int					&getFd(void);
 		std::string 		&getMsg(void);
 		void				setPwd(std::string pwd);
 		void				setMsg(std::string buf);
@@ -57,22 +58,22 @@ class Server
 		void				listenForConnection(void);
 		void				closeServFd(void);
 		int					acceptConnection(void);
-		void 				checkPoll(int rc);
+		int 				checkPoll(int rc);
 		void				checkReception(int rc);
-		int 				manageConnections(void);
+		void 				manageConnections(void);
 		int					manageExistingConn(std::vector<pollfd> fds, std::vector<pollfd>::iterator it);
-		int 				addConnections(std::vector<pollfd> fds, size_t i);
+		int					addConnections(void);
 		int					handleExistingConn(void);
 		int					managePolloutEvent(std::vector<pollfd> fds, int fd,size_t i);
 		int					managePollerrEvents(std::vector<pollfd> fds, size_t i);
+		pollfd				getActivePoll(int i);
 
 		/*********    Client management    *********/
-		void 				addClient(std::vector<pollfd> fds, int fd, size_t i);
+		int					addClient(int fd);
 		void				cantAddClient(int fd);
-		void				delClient(std::vector <pollfd> fds, size_t i);
-		void				delClient(int cliFd);
+		void				delClient(int fd);
 		//bool				sendReply(int fd);
-		int					receiveMsg(std::vector<pollfd> fds, int fd, size_t i);
+		int					receiveMsg(int fd);
 		void				stockMsg(Client *cli, char *s);
 		bool				isValidNickname(std::string name);
 		int					checkRecv(int res, int fd);
@@ -106,6 +107,7 @@ class Server
 		std::map<int, Client *>				_clients; //client id, client class
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
 		CmdHandler							*_handler;
+		std::vector<pollfd>					_poll_fds;
 };
 
 bool 						checkArg(std::string port, std::string pwd);

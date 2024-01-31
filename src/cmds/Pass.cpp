@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:04:09 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/29 11:11:19 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:55:37 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void PassCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));
 		return;
 	}
-    //std::cout << "in pass function PASS = " << arguments[0] << std::endl; 
     client->setPwd(arguments[0]);
 	client->welcomeClient(client->getServer());
 }

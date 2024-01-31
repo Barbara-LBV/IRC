@@ -3,40 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagementUtils.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 12:05:31 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:53:40 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-void		Server::delClient(int cliFd)
+void		Server::delClient(int fd)
 {
-	_clients.erase(cliFd);
-	// fds.erase(it);
-	close(cliFd);
-	_cliNb--;
-	std::cout << BLUE << "[Server] Client #" << cliFd
-		<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
-}
-
-void		Server::delClient(std::vector <pollfd> fds, size_t i)
-{
-	int cliFd = fds[i].fd;
-	std::vector<pollfd>::iterator it = fds.begin();
-	for (; it != fds.end(); it++)
+	_clients.erase(fd);
+	std::vector<pollfd>::iterator it = _poll_fds.begin();
+	for (int i = 0; i < _cliNb + 1 ; ++i)
 	{
-		if (it->fd == fds[i].fd)
+		if (fd == it->fd)
+		{
+			_poll_fds.erase(it);
 			break ;
+		}
+		++it;
 	}
-	_clients.erase(fds[i].fd);
-	fds.erase(it);
-	close(cliFd);
 	_cliNb--;
-	std::cout << BLUE << "[Server] Client #" << cliFd
-		<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
+	std::cout << BLUE << "[Server] Client #" << it->fd
+	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
+	close(fd);
 }
 
 void		Server::delChannel(std::string topic)
@@ -55,20 +47,19 @@ void		Server::delChannel(std::string topic)
 	}
 }
 
-void	Server::addClient(std::vector<pollfd> fds, int fd, size_t i)
+int Server::addClient(int fd)
 {
 	Client *cli = new Client(fd, this);
-	pollfd newFd;
-
-	fcntl(fd, F_SETFL, O_NONBLOCK);
-	newFd.fd = fd;
-	newFd.events = POLLIN | POLLOUT;
-	fds.push_back(newFd);
+	pollfd	cliPoll;
+	
+	cliPoll.fd = fd;
+	cliPoll.events = POLLIN;
 	_clients.insert(std::pair<int, Client *>(fd, cli));
-	if (receiveMsg(fds, fd, i) == BREAK)
-		exit(ERROR);
-	std::cout << "[Server] Added client #" << fd << " successfully" << std::endl;
+	_poll_fds.push_back(cliPoll);
 	_cliNb++;
+	//if (receiveMsg(fd) == BREAK)
+	//	return BREAK ;
+	return TRUE;
 }
 
 void	Server::cantAddClient(int cliSocket)
@@ -77,7 +68,7 @@ void	Server::cantAddClient(int cliSocket)
 	std::cout << RED << "[Server] You cannot join, the server is already full" << DEFAULT << std::endl;
 	send(cliSocket, "[Server] You cannot join, the server is already full", 53, 0);
 	close (cliSocket);
-	close(_servFd); // really ?? do we still can recv/send msg with clients ??
+	close(_servFd); // we close the listening socket as we cannot add more clients
 }
 
 

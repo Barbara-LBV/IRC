@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 13:37:09 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/30 17:20:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	signal_handler(int signal)
 	(void)signal;
 	server_shutdown = true;
 	std::cout << "[Server] Shutting down...\n";
-	//exit(ERROR);
+	exit(ERROR);
 }
 
 int main(int ac, char **av)
