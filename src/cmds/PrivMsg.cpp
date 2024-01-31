@@ -6,14 +6,14 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/31 12:06:04 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:34:50 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Server.hpp"
 
-// MODE parida :hello !
+// PRIVMSG parida :hello !     send message "hello !" to parida   
 
 PrivMsgCommand::PrivMsgCommand(Server *server) : Command(server) {}
 
@@ -21,7 +21,17 @@ PrivMsgCommand::~PrivMsgCommand() {}
 
 void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	(void)client;
-	(void)arguments;
-	std::cout << " Execute PrivMsg Command\n";
+	if (arguments.size() < 2)
+	{
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PRIVMSG"));
+		return;
+	}
+	const std::string  target = arguments[0];
+	if (_server->isValidNickname(target))
+	{
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
+		return ;
+	}
+	Client*		client_target = _server->getClientByNickname(target);
+	
 }

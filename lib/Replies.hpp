@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 17:20:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/31 14:20:52 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@
 #define RPL_PART(source, channel)					":" + source + " PART " + channel
 #define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + " :" + reason
 #define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason
-#define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " :" + message
+#define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + " " + message + "\r\n")
+// #define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " :" + message
 #define RPL_NOTICE(source, target, message)			":" + source + " NOTICE " + target + " :" + message
 #define RPL_INVITE(source, target, channel)			":" + source + " INVITE " + target + " :" + channel
 
