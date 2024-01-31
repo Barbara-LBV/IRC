@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/30 15:13:12 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 11:42:42 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ Channel* Server::getChannel(const std::string& cName)
         return it->second;     // Channel found, return the pointer
     else
         
-        return nullptr;       // Channel not found, return nullptr
+        return NULL;       // Channel not found, return NULL
 }
 
 
@@ -55,7 +55,7 @@ Client *Server::getClientByNickname(const std::string &nickname)
 		}
 	}
 	// std::cout <<  ERR_NOSUCHNICK(nickname, NULL);
-	return nullptr; 
+	return NULL; 
 }
 
 std::string		&Server::getPwd(void){ return _servPwd;}

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/30 14:36:03 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 10:41:41 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class Channel
 				
 		void 						setTopic(const std::string &topic);
 		void						setPassword(std::string password){_password = password;};
-		void						setL(size_t N){_l = (N != 0) ? N : 1; };
+		void						setL(size_t N){_l = (N != 0) ? N : std::numeric_limits<int>::max(); };
 		void						setI(int b){_i = b;};
 		void						setT(int b){_t = b;};
 		

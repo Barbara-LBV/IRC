@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/30 15:12:57 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 11:11:16 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 // MODE  #abc   -k					remove password of channel #abc
 // MODE  #abc   o/+o	parida		give operator privilege to user "parida" in channel #abc 
 // MODE  #abc   -o      parida		takeoff operator privilege to user "parida" in channel #abc
-// MODE  #abc   l/+l  	15			set limit of number of user in channel #abc  IS 15	
+// MODE  #abc   l/+l  	15			set limit of number of user in channel #abc  is 15	
 // MODE  #abc   -l  				takeoff limit of number of user in channel #abc
 		
 
@@ -97,7 +97,8 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		channel->setPassword(NULL);
 		channel->broadcastChannel("channel's Passwod has removed");
 	}
-
+	
+	// MODE #abc o/-o
 	if (arguments[1] == "o" || arguments[1] == "+o" || "-o")
 	{
 		if (arguments[2].empty())
@@ -125,18 +126,42 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 					addToClientBuffer(client->getServer(), client->getFd(), target + " is got operator privilege now");
 					return ;
 				}
-			else 
-			{
-				if (arguments[1] == "-o")
+				else 
 				{
-					channel->removeOpe(client_target);
-					client_target->deleteChannelName(chan_name);
-					addToClientBuffer(client->getServer(), client->getFd(), target + " is no more operator of channel " + chan_name);
-					return ;
+					if (arguments[1] == "-o")
+					{
+						channel->removeOpe(client_target);
+						client_target->deleteChannelName(chan_name);
+						addToClientBuffer(client->getServer(), client->getFd(), target + " is no more operator of channel " + chan_name);
+						return ;
+					}
 				}
 			}
 		}
 	}
-	
-	
+	// MODE #abc l/-l
+	if (arguments.size() > 2 || isAllDigits(arguments[2])) 
+	{
+        // Convert the string to size_t
+        std::istringstream iss(arguments[2]);
+        size_t sizeValue;
+
+        if ((iss >> sizeValue) && iss.eof())
+		{
+			if ((arguments[1] == "l" || arguments[1] == "+l") && (sizeValue != 0))
+				channel->setL(sizeValue);
+		}    
+	}
+	if (arguments.size() == 2 && arguments[1] == "-l")
+		channel->setL(0);
+}
+
+bool	isAllDigits(const std::string& str) 
+{
+    for (std::size_t i = 0; i < str.length(); ++i) {
+        if (!std::isdigit(str[i])) {
+            return false;
+        }
+    }
+    return true;
 }

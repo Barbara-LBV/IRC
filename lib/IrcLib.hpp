@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 11:07:30 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 10:52:42 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <limits>
 #include <map>
 #include <vector>
 #include <deque>
@@ -38,7 +39,8 @@
 #include <ctime>
 #include <sys/types.h>
 #include <algorithm>
-#include <sstream>
+#include <cctype>
+#include <cstdlib> // for std::atoi
 
 /****************** Includes *******************/
 
