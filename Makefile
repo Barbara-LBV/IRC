@@ -19,7 +19,6 @@ SRCS_NAME 	= main.cpp \
 			cmds/User.cpp \
 			cmds/Nick.cpp \
 			cmds/Ping.cpp \
-			cmds/Pong.cpp \
 			cmds/PrivMsg.cpp \
 			cmds/Quit.cpp \
 			cmds/Topic.cpp \

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:51:47 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/01/31 17:54:25 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (n
 	_servPort = atoi(port.c_str());
 	_cliNb = 0;
 	_servPwd = pwd;
-	_cliMsg = "";
 	_servName = "localhost";
 	this->setDatetime(time);
 	_result = 0;
@@ -58,25 +57,11 @@ Channel* Server::getChannel(const std::string& cName)
 
 Client*			Server::getClient(int fd){return _clients[fd];}
 
-Client *Server::getClientByNickname(const std::string &nickname)
-{
-	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-		if (it->second->getNickname() == nickname) {
-			// Found the client with the given nickname
-			return it->second;
-		}
-	}
-	// std::cout <<  ERR_NOSUCHNICK(nickname, NULL);
-	return NULL; 
-}
-
 std::string		&Server::getPwd(void){ return _servPwd;}
 
 int				&Server::getPort(void){ return _servPort;}
 
 int				&Server::getFd(void){ return _servFd;}
-
-std::string 	&Server::getMsg(void){ return _cliMsg;}
 
 std::string		&Server::getServerName(void){return _servName;}
 
@@ -94,7 +79,7 @@ Client 			*Server::getClientByNickname(const std::string &nickname)
 	return NULL; 
 }
 
-void			Server::setMsg(std::string buf){_cliMsg += buf;}
+void			Server::setFd(int fd){_servFd = fd;}
 
 void			Server::setDatetime(struct tm *timeinfo)
 {

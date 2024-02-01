@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/29 16:04:12 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:06:40 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 			}
 			if (arguments[1][0] == ':' && arguments[1].size() > 1)
 				topic = arguments[1].substr(1);
-			for(int i = 2; i < arguments.size(); i++)
+			for(size_t i = 2; i < arguments.size(); i++)
 				topic += " " + arguments[i];
 		}	
 	}

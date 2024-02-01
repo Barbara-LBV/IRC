@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/31 15:49:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/01 15:27:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,15 +119,6 @@ class PingCommand : public Command
 public:
 	PingCommand(Server *server);
 	~PingCommand();
-
-	void execute(Client *client, std::vector<std::string> arguments);
-};
-
-class PongCommand : public Command
-{
-public:
-	PongCommand(Server *server);
-	~PongCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
 };

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:53:40 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/01 14:03:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void		Server::delClient(int fd)
 {
-	_clients.erase(fd);
 	std::vector<pollfd>::iterator it = _poll_fds.begin();
 	for (int i = 0; i < _cliNb + 1 ; ++i)
 	{
@@ -25,7 +24,10 @@ void		Server::delClient(int fd)
 		}
 		++it;
 	}
+	_clients.erase(fd);
 	_cliNb--;
+	if (_cliNb < 0)
+		_cliNb = 0;
 	std::cout << BLUE << "[Server] Client #" << it->fd
 	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
 	close(fd);
@@ -33,8 +35,6 @@ void		Server::delClient(int fd)
 
 void		Server::delChannel(std::string topic)
 {
-	// 1- withdraw chanop privigeles to the admin-client => change its status
-	// 2- reduce the server's channel variable _channel
 	std::map<std::string, Channel *>::iterator it = _channels.begin();
     while(it != _channels.end())
     {
@@ -57,8 +57,6 @@ int Server::addClient(int fd)
 	_clients.insert(std::pair<int, Client *>(fd, cli));
 	_poll_fds.push_back(cliPoll);
 	_cliNb++;
-	//if (receiveMsg(fd) == BREAK)
-	//	return BREAK ;
 	return TRUE;
 }
 

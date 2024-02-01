@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:51:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:20:12 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Server
 		int					&getPort(void);
 		int					&getFd(void);
 		std::string 		&getMsg(void);
+		void				setFd(int fd);
 		void				setPwd(std::string pwd);
 		void				setMsg(std::string buf);
 		void				setDatetime(struct tm *timeinfo);
@@ -59,13 +60,12 @@ class Server
 		void				closeServFd(void);
 		int					acceptConnection(void);
 		int 				checkPoll(int rc);
-		void				checkReception(int rc);
 		void 				manageConnections(void);
 		int					manageExistingConn(std::vector<pollfd> fds, std::vector<pollfd>::iterator it);
 		int					addConnections(void);
 		int					handleExistingConn(void);
-		int					managePolloutEvent(std::vector<pollfd> fds, int fd,size_t i);
-		int					managePollerrEvents(std::vector<pollfd> fds, size_t i);
+		int					managePolloutEvent(int fd);
+		int					managePollerrEvents(int fd);
 		pollfd				getActivePoll(int i);
 
 		/*********    Client management    *********/
@@ -96,18 +96,17 @@ class Server
 		
 		int									_servFd; // server's fd
 		int									_servPort;
-		int									_cliNb;
+		int									_cliNb; // nb of active clients
 		sockaddr_in 						_hints; // give indications for configure/initialize info linked to a network address
 		sockaddr_in 						_servInfo; // stock server's infos for listening for connections
-		std::string							_servPwd;
-		std::string							_cliMsg;
-		std::string							_servName;
+		std::string							_servPwd; // server's password
+		std::string							_servName; // server's name
 		std::string							_time;
 		ssize_t     						_result; // variable qui retourne le nb de bytes envoyes par le client
 		std::map<int, Client *>				_clients; //client id, client class
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
-		CmdHandler							*_handler;
-		std::vector<pollfd>					_poll_fds;
+		CmdHandler							*_handler; // manage the cmmands
+		//std::vector<pollfd>					_poll_fds; // to handle all cnnections
 };
 
 bool 						checkArg(std::string port, std::string pwd);

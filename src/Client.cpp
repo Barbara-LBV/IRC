@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:52:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:02:37 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,20 +104,21 @@ bool				Client::sendReply(int fd)
 		std::cerr << "[Server] There's no message pending to be sent.\n";
 		return FALSE;
 	}
-	std::cout << "[Server] Message sent to client >>    " << buff << std::endl;
 	res = send(fd, buff.c_str(), buff.length(), 0);
-	setRecvMsg("");
 	if (res == ERROR)
 	{
 		std::cerr << "[Server] Sending reply failed.\n";
+		setRecvMsg("");
 		return FALSE;
 	}
 	if (res == 0)
 	{
-		std::cerr << "[Server] Client n#" << fd << " has disconnected\n";
 		getServer()->delClient(fd);
+		setRecvMsg("");
 		return FALSE;
 	}
+	std::cout << "[Server] Message sent to client >>    " << buff << std::endl;
+	setRecvMsg("");
 	return TRUE;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 15:29:07 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:10:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,10 @@ bool	Channel::isInChannel(Client *client)
 
 void 	Channel::broadcastChannel(std::string message)
 {
-	std::vector<Client*>::iterator it = getClients().begin();
+    std::vector<Client*> cli = getClients();
+	std::vector<Client*>::iterator it = cli.begin();
 	
-   for (; it != getClients().end(); ++it)
+   for (; it != cli.end(); ++it)
    {
 		if (getName() == (*it)->getActiveChannel())
 		{

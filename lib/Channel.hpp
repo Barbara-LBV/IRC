@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 10:41:41 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:12:05 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Channel
 
 		/***********   Assessors   ***********/
 		const std::string 			getName(void) const {return _name;};
-		const std::string 			&getTopic(void) const;
+		const std::string 			&getTopic(void) const {return _topic;};
 		std::string					getPassword(){return _password;};
 		std::vector<Client*>        getOperator(void){return _ops;};
 		std::vector<Client*>  		getClients(){return _clients;};

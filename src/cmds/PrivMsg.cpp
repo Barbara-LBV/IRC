@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/31 15:34:50 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:06:01 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,6 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
 		return ;
 	}
-	Client*		client_target = _server->getClientByNickname(target);
+	//Client*		client_target = _server->getClientByNickname(target);
 	
 }
