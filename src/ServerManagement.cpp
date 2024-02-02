@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 16:21:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:40:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,43 +15,44 @@
 void	Server::manageConnections(void)
 {
 	int 	new_socket, rc;
-	std::vector<pollfd> poll_fds;
 	pollfd	servPoll;
-	int client_count = 1; // Start with one for the server socket
+	int conn_count = 1; // Start with one for the server socket
 	
 	servPoll.fd 		= _servFd;
-	servPoll.events 	= POLLIN | POLLOUT;
-	poll_fds.push_back(servPoll);
+	servPoll.events 	= POLLIN;
+	_poll_fds.push_back(servPoll);
 	
     while (server_shutdown == FALSE) 
 	{
         // Poll for events
-        int activity = poll((pollfd *)&poll_fds[0], client_count, TIMEOUT);
-		std::vector<pollfd> tmp_pollfds;
+		int i = 0;
+        int activity = poll((pollfd *)&_poll_fds[0], (unsigned int)_poll_fds.size(), TIMEOUT);
         if (checkPoll(activity) == BREAK)
 			break;
-		for (int i = 0; i < client_count; i++)
+		for (; i < conn_count ; i++)
 		{
-			if (poll_fds[i].revents == 0)
+			std::cout << "in loop for i=" << i << std::endl;
+			std::cout << "in loop for poll size=" << _poll_fds.size() << std::endl;
+			//std::cout << "in loop for poll revent[i]=" << _poll_fds[i].revents<< std::endl;
+			if (_poll_fds[i].revents == 0)
 				continue ; 
-        	if (poll_fds[i].fd == _servFd)
+        	if (_poll_fds[i].fd == _servFd)
 			{
 				// New incoming connection
 				new_socket = addConnections();
-				//if (new_socket == BREAK || new_socket == ERROR)
-				//	continue ;
-				client_count++;
+				if (new_socket == BREAK || new_socket == ERROR)
+					continue ;
+				conn_count++;
 				std::cout << "New connection on fd #" << new_socket << " accepted.\n";
 			}
-			else
+			else if (i > 0)
 			{
-				rc = receiveMsg(poll_fds[i].fd);
-				if (rc == BREAK && client_count > 1)
-					client_count--;
+				std::cout << "in loop recev " << std::endl;
+				rc = receiveMsg(_poll_fds[i].fd);
+				if (rc == BREAK && conn_count > 1)
+					conn_count--;
 			}
 		}
-		poll_fds.insert(poll_fds.end(), tmp_pollfds.begin(), tmp_pollfds.end()); // Add the range of NEW_pollfds in poll_fds (helps recalculating poll_fds.end() in the for loop)
-	
 	}
 }
 
@@ -135,7 +136,8 @@ int	Server::receiveMsg(int fd)
 	
 	memset(buf, 0, MAXBUF);
 	_result = recv(fd, buf, MAXBUF, 0);
-	
+	std::cout << "_result =" << _result << std::endl;
+	std::cout << "buf =" << buf << std::endl;
 	if (checkRecv(_result, fd) == ERROR)
 		return BREAK;
 
@@ -148,16 +150,14 @@ int	Server::receiveMsg(int fd)
 		std::cout << "[Client] Partial message received from " << fd << "   << " << cli->getPartialMsg() << std::endl;
 		return TRUE;
 	}
-	else if (fullMsg[_result - 1] == '\n')
+	else if (_result <= MAXBUF)
 	{
 		std::cout << "[Client] Message received from " << fd << " << " << cli->getPartialMsg() << std::endl;
-		cli->setPartialMsg("");
+		cli->resetPartialMsg();
 		std::vector<std::string> cmds = splitMsg(fullMsg, '\n');
-		fullMsg = "";
 		for(size_t i = 0; i < cmds.size(); i++)
 			_handler->invoke(this, cli, cmds[i]);
-		//if (_clients[fd]->getWelcomeStatus() == TRUE)
-		cli->sendReply(fd);
+		//cli->sendReply(fd);
 		return TRUE;
 	}
 	return FALSE;

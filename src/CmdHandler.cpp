@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 16:01:26 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:46:15 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,20 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 			if (command->getAuthRequired() && client->isRegistred() == FALSE)
 			{
 				addToClientBuffer(serv, client->getFd(), ERR_NOTREGISTERED(client->getNickname()));
+				client->sendReply(client->getFd());
 				return ;
 			}
 			command->execute(client, args);
+			client->sendReply(client->getFd());
+			
 		}
 		catch (const std::out_of_range &e)
 		{
 			if (name != "CAP")
+			{
 				addToClientBuffer(serv, client->getFd(), ERR_UNKNOWNCOMMAND(client->getNickname(), name));
+				client->sendReply(client->getFd());
+			}
 		}
 	}
 }

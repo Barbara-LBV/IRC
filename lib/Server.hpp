@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 16:20:12 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/01 17:03:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ class Server
 		std::map<int, Client *>				_clients; //client id, client class
 		std::map<std::string, Channel *>	_channels; // channel name, channel class
 		CmdHandler							*_handler; // manage the cmmands
-		//std::vector<pollfd>					_poll_fds; // to handle all cnnections
+		std::vector<pollfd>					_poll_fds; // to handle all cnnections
 };
 
 bool 						checkArg(std::string port, std::string pwd);

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:48 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/01 15:08:55 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:48:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ void UserCommand::execute(Client *client, std::vector<std::string> arguments)
 	client->setUsername(arguments[0]);
 	client->setRealName(arguments[3].substr(1) + " " + arguments[4]);
 	if (!client->getNickname().empty())
-		addToClientBuffer(client->getServer(), client->getFd(), NICK(client->getNickname(), arguments[0], client->getNickname()));
+		addToClientBuffer(client->getServer(), client->getFd(), RPL_NICK(client->getNickname(), arguments[0], client->getNickname()));
 	client->welcomeClient(client->getServer());
 }

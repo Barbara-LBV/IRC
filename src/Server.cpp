@@ -6,13 +6,13 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 17:54:25 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:44:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (new CmdHandler(this)), _poll_fds()
+Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (new CmdHandler(this))
 {
  	_servFd = -1;
 	_servPort = atoi(port.c_str());
@@ -34,7 +34,7 @@ Server::~Server()
 	std::map<std::string, Channel *>::iterator it1 = _channels.begin();
 	for (; it1 != _channels.end(); it1++)
 		delete it1->second;
-	_poll_fds.clear();
+	//_poll_fds.clear();
 	_channels.clear();
 	_clients.clear();
 	delete _handler;

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 16:02:37 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:47:54 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ void				Client::setWelcomeStatus(bool b){_state._welcomed = b;}
 
 void				Client::setChannelName(const std::string cName){_channelName.push_back(cName);}
 
+void				Client::resetPartialMsg(void) { _partialMsg = "";}
+
+void				Client::resetRecvMsg(void) { _recvdFromServ = "";}
+
 std::string  		Client::getPrefix(void)const
 {
 	if (this->getNickname().empty())
@@ -108,17 +112,17 @@ bool				Client::sendReply(int fd)
 	if (res == ERROR)
 	{
 		std::cerr << "[Server] Sending reply failed.\n";
-		setRecvMsg("");
+		//setRecvMsg("");
 		return FALSE;
 	}
 	if (res == 0)
 	{
 		getServer()->delClient(fd);
-		setRecvMsg("");
+		resetRecvMsg();
 		return FALSE;
 	}
 	std::cout << "[Server] Message sent to client >>    " << buff << std::endl;
-	setRecvMsg("");
+	resetRecvMsg();
 	return TRUE;
 }
 
