@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:37:32 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:46:15 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ CmdHandler::CmdHandler(Server *server)
 	_commands["USER"] = new UserCommand(_server, false);
 	_commands["QUIT"] = new QuitCommand(_server, false);
 	_commands["PING"] = new PingCommand(_server);
-	_commands["PONG"] = new PongCommand(_server);
 	_commands["JOIN"] = new JoinCommand(_server);
 	_commands["MODE"] = new ModeCommand(_server);
 	_commands["PART"] = new PartCommand(_server);
@@ -51,7 +50,8 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 		name = line.substr(0, line.find(' '));
 		if (name == "CAP")
 			continue;
-		//std::cout << "In invoke function, in while loop \n";
+		for (std::string::iterator it = name.begin(); it != name.end(); ++it)
+        	*it = std::toupper(*it); 
 		try
 		{
 			Command *command = _commands.at(name);
@@ -60,17 +60,23 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 			
 			while (ss >> buf)
 				args.push_back(buf);
-			if (command->getAuthRequired() == TRUE && client->isRegistred() == FALSE)
+			if (command->getAuthRequired() && client->isRegistred() == FALSE)
 			{
 				addToClientBuffer(serv, client->getFd(), ERR_NOTREGISTERED(client->getNickname()));
+				client->sendReply(client->getFd());
 				return ;
 			}
 			command->execute(client, args);
+			client->sendReply(client->getFd());
+			
 		}
 		catch (const std::out_of_range &e)
 		{
 			if (name != "CAP")
+			{
 				addToClientBuffer(serv, client->getFd(), ERR_UNKNOWNCOMMAND(client->getNickname(), name));
+				client->sendReply(client->getFd());
+			}
 		}
 	}
 }

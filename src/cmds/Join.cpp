@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/30 11:35:13 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:26:50 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,18 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		
 	
 	name[0] == '#' ? name : "#" + name;
-	std::string password = arguments.size() > 1 ? arguments[1] : NULL;
+	std::string password = arguments.size() > 1 ? arguments[1] : "";
 
-	if (_server->isValidChannelName(name))
+	Channel* channel = _server->getChannel(name);
+	if (channel == NULL)
 	{
         Channel* channel = new Channel(name, password, client, _server);
 		client->setChannelName(name);
 		channel->joinChannel(client);
+		addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 	}
     else 
 	{
-		Channel* channel = _server->getChannel(name);
 		if(channel->getI() == true)
 		{
 			addToClientBuffer(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
@@ -118,6 +119,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 			{
 				channel->joinChannel(client);
 				client->setChannelName(name);
+				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 			}
 			else
 				addToClientBuffer(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));

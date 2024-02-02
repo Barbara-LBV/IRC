@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/31 15:53:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:48:47 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,6 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 	client->setNickname(nickname);
 	
 	if (!client->getUsername().empty())
-	{
-		addToClientBuffer(client->getServer(), client->getFd(), NICK(nickname, client->getUsername(), nickname));
-		//client->sendReply(client->getFd());
-		client->welcomeClient(client->getServer());
-	}	
+		addToClientBuffer(client->getServer(), client->getFd(), RPL_NICK(nickname, client->getUsername(), nickname));
+	client->welcomeClient(client->getServer());
 }

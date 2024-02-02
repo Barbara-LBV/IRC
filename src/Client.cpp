@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:52:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 15:31:07 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ Client::Client(int fd, Server *server)
 
 Client::~Client()
 {
+	_channelName.clear();
 	delete _server;
 }
 
@@ -75,6 +76,10 @@ void				Client::setWelcomeStatus(bool b){_state._welcomed = b;}
 
 void				Client::setChannelName(const std::string cName){_channelName.push_back(cName);}
 
+void				Client::resetPartialMsg(void) { _partialMsg = "";}
+
+void				Client::resetRecvMsg(void) { _recvdFromServ = "";}
+
 std::string  		Client::getPrefix(void)const
 {
 	if (this->getNickname().empty())
@@ -86,7 +91,7 @@ std::string		Client::getActiveChannel(void)
 {
     if (!_channelName.empty())
         return (_channelName.back()); 
-    return NULL;
+    return "";
 }
 
 void				Client::deleteChannelName(const std::string& cName) const
@@ -104,20 +109,21 @@ bool				Client::sendReply(int fd)
 		std::cerr << "[Server] There's no message pending to be sent.\n";
 		return FALSE;
 	}
-	std::cout << "[Server] Message sent to client >>    " << buff << std::endl;
 	res = send(fd, buff.c_str(), buff.length(), 0);
-	setRecvMsg("");
 	if (res == ERROR)
 	{
 		std::cerr << "[Server] Sending reply failed.\n";
+		//setRecvMsg("");
 		return FALSE;
 	}
 	if (res == 0)
 	{
-		std::cerr << "[Server] Client n#" << fd << " has disconnected\n";
 		getServer()->delClient(fd);
+		resetRecvMsg();
 		return FALSE;
 	}
+	std::cout << "[Server] Message sent to client >>    " << buff << std::endl;
+	resetRecvMsg();
 	return TRUE;
 }
 

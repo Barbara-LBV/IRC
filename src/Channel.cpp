@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/29 15:29:07 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/02 14:11:54 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 Channel::Channel(std::string const &name, std::string const &password, Client* ops, Server *server)
 					: _name(name), _topic(""),_password(password), _server(server), \
                      _l(1000),_i(FALSE), _t(TRUE){_ops.push_back(ops);}
-Channel::~Channel() {}
+Channel::~Channel() 
+{
+    _clients.clear();
+    _ops.clear();
+}
 
 std::vector<std::string> Channel::getNicknames()
 {
@@ -119,9 +123,10 @@ bool	Channel::isInChannel(Client *client)
 
 void 	Channel::broadcastChannel(std::string message)
 {
-	std::vector<Client*>::iterator it = getClients().begin();
+    std::vector<Client*> cli = getClients();
+	std::vector<Client*>::iterator it = cli.begin();
 	
-   for (; it != getClients().end(); ++it)
+   for (; it != cli.end(); ++it)
    {
 		if (getName() == (*it)->getActiveChannel())
 		{

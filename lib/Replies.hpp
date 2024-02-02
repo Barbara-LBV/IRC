@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/02 11:48:15 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/02 13:37:32 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #ifndef REPLIES_HPP
 # define REPLIES_HPP
 
-#define CLIENT_ID(nickname, username, command)(":" + nickname + "!" + username + "@localhost" + " " + command + " ")
+#define CLIENT_ID(nickname, username, command)(":" + nickname + "!" + username + "@localhost " + command)
 
 /*********************  GLOBAL ERRORS   **********************/
 
@@ -92,7 +92,7 @@
 // NICK
 #define ERR_NONICKNAMEGIVEN(source)						"431 " + source + " :Nickname not given"
 #define ERR_NICKNAMEINUSE(source, nickname)				"433 " + source + " " + nickname + " :Nickname is already in use"
-#define NICK(nickname, username, new_nickname) (CLIENT_ID(nickname, username,"NICK") + ":" + new_nickname + "\r\n")
+#define RPL_NICK(nickname, username, new_nickname)                ":" + nickname + "!" + username + "@localhost NICK " +  nickname + "\r\n"
 
 // NOTICE
 #define RPL_NOTICE(source, target, message)				":" + source + " NOTICE " + target + " :" + message

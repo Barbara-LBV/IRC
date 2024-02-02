@@ -6,11 +6,11 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:48:48 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:47:20 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPPetAuthRequired() == TRUE 
+#ifndef CLIENT_HPP
 #define CLIENT_HPP
 
 #include <iostream>
@@ -70,7 +70,9 @@ class Client
 		void				setWelcomeStatus(bool);
 		void 				setRecvMsg(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
-		
+		void				resetPartialMsg(void);
+		void				resetRecvMsg(void);
+;		
 		/**********    Messages Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
 		bool				isRegistred(void);
@@ -85,7 +87,6 @@ class Client
 		void				setChannelName(std::string n);
 		void				partAllChannel(void);
 		void			    deleteChannelName(const std::string& cName) const;
-		//which "mode" : chanOp, simple user, disconnected, username a incrementer
 
 	private:
 		Client(Client const &s);

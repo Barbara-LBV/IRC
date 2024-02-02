@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/31 11:11:16 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:24:27 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	chan_name[0] == '#' ? chan_name : "#" + chan_name;
     Channel* 	channel = _server->getChannel(chan_name);
 
-	if (_server->isValidChannelName(chan_name))
+	if (!channel)
 	{
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), chan_name));
 		return ;
@@ -94,7 +94,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (arguments[1] == "-k" )
 	{
-		channel->setPassword(NULL);
+		channel->setPassword("");
 		channel->broadcastChannel("channel's Passwod has removed");
 	}
 	

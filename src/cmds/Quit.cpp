@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:54:27 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 15:24:30 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ QuitCommand::~QuitCommand() {}
 
 void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	std::string  reason = NULL;
+	std::string  reason = "";
 	if (!arguments.empty() || !arguments[0].empty())
 	{
-		for (int i = 0; i < arguments.size(); i++)
+		for (size_t i = 0; i < arguments.size(); i++)
 			reason = " " + arguments[i];
 	}
 	client->partAllChannel();
-	_server->delClient(client->getFd());
-	addToClientBuffer(client->getServer(), client->getFd(), "User" + client->getNickname() + "has quit IRC" +  reason);
+	//_server->delClient(client->getFd());
+	addToClientBuffer(client->getServer(), client->getFd(), RPL_QUIT(client->getNickname(), reason));
 }

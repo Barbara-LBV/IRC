@@ -3,22 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 15:51:47 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:16:26 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (new CmdHandler(this)), _poll_fds()
+Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (new CmdHandler(this))
 {
  	_servFd = -1;
 	_servPort = atoi(port.c_str());
 	_cliNb = 0;
 	_servPwd = pwd;
-	_cliMsg = "";
 	_servName = "localhost";
 	this->setDatetime(time);
 	_result = 0;
@@ -35,7 +34,7 @@ Server::~Server()
 	std::map<std::string, Channel *>::iterator it1 = _channels.begin();
 	for (; it1 != _channels.end(); it1++)
 		delete it1->second;
-	_poll_fds.clear();
+	//_poll_fds.clear();
 	_channels.clear();
 	_clients.clear();
 	delete _handler;
@@ -46,37 +45,25 @@ Server::~Server()
 
 Channel* Server::getChannel(const std::string& cName)
 {
-    std::map<std::string, Channel*>::iterator it = _channels.find(cName);
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+    {
+		std::cout << "channel name is " + it->first << std::endl;
+        if (it->first == cName)
+            return it->second; // Channel found, return the pointer
+    }
 
-    if (it != _channels.end())
-        return it->second;     // Channel found, return the pointer
-    else
-        
-        return NULL;       // Channel not found, return NULL
+    return NULL; // Channel not found, return NULL
 }
+
 
 
 Client*			Server::getClient(int fd){return _clients[fd];}
-
-Client *Server::getClientByNickname(const std::string &nickname)
-{
-	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-		if (it->second->getNickname() == nickname) {
-			// Found the client with the given nickname
-			return it->second;
-		}
-	}
-	// std::cout <<  ERR_NOSUCHNICK(nickname, NULL);
-	return NULL; 
-}
 
 std::string		&Server::getPwd(void){ return _servPwd;}
 
 int				&Server::getPort(void){ return _servPort;}
 
 int				&Server::getFd(void){ return _servFd;}
-
-std::string 	&Server::getMsg(void){ return _cliMsg;}
 
 std::string		&Server::getServerName(void){return _servName;}
 
@@ -94,7 +81,7 @@ Client 			*Server::getClientByNickname(const std::string &nickname)
 	return NULL; 
 }
 
-void			Server::setMsg(std::string buf){_cliMsg += buf;}
+void			Server::setFd(int fd){_servFd = fd;}
 
 void			Server::setDatetime(struct tm *timeinfo)
 {
