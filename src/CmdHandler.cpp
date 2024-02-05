@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/02 11:46:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 11:43:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 			}
 			command->execute(client, args);
 			client->sendReply(client->getFd());
-			
+			if (name == "QUIT")
+				serv->delClient(client->getFd());
 		}
 		catch (const std::out_of_range &e)
 		{

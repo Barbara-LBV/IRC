@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/30 11:35:13 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:12:37 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		
 	
 	name[0] == '#' ? name : "#" + name;
-	std::string password = arguments.size() > 1 ? arguments[1] : NULL;
+	std::string password = arguments.size() > 1 ? arguments[1] : "";
 
 	if (_server->isValidChannelName(name))
 	{

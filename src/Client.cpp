@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/02 11:47:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:12:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Client::Client(int fd, Server *server)
 	_state._welcomed = FALSE;
 	_state._toDisconnect = FALSE;
 	_server = server;
-	//_infos._pwd = server->getPwd();
+	_infos._pwd = server->getPwd();
 }
 
 Client::~Client()
@@ -90,7 +90,7 @@ std::string		Client::getActiveChannel(void)
 {
     if (!_channelName.empty())
         return (_channelName.back()); 
-    return NULL;
+    return ("");
 }
 
 void				Client::deleteChannelName(const std::string& cName) const
@@ -105,14 +105,14 @@ bool				Client::sendReply(int fd)
 	std::string buff = getMsgRecvd();
 	if (buff.empty())
 	{
-		std::cerr << "[Server] There's no message pending to be sent.\n";
+		std::cerr << BGREEN "[Server] " <<  GREEN "There's no message pending to be sent.\n" DEFAULT;
 		return FALSE;
 	}
 	res = send(fd, buff.c_str(), buff.length(), 0);
 	if (res == ERROR)
 	{
-		std::cerr << "[Server] Sending reply failed.\n";
-		//setRecvMsg("");
+		std::cerr << BGREEN "[Server] " <<  GREEN " Sending reply failed.\n" DEFAULT;
+		resetRecvMsg();
 		return FALSE;
 	}
 	if (res == 0)
@@ -121,7 +121,7 @@ bool				Client::sendReply(int fd)
 		resetRecvMsg();
 		return FALSE;
 	}
-	std::cout << "[Server] Message sent to client >>    " << buff << std::endl;
+	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " DEFAULT << "<<  "<< buff << std::endl;
 	resetRecvMsg();
 	return TRUE;
 }

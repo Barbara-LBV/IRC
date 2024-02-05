@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 16:44:09 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 12:53:56 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,22 @@ Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (n
 
 Server::~Server()
 {
-	std::map<int, Client *>::iterator it = _clients.begin();
-	for(; it != _clients.end(); it++)
-	{
-		delete it->second;
-		close(it->first);
-	}
-	std::map<std::string, Channel *>::iterator it1 = _channels.begin();
-	for (; it1 != _channels.end(); it1++)
-		delete it1->second;
-	//_poll_fds.clear();
+	//if (!_clients.empty())
+	//{
+	//	std::map<int, Client *>::iterator it = _clients.begin();
+	//	for(; it != _clients.end(); it++)
+	//	{
+	//		delete it->second;
+	//		close(it->first);
+	//	}
+	//}
+	//if (!_channels.empty())
+	//{
+	//	std::map<std::string, Channel *>::iterator it1 = _channels.begin();
+	//	for (; it1 != _channels.end(); it1++)
+	//		delete it1->second;
+	//}
+	_poll_fds.clear();
 	_channels.clear();
 	_clients.clear();
 	delete _handler;

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 17:04:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 12:34:51 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	Server::createServerSocket(void)
 	fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd == ERROR)
 	{
-		std::cerr << "[Server] Socket creation error" << std::endl;
+		std::cerr << BGREEN "[Server] " << GREEN "Socket creation error" << std::endl;
 		server_shutdown = TRUE;
 		close(fd);
 		exit(ERROR);
@@ -27,7 +27,7 @@ void	Server::createServerSocket(void)
     rc = setsockopt(getFd(), SOL_SOCKET, SO_REUSEPORT, (const void*)&on, sizeof(on));
 	if (rc == ERROR)
 	{
-		std::cerr << "[Server] Impossible to reuse the socket" << std::endl;
+		std::cerr << BGREEN "[Server] " << GREEN "Impossible to reuse the socket" << std::endl;
 		close(getFd());
 		server_shutdown = TRUE;
 		exit(ERROR);
@@ -42,7 +42,7 @@ void	Server::bindServerSocket(int port)
 	_servInfo.sin_port = htons(port);
 	if (bind(getFd(), (struct sockaddr *)&_servInfo, sizeof(_servInfo)) == ERROR)
 	{
-		std::cerr << "[Server] Socket impossible to bind" << std::endl;
+		std::cerr << BGREEN "[Server] " << GREEN "Socket impossible to bind" DEFAULT << std::endl;
 		close(getFd());
 		server_shutdown = TRUE;
 		exit(ERROR);
@@ -54,12 +54,12 @@ void	Server::listenForConnection(void)
 {
 	if (listen(getFd(), BACKLOG) ==  ERROR)
 	{
-		std::cerr << "[Server] Socket cannot listen" << std::endl;
+		std::cerr << BGREEN "[Server] " << GREEN "Socket cannot listen" DEFAULT << std::endl;
 		server_shutdown = TRUE;
 		close(getFd());
 		exit(ERROR);
 	}
-	std::cout << "[Server] Listening on socket fd: " << _servFd << std::endl;
+	std::cout << BGREEN "[Server] " << GREEN "Listening on socket fd #" << _servFd << DEFAULT << std::endl;
 }
 
 int		Server::acceptConnection(void)
@@ -70,7 +70,7 @@ int		Server::acceptConnection(void)
 	{
 		if (errno != EWOULDBLOCK)
 		{
-			std::cerr << "[Server] Socket cannot accept connection" << std::endl;
+			std::cerr << BGREEN "[Server] " << GREEN "Socket cannot accept connection" DEFAULT << std::endl;
 			return BREAK ;
 		}
 	}
@@ -83,23 +83,22 @@ void Server::initializeServer(int port)
     createServerSocket();
     bindServerSocket(port);
     listenForConnection();
-	std::cout << "[Server] Waiting for connections... " << std::endl;
+	std::cout << BGREEN "[Server] " <<  GREEN "Waiting for connections... " DEFAULT << std::endl;
 }
 
 int 	Server::checkPoll(int rc)
 {
 	if (rc == ERROR && server_shutdown == TRUE)
-		exit(ERROR);
+		throw ;
 	if (rc == ERROR)
 	{
-		std::cerr << "[Server] Poll failed" << std::endl;
+		std::cerr << BGREEN "[Server] " <<  GREEN "Poll failed" DEFAULT << std::endl;
 		server_shutdown = TRUE;
-		//free function
-		exit(ERROR);
+		throw ;
 	}
 	if (rc == 0)
 	{
-		std::cerr << "[Server] Poll timed out." << std::endl;
+		std::cerr << BGREEN "[Server] " <<  GREEN "Poll timed out." DEFAULT << std::endl;
 		return BREAK ;
 	}
 	return TRUE;
@@ -109,7 +108,7 @@ int		Server::checkRecv(int res, int fd)
 {
 	if (res == ERROR)
 	{
-		std::cout << "[Server] recv() error\n";
+		std::cout << BGREEN "[Server] " <<  GREEN "recv() error\n" DEFAULT;
 		return ERROR;
 	}	
 	if (res == 0)
@@ -118,31 +117,6 @@ int		Server::checkRecv(int res, int fd)
 		return ERROR;
 	}
 	return TRUE;
-}
-
-bool	Server::isValidNickname(std::string name)
-{
-	std::map<int, Client *>::iterator it = _clients.begin();
-	
-	while (it != _clients.end())
-	{
-		if (it->second->getNickname() == name)
-			return FALSE;	
-	}
-	return TRUE;
-}
-bool	Server::isValidChannelName(std::string cName)
-{
-    cName[0] == '#' ? cName : cName = "#" + cName;
-    std::map<std::string, Channel*>::iterator it = _channels.begin();
-
-    while (it != _channels.end())
-    {
-        if (it->first == cName)
-            return false;
-        ++it;
-    } 
-    return true;
 }
 
 void 	addToClientBuffer(Server *server, int cliFd, std::string reply)

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 17:03:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:08:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void		Server::delClient(int fd)
 	_cliNb--;
 	if (_cliNb < 0)
 		_cliNb = 0;
-	std::cout << BLUE << "[Server] Client #" << it->fd
+	std::cout << BGREEN "[Server] " <<  GREEN "Client #" << it->fd
 	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
 	close(fd);
 }
@@ -49,6 +49,8 @@ void		Server::delChannel(std::string topic)
 
 int Server::addClient(int fd)
 {
+	std::cout << "in addClient, bp#1, fd =" << fd<< std::endl;
+	std::cout << "in addClient, bp#2, server =" << this << std::endl;
 	Client *cli = new Client(fd, this);
 	pollfd	cliPoll;
 	
@@ -63,7 +65,7 @@ int Server::addClient(int fd)
 void	Server::cantAddClient(int cliSocket)
 {
 	(void) cliSocket;
-	std::cout << RED << "[Server] You cannot join, the server is already full" << DEFAULT << std::endl;
+	std::cout << BGREEN "[Server] " <<  GREEN "You cannot join, the server is already full" << DEFAULT << std::endl;
 	send(cliSocket, "[Server] You cannot join, the server is already full", 53, 0);
 	close (cliSocket);
 	close(_servFd); // we close the listening socket as we cannot add more clients

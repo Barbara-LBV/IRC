@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/25 12:04:55 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 12:34:56 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,27 @@ std::vector<std::string>	splitMsg(std::string msg, char c)
 	return cmd;
 }
 
-//void	Server::parseCmd(Client *cli, std::vector <std::string> cmds)
-//{
+bool	Server::isValidNickname(std::string name)
+{
+	std::map<int, Client *>::iterator it = _clients.begin();
 	
-//}
+	while (it != _clients.end())
+	{
+		if (it->second->getNickname() == name)
+			return FALSE;	
+	}
+	return TRUE;
+}
+bool	Server::isValidChannelName(std::string cName)
+{
+    cName[0] == '#' ? cName : cName = "#" + cName;
+    std::map<std::string, Channel*>::iterator it = _channels.begin();
 
+    while (it != _channels.end())
+    {
+        if (it->first == cName)
+            return false;
+        ++it;
+    } 
+    return true;
+}

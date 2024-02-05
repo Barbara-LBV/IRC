@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/31 11:11:16 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:12:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (arguments[1] == "-k" )
 	{
-		channel->setPassword(NULL);
+		channel->setPassword("");
 		channel->broadcastChannel("channel's Passwod has removed");
 	}
 	

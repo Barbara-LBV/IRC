@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/31 16:06:40 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 12:52:29 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
     }
     
     Channel* 	channel = _server->getChannel(chan_name);
-	std::string  topic = NULL;
+	std::string  topic = "";
 	
 	if (!channel->isInChannel(client))
 	{
@@ -89,7 +89,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 		}
 		else if (arguments.size() == 2 || arguments[1] == ":")
 		{
-			channel->setTopic(NULL);
+			channel->setTopic("");
 			channel->broadcastChannel("Topic of " + chan_name + " is cleared");
 			return ;
 		}
