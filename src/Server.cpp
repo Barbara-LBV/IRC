@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 12:53:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:04:07 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,28 @@ Server::~Server()
 
 Channel* Server::getChannel(const std::string& cName)
 {
-    std::map<std::string, Channel*>::iterator it = _channels.find(cName);
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+    {
+        if (it->first == cName)
+            return it->second; // Channel found, return the pointer
+    }
 
-    if (it != _channels.end())
-        return it->second;     // Channel found, return the pointer
-    else
-        
-        return NULL;       // Channel not found, return NULL
+    return NULL; // Channel not found, return NULL
+}
+
+void Server::addChannel(std::string chan_name, Channel* channel)
+{
+    if (channel)
+    {
+        // Check if the channel name already exists
+        if (_channels.find(chan_name) == _channels.end())
+        {
+            // If not, add the channel to the map
+            _channels.insert(std::make_pair(chan_name, channel));
+        }
+        else
+            std::cout << "channel name already exit\n";
+    }
 }
 
 

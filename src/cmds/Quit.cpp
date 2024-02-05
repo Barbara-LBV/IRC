@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 12:50:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:06:46 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ QuitCommand::~QuitCommand() {}
 
 void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	std::string  reason = "";
-	if (!arguments.empty() && !arguments[0].empty())
+	std::string  reason = NULL;
+	if (!arguments.empty() || !arguments[0].empty())
 	{
 		for (size_t i = 0; i < arguments.size(); i++)
 			reason = " " + arguments[i];

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/05 13:12:44 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:06:19 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	chan_name[0] == '#' ? chan_name : "#" + chan_name;
     Channel* 	channel = _server->getChannel(chan_name);
 
-	if (_server->isValidChannelName(chan_name))
+	if (!channel)
 	{
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), chan_name));
 		return ;
@@ -122,7 +122,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 				if (arguments[1] == "o" || arguments[1] == "+o")
 				{
 					channel->addOperator(client_target);
-					client_target->setChannelName(chan_name);
+					client_target->addChannel(channel);
 					addToClientBuffer(client->getServer(), client->getFd(), target + " is got operator privilege now");
 					return ;
 				}
@@ -131,7 +131,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 					if (arguments[1] == "-o")
 					{
 						channel->removeOpe(client_target);
-						client_target->deleteChannelName(chan_name);
+						client_target->deleteChannel(channel);
 						addToClientBuffer(client->getServer(), client->getFd(), target + " is no more operator of channel " + chan_name);
 						return ;
 					}

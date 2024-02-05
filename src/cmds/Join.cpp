@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/05 13:12:37 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:05:59 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,19 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		
 	
 	name[0] == '#' ? name : "#" + name;
-	std::string password = arguments.size() > 1 ? arguments[1] : "";
+	std::string password = arguments.size() > 1 ? arguments[1] : NULL;
 
-	if (_server->isValidChannelName(name))
+	Channel* channel = _server->getChannel(name);
+	if (channel == NULL)
 	{
         Channel* channel = new Channel(name, password, client, _server);
-		client->setChannelName(name);
+		_server->addChannel(name, channel);
+		client->addChannel(channel);
 		channel->joinChannel(client);
+		addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 	}
     else 
 	{
-		Channel* channel = _server->getChannel(name);
 		if(channel->getI() == true)
 		{
 			addToClientBuffer(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
@@ -117,7 +119,8 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 			if (password == channel->getPassword())
 			{
 				channel->joinChannel(client);
-				client->setChannelName(name);
+				client->addChannel(channel);
+				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 			}
 			else
 				addToClientBuffer(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));

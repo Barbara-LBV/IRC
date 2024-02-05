@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 16:10:50 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 13:04:49 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 Channel::Channel(std::string const &name, std::string const &password, Client* ops, Server *server)
 					: _name(name), _topic(""),_password(password), _server(server), \
                      _l(1000),_i(FALSE), _t(TRUE){_ops.push_back(ops);}
-Channel::~Channel() {}
+Channel::~Channel() 
+{
+    _clients.clear();
+    _ops.clear();
+}
 
 std::vector<std::string> Channel::getNicknames()
 {
@@ -83,13 +87,13 @@ void    Channel::partChannel(Client* cli)
             _clients.erase(it);			// delete from list of client in this channel
             if (is_oper(cli))
                 removeOpe(cli);
-			cli->deleteChannelName(getName());   // remove the name of channel in  the client info
+			cli->deleteChannel(this);   // remove the name of channel in  the client info
             if ((it + 1) == _clients.end())
                 delete this;
             break; 
         }
         if (it == _ops.end())
-            std::cout << cli->getNickname() + " is not user of this channel\n";
+            addToClientBuffer(cli->getServer(), cli->getFd(), ERR_USERNOTINCHANNEL(cli->getNickname(), cli->getNickname(), this->getName()));
     }
 }
 
@@ -124,7 +128,7 @@ void 	Channel::broadcastChannel(std::string message)
 	
    for (; it != cli.end(); ++it)
    {
-		if (getName() == (*it)->getActiveChannel())
+		if (this == (*it)->getActiveChannel())
 		{
 			addToClientBuffer(getServer(), (*it)->getFd(), message);
             // (*it)->getFd()->sendReply((*it)->getFd());

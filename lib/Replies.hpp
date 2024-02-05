@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/02 11:21:08 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 11:57:34 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 #define RPL_ENDOFMOTD(client) 							"376 " + client + " :End of /MOTD command.\r\n"
 
 //INVITE
-#define RPL_INVITE(source, target, channel)				":" + source + " INVITE " + target + " :" + channel
+#define RPL_INVITE(source, target, channel)				":" + source + " INVITE " + target + " to " + channel
 #define RPL_INVITING(source, channel, target)			      "341 " + source + " " + channel + " " + target
 #define ERR_NOTONCHANNEL(source, channel)				      "442 " + source + " " + channel + " :You're not on that channel"
 #define ERR_NOSUCHCHANNEL(source, channel)				"403 " + source + " " + channel + " :No such channel"
@@ -113,6 +113,8 @@
 
 // PRIVMSG
 #define RPL_PRIVMSG(nick, username, target, message) 	(":" + nick + "!" + username + "@localhost PRIVMSG " + target + " " + message + "\r\n")
+# define ERR_NORECIPIENT(client) ("411 " + client + " :No recipient given PRIVMSG\r\n")
+# define ERR_NOTEXTTOSEND(client) ("412 " + client + " :No text to send\r\n")
 //#define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " :" + message
 
 // QUIT

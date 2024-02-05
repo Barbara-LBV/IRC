@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 13:07:51 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:02:05 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 #include <iostream>
 #include "Server.hpp"
 #include "IrcLib.hpp"
-//#include "Channel.hpp"
+#include "Channel.hpp"
 
 class Server;
+class Channel;
 //class Channel; 
-
+ 
 class Client
 {
 	public:
@@ -83,10 +84,10 @@ class Client
 		
 		/**********    Channel Management    *********/
 		//std::string	const	&getChannelName()const;
-		std::string			getActiveChannel(void);
-		void				setChannelName(std::string n);
+		Channel*			getActiveChannel(void) const;
+		void				addChannel(Channel* channel);
 		void				partAllChannel(void);
-		void			    deleteChannelName(const std::string& cName) const;
+		void			    deleteChannel(Channel* channel);
 
 	private:
 		Client(Client const &s);
@@ -97,7 +98,7 @@ class Client
 		t_names					_infos; 
 		t_status				_state;
 		Server*					_server;
-		mutable std::deque<std::string> _channelName;
+		std::deque<Channel*> _channel;
 };
 
 void	addToClientBuffer(Server *server, int cliFd, std::string reply);
