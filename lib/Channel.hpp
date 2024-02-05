@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 16:12:05 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:45:00 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Channel
 		bool						isInChannel(Client *client);
 		void						addOperator(Client *client){_ops.push_back(client);};
 		void 	  					broadcastChannel(std::string message);
+		void						replyList(Client* client);
 		
 	private:
 		Channel(Channel const &name);

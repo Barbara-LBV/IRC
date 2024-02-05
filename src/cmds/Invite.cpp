@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:34 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/05 13:06:56 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 16:26:11 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,35 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
     }
     
 	if (!channel->isInChannel(client))
+	{
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
+		return ;
+	}
 	else if (!channel->is_oper(client))
+	{
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
+		return ;
+	}
 	else if (channel->isInChannel(client_target))
+	{
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_USERONCHANNEL(client->getNickname(), target, chan_name));
+		return ;
+	}
 	else 
 	{
 		if ((channel->getL() - channel->getClients().size()) > 0)
 		{
+			addToClientBuffer(client->getServer(), client->getFd(), RPL_INVITING(client->getNickname(), chan_name, target));
+			//client->sendReply(client->getFd());
+			std::cout << "hello we are here \n";
 			channel->joinChannel(client_target);
 			client_target->addChannel(channel);
-			addToClientBuffer(client->getServer(), client->getFd(), RPL_INVITE(client->getNickname(), target, chan_name));
+			//addToClientBuffer(client->getServer(), client_target->getFd(), RPL_JOIN(client_target->getPrefix(), chan_name));
+			addToClientBuffer(client->getServer(), client_target->getFd(), RPL_INVITE(client->getNickname(), target, chan_name));
+			channel->replyList(client_target);
+			client->sendReply(client_target->getFd());
+			std::cout << "msg to be sent to target =" << client_target->getMsgRecvd() << std::endl;
+			//std::cout << "msg to be sent =" << client->getMsgRecvd() << std::endl;
 		}
 		else 
 			addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), chan_name));

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 13:04:49 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:33:58 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,4 +134,18 @@ void 	Channel::broadcastChannel(std::string message)
             // (*it)->getFd()->sendReply((*it)->getFd());
 		}
 	}
+}
+
+void        Channel::replyList(Client* client)
+{
+    std::vector<std::string> nickname = getNicknames();
+    std::string list = "";
+    for (std::vector<std::string>::iterator it = nickname.begin(); it != nickname.end(); ++it)
+    {
+        if (!it->empty()) 
+        list += *it + " ";
+    } 
+    list += "\n";
+    addToClientBuffer(client->getServer(), client->getFd(), RPL_NAMREPLY(client->getNickname(), this->getName(), list));
+    addToClientBuffer(client->getServer(), client->getFd(), RPL_ENDOFNAMES(client->getNickname(), this->getName()));
 }

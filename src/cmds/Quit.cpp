@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 14:06:46 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:42:41 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ QuitCommand::~QuitCommand() {}
 
 void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	std::string  reason = NULL;
+	std::string  reason = "";
 	if (!arguments.empty() || !arguments[0].empty())
 	{
 		for (size_t i = 0; i < arguments.size(); i++)

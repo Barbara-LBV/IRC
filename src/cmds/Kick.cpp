@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:56:07 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/29 11:10:30 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:49:58 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 
     std::string chan_name = arguments[0];
-    chan_name[0] == '#' ? chan_name : "#" + chan_name;
+
+	chan_name[0] == '#' ? chan_name : chan_name.insert(0, 1, '#');
 	std::string target = arguments[1];
 
     if (_server->isValidNickname(target))

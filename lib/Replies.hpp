@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 11:57:34 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:37:23 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,19 @@
 #define RPL_ENDOFMOTD(client) 							"376 " + client + " :End of /MOTD command.\r\n"
 
 //INVITE
-#define RPL_INVITE(source, target, channel)				":" + source + " INVITE " + target + " to " + channel
-#define RPL_INVITING(source, channel, target)			      "341 " + source + " " + channel + " " + target
-#define ERR_NOTONCHANNEL(source, channel)				      "442 " + source + " " + channel + " :You're not on that channel"
-#define ERR_NOSUCHCHANNEL(source, channel)				"403 " + source + " " + channel + " :No such channel"
-#define ERR_USERONCHANNEL(source, target, channel)		      "443 " + source + " " + target + " " + channel + " :is already on channel"
+#define RPL_INVITE(source, target, channel)				":" + source + " INVITE " + target + " to " + channel + "\r\n"
+#define RPL_INVITING(source, channel, target)			      "341 " + source + " " + channel + " " + target + "\r\n"
+#define ERR_NOTONCHANNEL(source, channel)				      "442 " + source + " " + channel + " :You're not on that channel" + "\r\n"
+#define ERR_NOSUCHCHANNEL(source, channel)				"403 " + source + " " + channel + " :No such channel" + "\r\n"
+#define ERR_USERONCHANNEL(source, target, channel)		      "443 " + source + " " + target + " " + channel + " :is already on channel" + "\r\n"
 
 // JOIN
-#define RPL_JOIN(source, channel)						":" + source + " JOIN :" + channel
-#define ERR_BADCHANNELKEY(source, channel)				"475 " + source + " " + channel + " :Cannot join channel (+k)"
+#define RPL_JOIN(source, channel)						":" + source + " JOIN :" + channel + "\r\n"
+#define ERR_BADCHANNELKEY(source, channel)				"475 " + source + " " + channel + " :Cannot join channel (+k)" + "\r\n"
 #define ERR_BANNEDFROMCHAN(client, channel) 			      "474 " + client + " #" + channel + " :Cannot join channel (+b)\r\n"
 
 // KICK
-#define RPL_KICK(source, channel, target, reason)		      ":" + source + " KICK " + channel + " " + target + " :" + reason
+#define RPL_KICK(source, channel, target, reason)		      ":" + source + " KICK " + channel + " " + target + " :" + reason + "\r\n"
 #define ERR_USERNOTINCHANNEL(source, nickname, channel)		"441 " + source + " " + nickname + " " + channel + " :They aren't on that channel"
 
 // KILL
@@ -86,7 +86,7 @@
 #define RPL_UMODEIS(client, mode) 						"221 " + client + " " + mode + "\r\n"
 
 // NAMES
-#define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
+#define RPL_NAMREPLY(source, channel, users)			      "353 " + source + " = " + channel + " :" + users + "\r\n"
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."
 
 // NICK

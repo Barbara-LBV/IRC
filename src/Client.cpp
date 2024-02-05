@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 14:03:42 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 16:08:32 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ bool				Client::sendReply(int fd)
 		resetRecvMsg();
 		return FALSE;
 	}
-	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " DEFAULT << "<<  "<< buff << std::endl;
+	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " DEFAULT  << this->getFd() << ">>  "<< buff << std::endl;
 	resetRecvMsg();
 	return TRUE;
 }
@@ -177,5 +177,4 @@ void				Client::partAllChannel(void)
 		 _channel.pop_back();
 	}
 	_channel.clear();
-	
 }

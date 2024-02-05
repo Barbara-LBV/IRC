@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 14:04:44 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:51:12 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,5 +124,5 @@ void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
 	Client *client = server->getClient(cliFd);
 	
 	if (client)
-		client->setRecvMsg(reply);
+		client->setRecvMsg(":" + server->getServerName() + " " + reply);
 }
