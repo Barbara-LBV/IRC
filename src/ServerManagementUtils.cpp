@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 13:08:18 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:06:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void		Server::delClient(int fd)
 	}
 	_clients.erase(fd);
 	_cliNb--;
-	if (_cliNb < 0)
+	if (_cliNb <= 0)
 		_cliNb = 0;
 	std::cout << BGREEN "[Server] " <<  GREEN "Client #" << it->fd
 	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
@@ -49,11 +49,10 @@ void		Server::delChannel(std::string topic)
 
 int Server::addClient(int fd)
 {
-	std::cout << "in addClient, bp#1, fd =" << fd<< std::endl;
-	std::cout << "in addClient, bp#2, server =" << this << std::endl;
-	Client *cli = new Client(fd, this);
+	Client *cli = new Client(fd);
 	pollfd	cliPoll;
 	
+	cli->setServer(this);
 	cliPoll.fd = fd;
 	cliPoll.events = POLLIN;
 	_clients.insert(std::pair<int, Client *>(fd, cli));

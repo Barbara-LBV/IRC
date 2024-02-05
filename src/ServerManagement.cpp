@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 13:09:38 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:58:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int 	Server::addConnections(void)
 	}
 	else if (cliFd > 3 && cliFd <= MAXCONN)
 	{
-		//std::cout << BGREEN "[Server] " <<  GREEN "New incoming connection on fd n#" << cliFd << DEFAULT << std::endl;
 		if (addClient(cliFd) == BREAK)
 			return BREAK ;
 	}

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 14:03:42 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:04:52 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Client.hpp"
 
-Client::Client(int fd, Server *server)
+Client::Client(int fd)
 {
 	_partialMsg = "";
 	_recvdFromServ = "";
@@ -22,8 +22,8 @@ Client::Client(int fd, Server *server)
 	_state._registred = FALSE;
 	_state._welcomed = FALSE;
 	_state._toDisconnect = FALSE;
-	_server = server;
-	_infos._pwd = server->getPwd();
+	//_server = server;
+	//_infos._pwd = server->getPwd();
 }
 
 Client::~Client()
@@ -167,9 +167,10 @@ void				Client::welcomeClient(Server *serv)
 	}
 }
 
-void				Client::partAllChannel(void)
+void		Client::partAllChannel(void)
 {
-	while (!_channel.empty())
+	size_t i = 0;
+	for (; i < _channel.size(); i++)
 	{
 		Channel * channel = _channel.back();
 		if (channel)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 14:02:05 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:05:49 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Channel;
 class Client
 {
 	public:
-		Client(int fd, Server *server);
+		Client(int fd);
 		~Client();
 		
 		/**********    Structures    *********/
@@ -62,6 +62,7 @@ class Client
 		bool const			&getRegistrationStatus(void)const ;
 		bool const			&getDeconnStatus(void)const ;
 		int	const			&getFd(void)const ;
+		void				setServer(Server *serv){_server = serv;};
 		Server				*getServer(void);
 		void				setNickname(std::string);
 		void				setUsername(std::string);

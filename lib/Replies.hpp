@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 11:57:34 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 14:36:25 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@
 #define RPL_UMODEIS(client, mode) 						"221 " + client + " " + mode + "\r\n"
 
 // NAMES
-#define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
+#define RPL_NAMREPLY(source, channel, users)			      "353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."
 
 // NICK
