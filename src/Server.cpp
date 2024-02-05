@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/02 16:16:26 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 11:53:00 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ Channel* Server::getChannel(const std::string& cName)
 {
     for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
     {
-		std::cout << "channel name is " + it->first << std::endl;
         if (it->first == cName)
             return it->second; // Channel found, return the pointer
     }
@@ -55,6 +54,20 @@ Channel* Server::getChannel(const std::string& cName)
     return NULL; // Channel not found, return NULL
 }
 
+void Server::addChannel(std::string chan_name, Channel* channel)
+{
+    if (channel)
+    {
+        // Check if the channel name already exists
+        if (_channels.find(chan_name) == _channels.end())
+        {
+            // If not, add the channel to the map
+            _channels.insert(std::make_pair(chan_name, channel));
+        }
+        else
+            std::cout << "channel name already exit\n";
+    }
+}
 
 
 Client*			Server::getClient(int fd){return _clients[fd];}

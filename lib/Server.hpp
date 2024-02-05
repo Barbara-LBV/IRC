@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/01 17:03:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/05 11:38:15 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ class Server
 		//void				addToClientBuffer(Server *s, Client *cli, std::string reply);
 
 		/*********    Channel management    *********/
-		void				addChannel(std::string topic);
+		void				addChannel(std::string chan_name, Channel* channel);
 		void				delChannel(std::string topic);
 		void				cantAddChannel(void);
 		Channel* 			getChannel(const std::string& cName);

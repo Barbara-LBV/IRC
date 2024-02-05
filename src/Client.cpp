@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/02 15:31:07 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 12:54:58 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Client::Client(int fd, Server *server)
 
 Client::~Client()
 {
-	_channelName.clear();
+	_channel.clear();
 	delete _server;
 }
 
@@ -52,8 +52,6 @@ bool	const		&Client::getDeconnStatus(void)const{return _state._toDisconnect;}
 
 bool const			&Client::getWelcomeStatus(void) const {return _state._welcomed;}
 
-//std::string	const	&Client::getActiveChannel(void)const{return _channelName.top();}
-
 int	const			&Client::getFd(void)const{return _infos._cliFd;}
 
 Server				*Client::getServer(void){return _server;}
@@ -74,7 +72,7 @@ void				Client::setPwd(std::string pwd){_infos._pwd = pwd;}
 
 void				Client::setWelcomeStatus(bool b){_state._welcomed = b;}
 
-void				Client::setChannelName(const std::string cName){_channelName.push_back(cName);}
+void				Client::addChannel(Channel* channel){_channel.push_back(channel);}
 
 void				Client::resetPartialMsg(void) { _partialMsg = "";}
 
@@ -87,18 +85,19 @@ std::string  		Client::getPrefix(void)const
 	return _infos._nickname + "!" + _infos._username + "@" + _infos._host;
 }
 
-std::string		Client::getActiveChannel(void)
+Channel*		Client::getActiveChannel(void) const
 {
-    if (!_channelName.empty())
-        return (_channelName.back()); 
-    return "";
+    if (!_channel.empty())
+        return (_channel.back()); 
+    return NULL;
 }
 
-void				Client::deleteChannelName(const std::string& cName) const
+void			Client::deleteChannel(Channel* channel)
 {
-    std::deque<std::string>::iterator it = std::remove(_channelName.begin(), _channelName.end(), cName);
-    _channelName.erase(it, _channelName.end());
+    // Use std::remove to move the elements to be removed to the end
+    _channel.erase(std::remove(_channel.begin(), _channel.end(), channel), _channel.end());
 }
+
 
 bool				Client::sendReply(int fd)
 {
@@ -170,10 +169,13 @@ void				Client::welcomeClient(Server *serv)
 
 void				Client::partAllChannel(void)
 {
-	while (!getActiveChannel().empty())
+	while (!_channel.empty())
 	{
-		Channel* channel = _server->getChannel(getActiveChannel());
-		channel->partChannel(this);
-		deleteChannelName(getActiveChannel());
+		Channel * channel = _channel.back();
+		if (channel)
+			channel->partChannel(this);
+		 _channel.pop_back();
 	}
+	_channel.clear();
+	
 }

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/02 13:37:32 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/05 11:57:34 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 #define RPL_ENDOFMOTD(client) 							"376 " + client + " :End of /MOTD command.\r\n"
 
 //INVITE
-#define RPL_INVITE(source, target, channel)				":" + source + " INVITE " + target + " :" + channel
+#define RPL_INVITE(source, target, channel)				":" + source + " INVITE " + target + " to " + channel
 #define RPL_INVITING(source, channel, target)			      "341 " + source + " " + channel + " " + target
 #define ERR_NOTONCHANNEL(source, channel)				      "442 " + source + " " + channel + " :You're not on that channel"
 #define ERR_NOSUCHCHANNEL(source, channel)				"403 " + source + " " + channel + " :No such channel"
