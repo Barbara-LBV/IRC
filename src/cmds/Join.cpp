@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/05 14:15:35 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:39:47 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 {
     if (arguments.empty())
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getPrefix(), "JOIN"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN"));
 		return;
 	}
     
@@ -95,7 +95,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 		
 	
-	name[0] == '#' ? name : "#" + name;
+	//name[0] == '#' ? name : "#" + name;
 	std::string password = arguments.size() > 1 ? arguments[1] : "";
 
 	Channel* channel = _server->getChannel(name);
@@ -105,13 +105,13 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		_server->addChannel(name, channel);
 		client->addChannel(channel);
 		channel->joinChannel(client);
-		addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 	}
     else 
 	{
 		if(channel->getI() == true)
 		{
-			addToClientBuffer(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
 			return ;
 		}
 		else if (((channel->getL() - channel->getClients().size()) > 0))
@@ -120,13 +120,13 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 			{
 				channel->joinChannel(client);
 				client->addChannel(channel);
-				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
+				addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 			}
 			else
-				addToClientBuffer(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));
+				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));
 			
 		}
 		else
-			addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), name));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), name));
 	}
 }

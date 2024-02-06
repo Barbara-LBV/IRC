@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/02 11:48:47 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:03:12 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments[0].empty())
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NONICKNAMEGIVEN(client->getPrefix()));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NONICKNAMEGIVEN(client->getPrefix()));
 		return;
 	}
 
@@ -35,7 +35,7 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	else if (_server->getClientByNickname(nickname))
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NICKNAMEINUSE(client->getPrefix(), nickname));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NICKNAMEINUSE(client->getPrefix(), nickname));
 		return;
 	}
 	

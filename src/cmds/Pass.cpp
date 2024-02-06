@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:04:09 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/02 11:48:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ void PassCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getPrefix(), "PASS"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PASS"));
 		return;
 	}
 
 	if (_server->getPwd() != arguments[0])
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));
 		return;
 	}
     client->setPwd(arguments[0]);

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 15:06:09 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:25:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,14 @@ void		Server::delChannel(std::string topic)
 	}
 }
 
-int Server::addClient(int fd)
+int Server::addClient(Client *cli)
 {
-	Client *cli = new Client(fd);
 	pollfd	cliPoll;
 	
 	cli->setServer(this);
-	cliPoll.fd = fd;
+	cliPoll.fd = cli->getFd();
 	cliPoll.events = POLLIN;
-	_clients.insert(std::pair<int, Client *>(fd, cli));
+	_clients.insert(std::pair<int, Client *>(cli->getFd(), cli));
 	_poll_fds.push_back(cliPoll);
 	_cliNb++;
 	return TRUE;

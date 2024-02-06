@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/05 14:06:19 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2 || arguments[0].empty() || arguments[1].empty()) 
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
 		return;
 	}
 
@@ -44,17 +44,17 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	if (!channel)
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getPrefix(), chan_name));
 		return ;
 	}
     if (!channel->isInChannel(client))
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getPrefix(), chan_name));
 		return ;
 	}
 	else if (!channel->is_oper(client))
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
 		return ;
 	}
 	// MODE #abc i/-i
@@ -85,7 +85,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments[1] == "k" || arguments[1] == "+k" )
 	{
 		if (arguments[2].empty())
-			addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
 		else
 		{
 			channel->setPassword(arguments[2]);
@@ -102,19 +102,19 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments[1] == "o" || arguments[1] == "+o" || "-o")
 	{
 		if (arguments[2].empty())
-			addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
 		else 
 		{
 			std::string target = arguments[2];
 			if (_server->isValidNickname(target))
 			{
-				addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
+				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getPrefix(), target));
 				return ;
 			}
 			Client*		client_target = _server->getClientByNickname(target); 
 			if (!channel->isInChannel(client_target))
 			{
-				addToClientBuffer(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getNickname(), target, chan_name));
+				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getPrefix(), target, chan_name));
 				return ;
 			}
 			else if (!channel->is_oper(client_target))
@@ -123,7 +123,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 				{
 					channel->addOperator(client_target);
 					client_target->addChannel(channel);
-					addToClientBuffer(client->getServer(), client->getFd(), target + " is got operator privilege now");
+					addToClientBufferExtended(client->getServer(), client->getFd(), target + " is got operator privilege now");
 					return ;
 				}
 				else 
@@ -132,7 +132,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 					{
 						channel->removeOpe(client_target);
 						client_target->deleteChannel(channel);
-						addToClientBuffer(client->getServer(), client->getFd(), target + " is no more operator of channel " + chan_name);
+						addToClientBufferExtended(client->getServer(), client->getFd(), target + " is no more operator of channel " + chan_name);
 						return ;
 					}
 				}

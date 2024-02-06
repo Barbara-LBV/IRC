@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:34 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/05 13:06:56 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:43:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 	// }
     if (arguments.size() < 2)
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "INVITE"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "INVITE"));
 		return;
 	}
 	
@@ -37,32 +37,47 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 	Client*		client_target = _server->getClientByNickname(target); 
 	if (!client_target)
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
 		return ;
 	}
 
 	Channel* 	channel = _server->getChannel(chan_name);
     if (channel == NULL)
     {
-        addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), chan_name));
+        addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), chan_name));
 		return ;
     }
     
 	if (!channel->isInChannel(client))
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
+	{
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getPrefix(), chan_name));
+		return ;
+	}
 	else if (!channel->is_oper(client))
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
+	{
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
+		return ;
+	}
 	else if (channel->isInChannel(client_target))
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_USERONCHANNEL(client->getNickname(), target, chan_name));
+	{
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERONCHANNEL(client->getPrefix(), target, chan_name));
+		return ;
+	}
 	else 
 	{
 		if ((channel->getL() - channel->getClients().size()) > 0)
 		{
+			addToClientBufferExtended(client->getServer(), client->getFd(), RPL_INVITING(client->getNickname(), client_target->getNickname(), chan_name));
+			std::cout << "hello we are here \n";
 			channel->joinChannel(client_target);
 			client_target->addChannel(channel);
-			addToClientBuffer(client->getServer(), client->getFd(), RPL_INVITE(client->getNickname(), target, chan_name));
+			//addToClientBufferExtended(client->getServer(), client_target->getFd(), RPL_JOIN(client_target->getPrefix(), chan_name));
+			addToClientBuffer(client->getServer(), client_target->getFd(), RPL_INVITE(client->getPrefix(), client_target->getNickname(), chan_name));
+			channel->broadcastChannel(RPL_JOIN(client_target->getPrefix(), chan_name));
+			channel->replyList(client_target);
+			std::cout << "msg to be sent to target =" << client_target->getMsgRecvd() << std::endl;
 		}
 		else 
-			addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), chan_name));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), chan_name));
 	}
 }

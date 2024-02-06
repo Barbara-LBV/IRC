@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 11:38:15 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:24:16 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ class Server
 		pollfd				getActivePoll(int i);
 
 		/*********    Client management    *********/
-		int					addClient(int fd);
+		int					addClient(Client *cli);
 		void				cantAddClient(int fd);
 		void				delClient(int fd);
 		//bool				sendReply(int fd);
@@ -80,7 +80,7 @@ class Server
 		void				parseMsg(std::string msg, int fd); // to set the command 
 		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
 		void				parseCmd(Client *cli, std::vector <std::string> cmds);
-		//void				addToClientBuffer(Server *s, Client *cli, std::string reply);
+		//void				addToClientBufferExtended(Server *s, Client *cli, std::string reply);
 
 		/*********    Channel management    *********/
 		void				addChannel(std::string chan_name, Channel* channel);

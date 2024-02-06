@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:56:07 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/01/29 11:10:30 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2)
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "KICK"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "KICK"));
 		return;
 	}
 
@@ -31,13 +31,13 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 
     if (_server->isValidNickname(target))
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getPrefix(), target));
 		return ;
 	}
     
     if (_server->isValidChannelName(chan_name))
     {
-        addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), target));
+        addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getPrefix(), target));
 		return ;
     }
     
@@ -45,9 +45,9 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	Client*		client_target = _server->getClientByNickname(target); 
     
     if (!channel->is_oper(client))
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
     else if (!channel->isInChannel(client_target))
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getNickname(), target, chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getPrefix(), target, chan_name));
     else
         channel->partChannel(client_target);
 }

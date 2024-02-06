@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 15:47:49 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:12:26 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,20 @@ int		Server::checkRecv(int res, int fd)
 	return TRUE;
 }
 
-void 	addToClientBuffer(Server *server, int cliFd, std::string reply)
+void 	addToClientBufferExtended(Server *server, int cliFd, std::string reply)
 {
 	Client *client = server->getClient(cliFd);
 	
 	if (client)
 		client->setRecvMsg(":" + server->getServerName() + " " + reply);
+	client->sendReply(client->getFd());
+}
+
+void	addToClientBuffer(Server *server, int cliFd, std::string reply)
+{
+	Client *client = server->getClient(cliFd);
+	
+	if (client)
+		client->setRecvMsg(reply);
+	client->sendReply(client->getFd());
 }

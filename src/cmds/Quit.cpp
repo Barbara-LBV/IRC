@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 14:54:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:07:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,6 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 			reason = " " + arguments[i];
 	}
 	client->partAllChannel();
-	addToClientBuffer(client->getServer(), client->getFd(), RPL_QUIT(client->getNickname(), reason));
+	addToClientBufferExtended(client->getServer(), client->getFd(), RPL_QUIT(client->getPrefix(), reason));
 	_server->delClient(client->getFd());
 }

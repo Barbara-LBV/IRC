@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/02 15:59:03 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PART"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PART"));
 		return;
 	}
 
@@ -30,4 +30,5 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 
     Channel* 	channel = _server->getChannel(name);
     channel->partChannel(client);
+	addToClientBuffer(client->getServer(), client->getFd(), RPL_PART(client->getPrefix(), "PART"));
 }

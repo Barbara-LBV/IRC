@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/05 14:07:49 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	 if (arguments.empty())
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
 		return;
 	}
 
@@ -63,7 +63,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 	
     if (_server->isValidChannelName(chan_name))
     {
-        addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), chan_name));
+        addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getPrefix(), chan_name));
 		return ;
     }
     
@@ -72,12 +72,12 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 	
 	if (!channel->isInChannel(client))
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getPrefix(), chan_name));
 		return;
 	}
 	else if (channel->getT() && !channel->is_oper(client))
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
 		return ;
 	}
 	else 

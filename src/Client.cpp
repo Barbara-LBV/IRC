@@ -6,13 +6,13 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 15:04:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 12:04:26 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Client.hpp"
 
-Client::Client(int fd)
+Client::Client(int fd, Server *server)
 {
 	_partialMsg = "";
 	_recvdFromServ = "";
@@ -22,7 +22,7 @@ Client::Client(int fd)
 	_state._registred = FALSE;
 	_state._welcomed = FALSE;
 	_state._toDisconnect = FALSE;
-	//_server = server;
+	_server = server;
 	//_infos._pwd = server->getPwd();
 }
 
@@ -121,7 +121,7 @@ bool				Client::sendReply(int fd)
 		resetRecvMsg();
 		return FALSE;
 	}
-	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " DEFAULT << "<<  "<< buff << std::endl;
+	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " DEFAULT << ">>  "<< buff << std::endl;
 	resetRecvMsg();
 	return TRUE;
 }
@@ -145,24 +145,24 @@ void				Client::welcomeClient(Server *serv)
 		return ;
 	if (getWelcomeStatus() == FALSE)
 	{
-		addToClientBuffer(serv, this->getFd(), RPL_WELCOME(this->getNickname(), this->getPrefix()));
-		addToClientBuffer(serv, this->getFd(), RPL_YOURHOST(this->getNickname(), this->_server->getServerName(), "0.1"));
-		addToClientBuffer(serv, this->getFd(), RPL_CREATED(this->getNickname(), this->_server->getStartTime()));
-		addToClientBuffer(serv, this->getFd(), RPL_MYINFO(this->getNickname(), this->_server->getServerName(), "1.1", "io", "kost", "k"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_WELCOME(this->getNickname(), this->getPrefix()));
+		addToClientBufferExtended(serv, this->getFd(), RPL_YOURHOST(this->getNickname(), this->_server->getServerName(), "0.1"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_CREATED(this->getNickname(), this->_server->getStartTime()));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MYINFO(this->getNickname(), this->_server->getServerName(), "1.1", "io", "kost"));
 		
-		addToClientBuffer(serv, this->getFd(), RPL_MOTDSTART(this->getNickname(), "42_Ftirc (localhost)"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), " :- Welcome to our IRC server!"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- .-.-----------.-."));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |--FT_IRC---|#|"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-----------| |"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-blefebvr--| |"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-pmaimait--| |"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | \"-42-Paris-' |"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  .-----.-..   |"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  |     | || |||"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  |     | || \\/|"));
-		addToClientBuffer(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- \"--^-----^-^^---'"));
-		addToClientBuffer(serv, this->getFd(), RPL_ENDOFMOTD(this->getNickname()));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTDSTART(this->getNickname(), "42_Ftirc (localhost)"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), " :- Welcome to our IRC server!"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- .-.-----------.-."));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |--FT_IRC---|#|"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-----------| |"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-blefebvr--| |"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | |-pmaimait--| |"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- | \"-42-Paris-' |"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  .-----.-..   |"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  |     | || |||"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- |  |     | || \\/|"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_MOTD(this->getNickname(), "- \"--^-----^-^^---'"));
+		addToClientBufferExtended(serv, this->getFd(), RPL_ENDOFMOTD(this->getNickname()));
 		_state._welcomed = TRUE;
 	}
 }

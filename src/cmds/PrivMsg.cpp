@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/02 15:24:43 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2)
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PRIVMSG"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PRIVMSG"));
 		return;
 	}
 	
@@ -33,7 +33,7 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 	{
 		if (_server->isValidChannelName(target))
 		{
-			addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), target));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getPrefix(), target));
 			return ;
 		}
 	}
@@ -41,13 +41,13 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 	{
 		if (_server->isValidNickname(target))
 		{
-			addToClientBuffer(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getPrefix(), target));
 			return ;
 		}
 	}
 	if (arguments[1][0] != ':')
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getNickname()));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getPrefix()));
 		return ;
 	}
 	std::string message = "";
@@ -62,6 +62,6 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 	else
 	{
 		Client*		client_target = _server->getClientByNickname(target);
-		addToClientBuffer(client->getServer(), client_target->getFd(), message);
+		addToClientBuffer(client->getServer(), client_target->getFd(), RPL_PRIVMSG(client->getPrefix(), target, message));
 	}
 }

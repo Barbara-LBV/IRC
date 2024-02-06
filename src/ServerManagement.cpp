@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 14:58:44 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:23:34 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,26 @@ void	Server::manageConnections(void)
 
 int 	Server::addConnections(void)
 {
-	int cliFd;
+	int 	cliFd;
+	Client *client;
 	
 	cliFd = acceptConnection();
+	client = new Client(cliFd, this);
 	if (cliFd == ERROR)
 	{
 		std::cout << BGREEN "[Server] " <<  GREEN "Coudn't accept incoming connection.\n" DEFAULT;
+		delete client;
 		return BREAK ;
 	}
 	else if (cliFd > 3 && cliFd <= MAXCONN)
 	{
-		if (addClient(cliFd) == BREAK)
+		if (addClient(client) == BREAK)
 			return BREAK ;
 	}
 	if (cliFd > MAXCONN)
 	{
 		cantAddClient(cliFd);
+		delete client;
 		return ERROR ;
 	}
 	return cliFd;

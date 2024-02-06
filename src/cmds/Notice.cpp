@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:11:32 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/23 18:20:28 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:17:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,5 @@ void NoticeCommand::execute(Client *client, std::vector<std::string> arguments)
 	(void)arguments;
 	std::cout << " Execute Notice Command\n";
 }
+
+// no "localhost" before RPL_notice -> use AddToClientBuffer()

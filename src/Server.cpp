@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 15:09:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:11:28 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ Client 			*Server::getClientByNickname(const std::string &nickname)
 			return it->second;
 		}
 	}
-	// addToClientBuffer(this, nickname, ERR_NOSUCHNICK(client->getNickname(), target));
+	// addToClientBufferExtended(this, nickname, ERR_NOSUCHNICK(client->getNickname(), target));
 	return NULL; 
 }
 
@@ -118,7 +118,7 @@ void			Server::setDatetime(struct tm *timeinfo)
 //    {
 //		if (channel->getName() == (*it)->getActiveChannel())
 //		{
-//			addToClientBuffer(this, (*it)->getFd(), message);
+//			addToClientBufferExtended(this, (*it)->getFd(), message);
 //            this->sendReply((*it)->getFd());
 //		}
 //	}

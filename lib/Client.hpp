@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 15:05:49 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 10:22:19 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Channel;
 class Client
 {
 	public:
-		Client(int fd);
+		Client(int fd, Server *serv);
 		~Client();
 		
 		/**********    Structures    *********/
@@ -102,6 +102,7 @@ class Client
 		std::deque<Channel*> _channel;
 };
 
+void	addToClientBufferExtended(Server *server, int cliFd, std::string reply);
 void	addToClientBuffer(Server *server, int cliFd, std::string reply);
 
 #endif
