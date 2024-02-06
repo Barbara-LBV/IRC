@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 13:44:24 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	const std::string&  chan_name = arguments[0];
-	chan_name[0] == '#' ? chan_name : "#" + chan_name;
+	std::string&  chan_name = arguments[0];
+	chan_name[0] == '#' ? chan_name : chan_name.insert(0, 1, '#');
 	
     if (_server->isValidChannelName(chan_name))
     {

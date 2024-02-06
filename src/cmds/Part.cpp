@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 13:43:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 
     std::string name = arguments[0];
-    name[0] == '#' ? name : "#" + name;
+	name[0] == '#' ? name : name.insert(0, 1, '#');
 
     Channel* 	channel = _server->getChannel(name);
     channel->partChannel(client);

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 13:42:56 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,14 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	const std::string&  chan_name = arguments[0];
-	chan_name[0] == '#' ? chan_name : "#" + chan_name;
+	if (arguments[0] == client->getNickname() && arguments[1] == "+i")
+	{
+		addToClientBuffer(client->getServer(), client->getFd(), "");
+		return;
+	}
+	
+	std::string&  chan_name = arguments[0];
+	chan_name[0] == '#' ? chan_name : chan_name.insert(0, 1, '#');
     Channel* 	channel = _server->getChannel(chan_name);
 
 	if (!channel)

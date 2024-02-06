@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 11:39:47 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 13:42:16 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 		
 	
-	//name[0] == '#' ? name : "#" + name;
+	name[0] == '#' ? name : "#" + name;
 	std::string password = arguments.size() > 1 ? arguments[1] : "";
 
 	Channel* channel = _server->getChannel(name);

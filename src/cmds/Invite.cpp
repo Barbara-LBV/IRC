@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:34 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 11:43:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 13:41:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,33 +49,18 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
     }
     
 	if (!channel->isInChannel(client))
-	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getPrefix(), chan_name));
-		return ;
-	}
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
 	else if (!channel->is_oper(client))
-	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
-		return ;
-	}
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
 	else if (channel->isInChannel(client_target))
-	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERONCHANNEL(client->getPrefix(), target, chan_name));
-		return ;
-	}
+		addToClientBuffer(client->getServer(), client->getFd(), ERR_USERONCHANNEL(client->getNickname(), target, chan_name));
 	else 
 	{
 		if ((channel->getL() - channel->getClients().size()) > 0)
 		{
-			addToClientBufferExtended(client->getServer(), client->getFd(), RPL_INVITING(client->getNickname(), client_target->getNickname(), chan_name));
-			std::cout << "hello we are here \n";
 			channel->joinChannel(client_target);
 			client_target->addChannel(channel);
-			//addToClientBufferExtended(client->getServer(), client_target->getFd(), RPL_JOIN(client_target->getPrefix(), chan_name));
-			addToClientBuffer(client->getServer(), client_target->getFd(), RPL_INVITE(client->getPrefix(), client_target->getNickname(), chan_name));
-			channel->broadcastChannel(RPL_JOIN(client_target->getPrefix(), chan_name));
-			channel->replyList(client_target);
-			std::cout << "msg to be sent to target =" << client_target->getMsgRecvd() << std::endl;
+			addToClientBuffer(client->getServer(), client->getFd(), RPL_INVITE(client->getNickname(), target, chan_name));
 		}
 		else 
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), chan_name));
