@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CmdHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 11:43:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 12:20:30 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ CmdHandler::CmdHandler(Server *server)
 	_commands["INVITE"] = new InvitCommand(_server);
 	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
 	_commands["NOTICE"] = new NoticeCommand(_server);
-	_commands["WHO"] = new WhoCommand(_server);
+	_commands["WHOIS"] = new WhoCommand(_server);
 	_commands["LIST"] = new ListCommand(_server);
 }
 
