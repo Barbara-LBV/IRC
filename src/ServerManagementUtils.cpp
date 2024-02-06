@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 10:25:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 18:51:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ void		Server::delClient(int fd)
 	_cliNb--;
 	if (_cliNb <= 0)
 		_cliNb = 0;
-	std::cout << BGREEN "[Server] " <<  GREEN "Client #" << it->fd
+	std::cout << BGREEN "[Server] " <<  GREEN "Client #" << fd
 	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
 	close(fd);
 }
 
 void		Server::delChannel(std::string topic)
 {
-	std::map<std::string, Channel *>::iterator it = _channels.begin();
+	std::vector< Channel *>::iterator it = _channels.begin();
     while(it != _channels.end())
     {
-		if (it->first == topic)
+		if ((*it)->getTopic() == topic)
 		{
 			_channels.erase(it);
 			break ;
@@ -47,17 +47,15 @@ void		Server::delChannel(std::string topic)
 	}
 }
 
-int Server::addClient(Client *cli)
+void		Server::addClient(Client *cli)
 {
 	pollfd	cliPoll;
 	
-	cli->setServer(this);
 	cliPoll.fd = cli->getFd();
 	cliPoll.events = POLLIN;
-	_clients.insert(std::pair<int, Client *>(cli->getFd(), cli));
 	_poll_fds.push_back(cliPoll);
+	_clients.insert(std::pair<int, Client*>(cli->getFd(), cli));
 	_cliNb++;
-	return TRUE;
 }
 
 void	Server::cantAddClient(int cliSocket)

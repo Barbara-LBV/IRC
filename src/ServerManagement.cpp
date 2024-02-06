@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 10:23:34 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:02:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	Server::manageConnections(void)
 {
 	int 	new_socket, rc;
 	pollfd	servPoll;
-	int conn_count = 1; // Start with one for the server socket
+	//int conn_count = 1; // Start with one for the server socket
 	
 	servPoll.fd 		= _servFd;
 	servPoll.events 	= POLLIN;
@@ -25,29 +25,23 @@ void	Server::manageConnections(void)
     while (server_shutdown == FALSE) 
 	{
         // Poll for events
-		int i = 0;
         int activity = poll((pollfd *)&_poll_fds[0], (unsigned int)_poll_fds.size(), TIMEOUT);
         if (checkPoll(activity) == BREAK)
 			break;
-		for (; i < conn_count ; i++)
+		for (size_t i = 0; i < _poll_fds.size() ; ++i)
 		{
 			if (_poll_fds[i].revents == 0)
 				continue ; 
-        	if (_poll_fds[i].fd == _servFd)
+        	else if (_poll_fds[i].fd == _servFd)
 			{
 				// New incoming connection
 				new_socket = addConnections();
 				if (new_socket == BREAK || new_socket == ERROR)
 					continue ;
-				conn_count++;
 				std::cout << BGREEN "[Server] " <<  GREEN "New connection on fd #" << new_socket << " accepted.\n" DEFAULT;
 			}
 			else if (i > 0)
-			{
 				rc = receiveMsg(_poll_fds[i].fd);
-				if (rc == BREAK && conn_count > 1)
-					conn_count--;
-			}
 		}
 	}
 }
@@ -58,24 +52,19 @@ int 	Server::addConnections(void)
 	Client *client;
 	
 	cliFd = acceptConnection();
-	client = new Client(cliFd, this);
 	if (cliFd == ERROR)
 	{
 		std::cout << BGREEN "[Server] " <<  GREEN "Coudn't accept incoming connection.\n" DEFAULT;
-		delete client;
 		return BREAK ;
-	}
-	else if (cliFd > 3 && cliFd <= MAXCONN)
-	{
-		if (addClient(client) == BREAK)
-			return BREAK ;
 	}
 	if (cliFd > MAXCONN)
 	{
 		cantAddClient(cliFd);
-		delete client;
 		return ERROR ;
 	}
+	client = new Client(cliFd, this);
+	if (cliFd > 3 && cliFd <= MAXCONN)
+		addClient(client);
 	return cliFd;
 }
 
@@ -87,8 +76,10 @@ int	Server::receiveMsg(int fd)
 	memset(buf, 0, MAXBUF);
 	_result = recv(fd, buf, MAXBUF, 0);
 	if (checkRecv(_result, fd) == ERROR)
+	{
+		delClient(fd);
 		return BREAK;
-
+	}
 	buf[_result] = '\0';
 	cli->setPartialMsg(buf);
 	std::string fullMsg = cli->getPartialMsg();

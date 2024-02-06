@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 12:34:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:12:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ bool	Server::isValidNickname(std::string name)
 bool	Server::isValidChannelName(std::string cName)
 {
     cName[0] == '#' ? cName : cName = "#" + cName;
-    std::map<std::string, Channel*>::iterator it = _channels.begin();
+    std::vector<Channel*>::iterator it = _channels.begin();
 
     while (it != _channels.end())
     {
-        if (it->first == cName)
+        if ((*it)->getName() == cName)
             return false;
         ++it;
     } 

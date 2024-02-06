@@ -22,7 +22,7 @@ SRCS_NAME 	= main.cpp \
 			cmds/PrivMsg.cpp \
 			cmds/Quit.cpp \
 			cmds/Topic.cpp \
-			cmds/Who.cpp \
+			cmds/WhoIs.cpp \
 			cmds/List.cpp \
 			cmds/Part.cpp \
 			cmds/Mode.cpp \

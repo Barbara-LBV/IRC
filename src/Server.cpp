@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 10:11:28 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:07:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,24 @@ Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (n
 
 Server::~Server()
 {
-	//if (!_clients.empty())
-	//{
-	//	std::map<int, Client *>::iterator it = _clients.begin();
-	//	for(; it != _clients.end(); it++)
-	//	{
-	//		delete it->second;
-	//		close(it->first);
-	//	}
-	//}
-	//if (!_channels.empty())
-	//{
-	//	std::map<std::string, Channel *>::iterator it1 = _channels.begin();
-	//	for (; it1 != _channels.end(); it1++)
-	//		delete it1->second;
-	//}
+	if (!_clients.empty())
+	{
+		std::map<int, Client *>::iterator it = _clients.begin();
+		std::vector<pollfd>::iterator it0 = _poll_fds.begin();
+		for(; it != _clients.end(); it++)
+		{
+			delete it->second;
+			close(it->first);
+		}
+		for (; it0 != _poll_fds.end(); ++it0)
+			_poll_fds.erase(it0);
+	}
+	if (!_channels.empty())
+	{
+		std::vector<Channel *>::iterator it1 = _channels.begin();
+		for (; it1 != _channels.end(); it1++)
+			_channels.erase(it1);
+	}
 	_poll_fds.clear();
 	_channels.clear();
 	_clients.clear();
@@ -51,10 +54,10 @@ Server::~Server()
 
 Channel* Server::getChannel(const std::string& cName)
 {
-    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+    for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
     {
-        if (it->first == cName)
-            return it->second; // Channel found, return the pointer
+        if ((*it)->getName() == cName)
+            return *it; // Channel found, return the pointer
     }
 
     return NULL; // Channel not found, return NULL
@@ -64,14 +67,16 @@ void Server::addChannel(std::string chan_name, Channel* channel)
 {
     if (channel)
     {
+		if (_channels.size() == 0)
+			_channels.push_back(channel);
         // Check if the channel name already exists
-        if (_channels.find(chan_name) == _channels.end())
-        {
-            // If not, add the channel to the map
-            _channels.insert(std::make_pair(chan_name, channel));
-        }
-        else
-            std::cout << "channel name already exit\n";
+		else if (_channels[_channels.size() - 1]->getName() == chan_name)
+		{
+			// If not, add the channel to the map
+			_channels.push_back(channel);
+		}
+		else
+			std::cout << "channel name already is use\n";
     }
 }
 
@@ -123,3 +128,8 @@ void			Server::setDatetime(struct tm *timeinfo)
 //		}
 //	}
 //}
+
+void			Server::cleanServer()
+{
+	return ;
+}

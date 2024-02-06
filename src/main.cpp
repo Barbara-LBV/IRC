@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/05 12:45:16 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:07:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	signal_handler(int signal)
 {
 	if (signal == SIGPIPE)
 		return ;
+	//Server::cleanServer();
 	server_shutdown = true;
 	std::cout << BGREEN "[Server]" GREEN << " Shutting down...\n" DEFAULT;
 	exit(ERROR);

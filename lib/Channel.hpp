@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 13:33:55 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:24:47 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class Channel
 		void						setL(size_t N){_l = (N != 0) ? N : std::numeric_limits<int>::max(); };
 		void						setI(int b){_i = b;};
 		void						setT(int b){_t = b;};
-		
+		void 						setAdmin(Client *client){ _admin = client;};
 		/***********   Functions   ***********/
 		void 						joinChannel(Client *cli){_clients.push_back(cli);};
    		void 						partChannel(Client *cli);
@@ -55,6 +55,8 @@ class Channel
 		void						addOperator(Client *client){_ops.push_back(client);};
 		void 	  					broadcastChannel(std::string message);
 		void						replyList(Client* client);
+		void    					removeClient(Client *client, std::string reason);
+		size_t						clientIndex(std::vector<Client *> clients, Client *client);
 		
 	private:
 		Channel(Channel const &name);
@@ -66,6 +68,7 @@ class Channel
 		Server*				_server;
 		std::vector<Client *>_clients;
 		std::vector<Client *>_ops;
+		Client				*_admin;
 		size_t				_l;		//Set/remove the user limit to channel
 		bool				_i;     //Set/remove Invite-only channel, true is invite only
 		bool				_t;		//Set/remove the restrictions of the TOPIC command to channel operator    //true is only operator can set topic

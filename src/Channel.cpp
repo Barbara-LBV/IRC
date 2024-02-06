@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 13:36:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:21:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,16 +147,43 @@ void        Channel::replyList(Client* client)
     addToClientBuffer(client->getServer(), client->getFd(), RPL_ENDOFNAMES(client->getNickname(), this->getName()));
 }
 
-void        Channel::replyList(Client* client)
+void    Channel::removeClient(Client *client, std::string reason)
 {
-    std::vector<std::string> nickname = getNicknames();
-    std::string list = "";
-    for (std::vector<std::string>::iterator it = nickname.begin(); it != nickname.end(); ++it)
-    {
-        if (!it->empty()) 
-        list += *it + " ";
-    } 
-    list += "\n";
-    addToClientBuffer(client->getServer(), client->getFd(), RPL_NAMREPLY(client->getNickname(), this->getName(), list));
-    addToClientBuffer(client->getServer(), client->getFd(), RPL_ENDOFNAMES(client->getNickname(), this->getName()));
+    	std::string clientPrefix = client->getPrefix();
+
+	if (reason.empty())
+		this->broadcastChannel(RPL_PART(clientPrefix, this->getName()));
+	else
+		this->broadcastChannel(RPL_PART_REASON(clientPrefix, this->getName(), reason));
+	reason.clear();
+
+	if (!_ops.empty())
+		_ops.erase(this->_ops.begin() + this->clientIndex(_ops, client));
+	//if (!_clients.empty())
+	//	_clients.erase(this->_clients.begin() + this->clientIndex(_clients, client));
+	//client->leave(this, 1, reason);
+
+	if (_clients.empty())
+	{
+		// free chan and remove it from server
+		return;
+	}
+	if (_admin == client)
+		_admin = _clients.begin().operator*();
+
+}
+
+size_t   Channel::clientIndex(std::vector<Client *> clients, Client *client)
+{
+	size_t i = 0;
+	std::vector<Client *>::iterator it = clients.begin();
+
+	while (it != clients.end())
+	{
+		if (*it == client)
+			return i;
+		it++;
+		i++;
+	}
+	return 0;
 }

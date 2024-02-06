@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 13:40:42 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 18:32:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,12 @@ void Server::initializeServer(int port)
 int 	Server::checkPoll(int rc)
 {
 	if (rc == ERROR && server_shutdown == TRUE)
-		throw ;
+		return ERROR;
 	if (rc == ERROR)
 	{
 		std::cerr << BGREEN "[Server] " <<  GREEN "Poll failed" DEFAULT << std::endl;
 		server_shutdown = TRUE;
-		throw ;
+		return ERROR;
 	}
 	if (rc == 0)
 	{
@@ -106,6 +106,7 @@ int 	Server::checkPoll(int rc)
 
 int		Server::checkRecv(int res, int fd)
 {
+	(void)fd;
 	if (res == ERROR)
 	{
 		std::cout << BGREEN "[Server] " <<  GREEN "recv() error\n" DEFAULT;
@@ -113,7 +114,7 @@ int		Server::checkRecv(int res, int fd)
 	}	
 	if (res == 0)
 	{
-		delClient(fd);
+		std::cout << BGREEN "[Server] " <<  GREEN "Client disconnected\n" DEFAULT;
 		return ERROR;
 	}
 	return TRUE;

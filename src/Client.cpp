@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 13:39:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 18:27:05 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Client::Client(int fd, Server *server)
 	_state._welcomed = FALSE;
 	_state._toDisconnect = FALSE;
 	_server = server;
-	//_infos._pwd = server->getPwd();
+	_infos._pwd = server->getPwd();
 }
 
 Client::~Client()
@@ -117,11 +117,11 @@ bool				Client::sendReply(int fd)
 	}
 	if (res == 0)
 	{
-		getServer()->delClient(fd);
+		//getServer()->delClient(fd);
 		resetRecvMsg();
 		return FALSE;
 	}
-	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " DEFAULT  << this->getFd() << ">>  "<< buff << std::endl;
+	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " << this->getFd() << DEFAULT " >>  "<< buff << std::endl;
 	resetRecvMsg();
 	return TRUE;
 }
@@ -170,6 +170,11 @@ void				Client::welcomeClient(Server *serv)
 void		Client::partAllChannel(void)
 {
 	size_t i = 0;
+	if (_channel.empty())
+	{
+		_channel.clear();
+		return ;
+	}
 	for (; i < _channel.size(); i++)
 	{
 		Channel * channel = _channel.back();

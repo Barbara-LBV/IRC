@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 13:42:16 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:23:14 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 		
-	
 	name[0] == '#' ? name : "#" + name;
 	std::string password = arguments.size() > 1 ? arguments[1] : "";
 
@@ -105,6 +104,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		_server->addChannel(name, channel);
 		client->addChannel(channel);
 		channel->joinChannel(client);
+		channel->setAdmin(client);
 		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 	}
     else 
@@ -120,7 +120,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 			{
 				channel->joinChannel(client);
 				client->addChannel(channel);
-				addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
+				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 			}
 			else
 				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));

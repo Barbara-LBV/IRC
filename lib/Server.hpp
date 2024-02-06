@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 10:24:16 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:07:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ class Server
 		pollfd				getActivePoll(int i);
 
 		/*********    Client management    *********/
-		int					addClient(Client *cli);
+		void					addClient(Client *cli);
 		void				cantAddClient(int fd);
 		void				delClient(int fd);
 		//bool				sendReply(int fd);
@@ -90,26 +90,29 @@ class Server
 		void 				broadcastChannel(std::string message, Channel* channel);
 		bool				isValidChannelName(std::string cName);
 		
+		/*********        Cleaning       ************/
+		static void			cleanServer(void);
+		
 	private:
 		Server(Server const &s);
 		Server &operator=(Server const &s);	
 		
-		int									_servFd; // server's fd
-		int									_servPort;
-		int									_cliNb; // nb of active clients
-		sockaddr_in 						_hints; // give indications for configure/initialize info linked to a network address
-		sockaddr_in 						_servInfo; // stock server's infos for listening for connections
-		std::string							_servPwd; // server's password
-		std::string							_servName; // server's name
-		std::string							_time;
-		ssize_t     						_result; // variable qui retourne le nb de bytes envoyes par le client
-		std::map<int, Client *>				_clients; //client id, client class
-		std::map<std::string, Channel *>	_channels; // channel name, channel class
-		CmdHandler							*_handler; // manage the cmmands
-		std::vector<pollfd>					_poll_fds; // to handle all cnnections
+		int						_servFd; // server's fd
+		int						_servPort;
+		int						_cliNb; // nb of active clients
+		sockaddr_in 			_hints; // give indications for configure/initialize info linked to a network address
+		sockaddr_in 			_servInfo; // stock server's infos for listening for connections
+		std::string				_servPwd; // server's password
+		std::string				_servName; // server's name
+		std::string				_time;
+		ssize_t     			_result; // variable qui retourne le nb de bytes envoyes par le client
+		std::map<int, Client *>	_clients; //client id, client class
+		std::vector<Channel *>	_channels; // channel name, channel class
+		CmdHandler				*_handler; // manage the cmmands
+		std::vector<pollfd>		_poll_fds; // to handle all cnnections
 };
 
-bool 						checkArg(std::string port, std::string pwd);
-std::vector<std::string> 	splitMsg(std::string msg, char c); // for split the message from the commande
+bool 							checkArg(std::string port, std::string pwd);
+std::vector<std::string> 		splitMsg(std::string msg, char c); // for split the message from the commande
 
 #endif

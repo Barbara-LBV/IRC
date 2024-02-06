@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 11:40:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 14:30:14 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	
 	const std::string  target = arguments[0];
+	std::cout << "is this a channel name with # ? " << arguments[0] << std::endl;
 	if (target[0] == '#')
 	{
 		if (_server->isValidChannelName(target))

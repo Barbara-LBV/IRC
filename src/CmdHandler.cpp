@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 13:40:04 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/06 17:35:33 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ CmdHandler::~CmdHandler()
 	std::map<std::string, Command *>::iterator it = _commands.begin();
 	for (; it != _commands.end(); it++)
 		delete it->second;
+	_commands.clear();
 }
 
 void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
