@@ -6,13 +6,13 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 19:07:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:41:35 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (new CmdHandler(this))
+Server::Server(std::string port, std::string pwd, struct tm * time) : _servInfo(NULL), _handler (new CmdHandler(this))
 {
  	_servFd = -1;
 	_servPort = atoi(port.c_str());
@@ -21,6 +21,7 @@ Server::Server(std::string port, std::string pwd, struct tm * time) :_handler (n
 	_servName = "localhost";
 	this->setDatetime(time);
 	_result = 0;
+	memset(&_hints, 0, sizeof(_hints));
 }
 
 Server::~Server()
@@ -131,5 +132,6 @@ void			Server::setDatetime(struct tm *timeinfo)
 
 void			Server::cleanServer()
 {
+	
 	return ;
 }

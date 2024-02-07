@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 19:07:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:37:28 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ class Server
 		//void				setClient(Client *c);
 		
 		/*********    Socket and connections management    *********/
-		void 				initializeServer(int port);
+		void 				initializeServer(void);
 		void 				createServerSocket(void);
-		void				bindServerSocket(int port);
+		void				bindServerSocket(void);
 		void				listenForConnection(void);
 		void				closeServFd(void);
 		int					acceptConnection(void);
@@ -67,6 +67,8 @@ class Server
 		int					managePolloutEvent(int fd);
 		int					managePollerrEvents(int fd);
 		pollfd				getActivePoll(int i);
+		int 				fillServinfo(char *port);
+		void				setHint(void);
 
 		/*********    Client management    *********/
 		void					addClient(Client *cli);
@@ -92,6 +94,7 @@ class Server
 		
 		/*********        Cleaning       ************/
 		static void			cleanServer(void);
+		static void			signal_handler(int signal);
 		
 	private:
 		Server(Server const &s);
@@ -100,8 +103,8 @@ class Server
 		int						_servFd; // server's fd
 		int						_servPort;
 		int						_cliNb; // nb of active clients
-		sockaddr_in 			_hints; // give indications for configure/initialize info linked to a network address
-		sockaddr_in 			_servInfo; // stock server's infos for listening for connections
+		addrinfo 				_hints; // give indications for configure/initialize info linked to a network address
+		addrinfo 				*_servInfo; // stock server's infos for listening for connections
 		std::string				_servPwd; // server's password
 		std::string				_servName; // server's name
 		std::string				_time;

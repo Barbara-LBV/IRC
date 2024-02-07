@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 18:32:32 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:37:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	Server::createServerSocket(void)
 {
 	int rc, fd, on = 1;
-	fd = socket(AF_INET, SOCK_STREAM, 0);
+	fd = socket(_servInfo->ai_family, _servInfo->ai_socktype, _servInfo->ai_protocol);
 	if (fd == ERROR)
 	{
 		std::cerr << BGREEN "[Server] " << GREEN "Socket creation error" << std::endl;
@@ -34,13 +34,26 @@ void	Server::createServerSocket(void)
 	}
 }
 
-void	Server::bindServerSocket(int port)
+void	Server::setHint(void)
 {
-	memset(&_servInfo, 0, sizeof(sockaddr_in));
-	_servInfo.sin_family = AF_INET;
-	_servInfo.sin_addr.s_addr = INADDR_ANY;
-	_servInfo.sin_port = htons(port);
-	if (bind(getFd(), (struct sockaddr *)&_servInfo, sizeof(_servInfo)) == ERROR)
+	_hints.ai_family = AF_INET;		  // We choose Ipv4
+	_hints.ai_socktype = SOCK_STREAM; // We choose to work with TCP stream sockets
+	_hints.ai_flags = AI_PASSIVE;	  // We'll be on localhost by default
+}
+
+int Server::fillServinfo(char *port)
+{
+	if (getaddrinfo(NULL, port, &_hints, &_servInfo) < 0)
+	{
+		std::cerr << RED << "[Server] Flop du addrinfo" << DEFAULT << std::endl;
+		return (ERROR);
+	}
+	return (TRUE);
+}
+
+void	Server::bindServerSocket(void)
+{
+	if (bind(getFd(), _servInfo->ai_addr, _servInfo->ai_addrlen) == ERROR)
 	{
 		std::cerr << BGREEN "[Server] " << GREEN "Socket impossible to bind" DEFAULT << std::endl;
 		close(getFd());
@@ -78,12 +91,13 @@ int		Server::acceptConnection(void)
 	return (cliFd);
 }
 
-void Server::initializeServer(int port)
+void Server::initializeServer(void)
 {
     createServerSocket();
-    bindServerSocket(port);
+    bindServerSocket();
     listenForConnection();
 	std::cout << BGREEN "[Server] " <<  GREEN "Waiting for connections... " DEFAULT << std::endl;
+	freeaddrinfo(_servInfo);
 }
 
 int 	Server::checkPoll(int rc)
