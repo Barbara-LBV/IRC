@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 11:52:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:11:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,24 +99,6 @@ void Server::initializeServer(void)
     listenForConnection();
 	std::cout << BGREEN "[Server] " <<  GREEN "Waiting for connections... " DEFAULT << std::endl;
 	freeaddrinfo(_servInfo);
-}
-
-int 	Server::checkPoll(int rc)
-{
-	if (rc == ERROR && server_shutdown == TRUE)
-		return ERROR;
-	if (rc == ERROR)
-	{
-		std::cerr << BGREEN "[Server] " <<  GREEN "Poll failed" DEFAULT << std::endl;
-		server_shutdown = TRUE;
-		return ERROR;
-	}
-	if (rc == 0)
-	{
-		std::cerr << BGREEN "[Server] " <<  GREEN "Poll timed out." DEFAULT << std::endl;
-		return BREAK ;
-	}
-	return TRUE;
 }
 
 int		Server::checkRecv(int res, int fd)

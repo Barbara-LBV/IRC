@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 14:59:33 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:12:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	Server::manageConnections(void)
 	int 					new_socket;
 	std::vector<pollfd>		poll_fds;
 	pollfd					servPoll;
-	//int conn_count = 1; // Start with one for the server socket
 	
 	servPoll.fd 		= _servFd;
 	servPoll.events 	= POLLIN;
@@ -27,13 +26,16 @@ void	Server::manageConnections(void)
 	{
         // Poll for events
 		std::vector<pollfd>		new_poll;
-        int activity = poll((pollfd *)&poll_fds[0], poll_fds.size(), TIMEOUT);
-        if (checkPoll(activity) == BREAK)
-			break;
+        if (poll((pollfd *)&poll_fds[0], poll_fds.size(), -1) <= TRUE) // -1 == no timeout
+		{
+			if (errno == EINTR)
+				break ;
+			std::cerr << RED << "[Server] Poll error" << DEFAULT << std::endl;
+			throw ;
+		}
 		std::vector<pollfd>::iterator it = poll_fds.begin();
 		while (it != poll_fds.end())
 		{
-			//std::cout << "in global loop, it.fd = " << it->fd << std::endl;
 			if (it->revents & POLLIN)
 			{
 				if (it->fd == _servFd)

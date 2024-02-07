@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 15:24:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 15:47:48 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,19 @@ Client::Client(int fd, Server *server)
 
 Client::~Client()
 {
-	//_channel.clear();
-	//delete _server;
+	if (_channel.empty())
+    {
+        _channel.clear();
+        return;
+    }
+    for (size_t i = _channel.size(); i > 0; --i)
+    {
+        Channel *channel = _channel[i - 1]; // Access to th element at index i - 1
+        if (channel)
+            delete _channel[i];
+    }
+    _channel.clear();
+	delete _server;
 }
 
 std::string	const 	&Client::getNickname(void) const {return (_infos._nickname);}
@@ -176,10 +187,9 @@ void Client::partAllChannel(void)
         _channel.clear();
         return;
     }
-    // Parcourir _channel de manière inverse
     for (size_t i = _channel.size(); i > 0; --i)
     {
-        Channel *channel = _channel[i - 1]; // Accéder à l'élément à l'index i - 1
+        Channel *channel = _channel[i - 1]; // Access to th element at index i - 1
         if (channel)
             channel->partChannel(this);
     }

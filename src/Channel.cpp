@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 15:12:35 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 15:49:40 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,29 @@ Channel::Channel(std::string const &name, std::string const &password, Client* o
                      _l(1000),_i(FALSE), _t(TRUE){_ops.push_back(ops);}
 Channel::~Channel() 
 {
+    if (_clients.empty())
+    {
+        _clients.clear();
+        return;
+    }
+    for (size_t i = _clients.size(); i > 0; --i)
+    {
+        Client *client = _clients[i - 1]; // Access to th element at index i - 1
+        if (client)
+            delete _clients[i];
+    }
     _clients.clear();
+	 if (_ops.empty())
+    {
+        _ops.clear();
+        return;
+    }
+    for (size_t i = _ops.size(); i > 0; --i)
+    {
+        Client *client = _ops[i - 1]; // Access to th element at index i - 1
+        if (client)
+            delete _ops[i];
+    }
     _ops.clear();
 }
 
