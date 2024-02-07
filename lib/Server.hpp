@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 14:42:22 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 18:23:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,15 @@ class Server
 		void 				createServerSocket(void);
 		void				bindServerSocket(void);
 		void				listenForConnection(void);
-		//void				closeServFd(void);
 		int					acceptConnection(void);
 		int 				checkPoll(int rc);
 		void 				manageConnections(void);
 		int					manageExistingConn(std::vector<pollfd> &fds, std::vector<pollfd>::iterator it);
 		int					addConnections(std::vector<pollfd> &poll_fds, std::vector<pollfd> &new_poll);
-		//int					handleExistingConn(void);
 		int					managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd);
 		int					managePollerEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd);
 		pollfd				getActivePoll(int i);
 		int 				fillServinfo(char *port);
-		void				setHint(void);
 
 		/*********    Client management    *********/
 		void				addClient(std::vector<pollfd> &new_poll, Client *cli);
@@ -110,7 +107,6 @@ class Server
 		std::map<int, Client *>	_clients; //client id, client class
 		std::vector<Channel *>	_channels; // channel name, channel class
 		CmdHandler				*_handler; // manage the cmmands
-		//std::vector<pollfd>		_poll_fds; // to handle all cnnections
 };
 
 bool 							checkArg(std::string port, std::string pwd);

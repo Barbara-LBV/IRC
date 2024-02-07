@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 17:12:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 18:15:24 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	Server::manageConnections(void)
 	{
         // Poll for events
 		std::vector<pollfd>		new_poll;
-        if (poll((pollfd *)&poll_fds[0], poll_fds.size(), -1) <= TRUE) // -1 == no timeout
+        if (poll((pollfd *)&poll_fds[0], poll_fds.size(), TIMEOUT) <= 0)
 		{
 			if (errno == EINTR)
 				break ;

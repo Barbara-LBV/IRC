@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 15:47:48 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 18:45:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,9 @@ Client::Client(int fd, Server *server)
 
 Client::~Client()
 {
-	if (_channel.empty())
-    {
-        _channel.clear();
-        return;
-    }
-    for (size_t i = _channel.size(); i > 0; --i)
-    {
-        Channel *channel = _channel[i - 1]; // Access to th element at index i - 1
-        if (channel)
-            delete _channel[i];
-    }
+	for (std::deque<Channel *>::iterator it = _channel.begin(); it != _channel.end(); ++it)
+        delete *it;
+    // Effacer le contenu du conteneur
     _channel.clear();
 	delete _server;
 }
@@ -130,11 +122,11 @@ bool				Client::sendReply(int fd)
 	}
 	if (res == 0)
 	{
-		//getServer()->delClient(fd);
+		this->setDeconnStatus(true);
 		resetRecvMsg();
 		return FALSE;
 	}
-	std::cout << BGREEN "[Server] " <<  GREEN "Message sent to client " << this->getFd() << DEFAULT " >>  "<< buff << std::endl;
+	std::cout << BGREEN "[Server] " <<  GREEN "Message to client " << this->getFd() << DEFAULT " >>  "<< buff;
 	resetRecvMsg();
 	return TRUE;
 }

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 15:01:27 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 18:30:39 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ int			Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::ite
 	std::string fullMsg = cli->getPartialMsg();
 	memset(buf, 0, sizeof(MAXBUF));
 	if (_result == MAXBUF && fullMsg[_result - 1] != '\n') // if the msg sent by client is longer than the MAXBUF
-		std::cout << BBLUE "[Client] " << BLUE "Partial message received from " << it->fd << DEFAULT "   << " << cli->getPartialMsg() << std::endl;
+		std::cout << BBLUE "[Client] " << BLUE "Partial message from " << it->fd << DEFAULT "   << " << cli->getPartialMsg();
 	else if (_result <= MAXBUF)
-		std::cout << BBLUE "[Client] " << BLUE "Message received from " << it->fd << DEFAULT " << " << cli->getPartialMsg() << std::endl;
+		std::cout << BBLUE "[Client] " << BLUE "Message from " << it->fd << DEFAULT " << " << cli->getPartialMsg();
 	return TRUE;
 }
 

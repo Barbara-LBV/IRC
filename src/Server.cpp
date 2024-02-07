@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 15:43:00 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 18:39:01 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ Server::Server(std::string port, std::string pwd, struct tm * time) : _servInfo(
 
 Server::~Server()
 {
-	delete _handler;
 	close(_servFd);
 	if (_clients.empty())
 	{
@@ -52,6 +51,7 @@ Server::~Server()
             delete _channels[i];
     }
     _channels.clear();
+	delete _handler;
 }
 
 /*********************  Assessors !!  ************************/

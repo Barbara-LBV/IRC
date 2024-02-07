@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 17:11:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 18:22:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int main(int ac, char **av)
 	if (checkArg(av[1], av[2]) == false)
 		return 2;
 	Server server(av[1], av[2], timeinfo);
-	server.setHint();
 	if (server.fillServinfo(av[1]) == ERROR)
 		return 2;
 	server.initializeServer();
