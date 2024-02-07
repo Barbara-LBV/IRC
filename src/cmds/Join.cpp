@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 16:23:14 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 14:11:57 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		channel->joinChannel(client);
 		channel->setAdmin(client);
 		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
+		channel->replyList(client);
 	}
     else 
 	{
@@ -121,6 +122,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 				channel->joinChannel(client);
 				client->addChannel(channel);
 				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
+				channel->replyList(client);
 			}
 			else
 				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));

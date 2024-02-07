@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 13:59:38 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 15:24:52 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void				Client::setHost(std::string hostname){_infos._host = hostname;}
 void				Client::setRecvMsg(std::string msg){_recvdFromServ += msg;}
 
 void				Client::setPwd(std::string pwd){_infos._pwd = pwd;}
+
+void				Client::setDeconnStatus(bool b){_state._toDisconnect = b;}
 
 void				Client::setWelcomeStatus(bool b){_state._welcomed = b;}
 
@@ -167,20 +169,19 @@ void				Client::welcomeClient(Server *serv)
 	}
 }
 
-void		Client::partAllChannel(void)
+void Client::partAllChannel(void)
 {
-	size_t i = 0;
-	if (_channel.empty())
-	{
-		_channel.clear();
-		return ;
-	}
-	for (; i < _channel.size(); i++)
-	{
-		Channel * channel = _channel.back();
-		if (channel)
-			channel->partChannel(this);
-		 _channel.pop_back();
-	}
-	_channel.clear();
+    if (_channel.empty())
+    {
+        _channel.clear();
+        return;
+    }
+    // Parcourir _channel de manière inverse
+    for (size_t i = _channel.size(); i > 0; --i)
+    {
+        Channel *channel = _channel[i - 1]; // Accéder à l'élément à l'index i - 1
+        if (channel)
+            channel->partChannel(this);
+    }
+    _channel.clear();
 }

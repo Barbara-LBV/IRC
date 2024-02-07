@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 13:54:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 15:01:27 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ int 	Server::addConnections(std::vector<pollfd>&poll_fds, std::vector<pollfd> &n
 	return cliFd;
 }
 
-void	Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it)
+int			Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it)
 {
+	(void)poll_fds;
 	char	buf[MAXBUF];
 	Client *cli = _clients[it->fd];
 	
@@ -44,7 +45,7 @@ void	Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iter
 	if (checkRecv(_result, it->fd) == ERROR)
 	{
 		delClient(poll_fds, it, it->fd);
-		return ;
+		return BREAK;
 	}
 	buf[_result] = '\0';
 	cli->setPartialMsg(buf);
@@ -54,11 +55,12 @@ void	Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iter
 		std::cout << BBLUE "[Client] " << BLUE "Partial message received from " << it->fd << DEFAULT "   << " << cli->getPartialMsg() << std::endl;
 	else if (_result <= MAXBUF)
 		std::cout << BBLUE "[Client] " << BLUE "Message received from " << it->fd << DEFAULT " << " << cli->getPartialMsg() << std::endl;
+	return TRUE;
 }
 
 void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it, int fd)
 {
-	_clients.erase(it->fd);
+	_clients.erase(fd);
 	poll_fds.erase(it);
 	_cliNb--;
 	if (_cliNb <= 0)
@@ -93,7 +95,7 @@ void		Server::addClient(std::vector<pollfd> &poll_fds, Client *cli)
 	_cliNb++;
 }
 
-void	Server::cantAddClient(int cliSocket)
+void		Server::cantAddClient(int cliSocket)
 {
 	(void) cliSocket;
 	std::cout << BGREEN "[Server] " <<  GREEN "You cannot join, the server is already full" << DEFAULT << std::endl;

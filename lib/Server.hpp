@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 13:51:39 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 14:42:22 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ class Server
 		void				addClient(std::vector<pollfd> &new_poll, Client *cli);
 		void				cantAddClient(int fd);
 		void				delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it, int fd);
-		void				receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it);
+		int					receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it);
 		void				stockMsg(Client *cli, char *s);
 		bool				isValidNickname(std::string name);
 		int					checkRecv(int res, int fd);

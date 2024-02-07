@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:34 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 15:07:55 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 14:07:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,7 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 			channel->joinChannel(client_target);
 			client_target->addChannel(channel);
 			addToClientBuffer(client->getServer(), client_target->getFd(), RPL_INVITE(client->getNickname(), target, chan_name));
-			addToClientBuffer(client->getServer(), client_target->getFd(), RPL_JOIN(client_target->getPrefix(), chan_name));
-			channel->replyList(client_target);
+			//addToClientBuffer(client->getServer(), client_target->getFd(), RPL_JOIN(client_target->getPrefix(), chan_name));
 		}
 		else 
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), chan_name));
