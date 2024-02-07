@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 16:21:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 12:46:21 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,15 +121,15 @@ bool	Channel::isInChannel(Client *client)
 	return false;
 }
 
-void 	Channel::broadcastChannel(std::string message)
+void 	Channel::broadcastChannel(Client* client, std::string message)
 {
-    std::vector<Client*> cli = getClients();
-	std::vector<Client*>::iterator it = cli.begin();
+    std::vector<Client*> cli_target = getClients();
+	std::vector<Client*>::iterator it = cli_target.begin();
 	
-   for (; it != cli.end(); ++it)
+   for (; it != cli_target.end(); ++it)
    {
-		if (this == (*it)->getActiveChannel())
-			addToClientBufferExtended(getServer(), (*it)->getFd(), message);
+		if (this == (*it)->getActiveChannel() && client != *it)
+			addToClientBufferExtended(getServer(), (*it)->getFd(), RPL_PRIVMSG(client->getNickname(), getName(), message));
 	}
 }
 
@@ -152,9 +152,9 @@ void    Channel::removeClient(Client *client, std::string reason)
     	std::string clientPrefix = client->getPrefix();
 
 	if (reason.empty())
-		this->broadcastChannel(RPL_PART(clientPrefix, this->getName()));
+		this->broadcastChannel(client, RPL_PART(clientPrefix, this->getName()));
 	else
-		this->broadcastChannel(RPL_PART_REASON(clientPrefix, this->getName(), reason));
+		this->broadcastChannel(client, RPL_PART_REASON(clientPrefix, this->getName(), reason));
 	reason.clear();
 
 	if (!_ops.empty())

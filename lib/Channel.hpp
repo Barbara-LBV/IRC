@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 16:24:47 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 12:11:42 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class Channel
 		void 						removeOpe(Client *client);
 		bool						isInChannel(Client *client);
 		void						addOperator(Client *client){_ops.push_back(client);};
-		void 	  					broadcastChannel(std::string message);
+		void 	  					broadcastChannel(Client* client, std::string message);
 		void						replyList(Client* client);
 		void    					removeClient(Client *client, std::string reason);
 		size_t						clientIndex(std::vector<Client *> clients, Client *client);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 14:30:14 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 12:44:08 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getPrefix()));
 		return ;
 	}
-	std::string message = "";
+	std::string message = arguments[1].substr(1);
 	for (size_t i = 2; i < arguments.size(); i++)
-		message += arguments[i];
+		message += " " + arguments[i];
 	
 	if (target[0] == '#')
 	{
 		Channel* channel = _server->getChannel(target);
-		channel->broadcastChannel(message);
+		channel->broadcastChannel(client, message);
 	}
 	else
 	{
