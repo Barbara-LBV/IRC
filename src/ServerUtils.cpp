@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 11:37:13 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 11:52:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,9 @@ void	Server::listenForConnection(void)
 
 int		Server::acceptConnection(void)
 {
-	socklen_t len = sizeof (_hints);
-	int cliFd = accept(getFd(), (struct sockaddr *)&_hints, &len);
+	sockaddr_in client;
+	socklen_t addr_size = sizeof(sockaddr_in);
+	int cliFd = accept(getFd(), (sockaddr *)&client, &addr_size);
 	if (cliFd == ERROR)
 	{
 		if (errno != EWOULDBLOCK)

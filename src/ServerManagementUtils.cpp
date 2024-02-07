@@ -6,25 +6,60 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 18:51:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:54:54 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-void		Server::delClient(int fd)
+int 	Server::addConnections(std::vector<pollfd>&poll_fds, std::vector<pollfd> &new_poll)
 {
-	std::vector<pollfd>::iterator it = _poll_fds.begin();
-	for (int i = 0; i < _cliNb + 1 ; ++i)
+	int 	cliFd;
+	Client *client;
+	
+	cliFd = acceptConnection();
+	if (cliFd == ERROR)
 	{
-		if (fd == it->fd)
-		{
-			_poll_fds.erase(it);
-			break ;
-		}
-		++it;
+		std::cout << BGREEN "[Server] " <<  GREEN "Coudn't accept incoming connection.\n" DEFAULT;
+		return BREAK ;
 	}
-	_clients.erase(fd);
+	if (cliFd > MAXCONN)
+	{
+		cantAddClient(cliFd);
+		return ERROR ;
+	}
+	client = new Client(cliFd, this);
+	if (poll_fds.size() <= MAXCONN)
+		addClient(new_poll, client);
+	return cliFd;
+}
+
+void	Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it)
+{
+	char	buf[MAXBUF];
+	Client *cli = _clients[it->fd];
+	
+	memset(buf, 0, MAXBUF);
+	_result = recv(it->fd, buf, MAXBUF, 0);
+	if (checkRecv(_result, it->fd) == ERROR)
+	{
+		delClient(poll_fds, it, it->fd);
+		return ;
+	}
+	buf[_result] = '\0';
+	cli->setPartialMsg(buf);
+	std::string fullMsg = cli->getPartialMsg();
+	memset(buf, 0, sizeof(MAXBUF));
+	if (_result == MAXBUF && fullMsg[_result - 1] != '\n') // if the msg sent by client is longer than the MAXBUF
+		std::cout << BBLUE "[Client] " << BLUE "Partial message received from " << it->fd << DEFAULT "   << " << cli->getPartialMsg() << std::endl;
+	else if (_result <= MAXBUF)
+		std::cout << BBLUE "[Client] " << BLUE "Message received from " << it->fd << DEFAULT " << " << cli->getPartialMsg() << std::endl;
+}
+
+void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it, int fd)
+{
+	_clients.erase(it->fd);
+	poll_fds.erase(it);
 	_cliNb--;
 	if (_cliNb <= 0)
 		_cliNb = 0;
@@ -47,13 +82,13 @@ void		Server::delChannel(std::string topic)
 	}
 }
 
-void		Server::addClient(Client *cli)
+void		Server::addClient(std::vector<pollfd> &poll_fds, Client *cli)
 {
 	pollfd	cliPoll;
 	
 	cliPoll.fd = cli->getFd();
-	cliPoll.events = POLLIN;
-	_poll_fds.push_back(cliPoll);
+	cliPoll.events = POLLIN | POLLOUT;
+	poll_fds.push_back(cliPoll);
 	_clients.insert(std::pair<int, Client*>(cli->getFd(), cli));
 	_cliNb++;
 }
@@ -66,7 +101,3 @@ void	Server::cantAddClient(int cliSocket)
 	close (cliSocket);
 	close(_servFd); // we close the listening socket as we cannot add more clients
 }
-
-
-
-

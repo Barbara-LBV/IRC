@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 11:41:35 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:59:25 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,28 @@ Server::Server(std::string port, std::string pwd, struct tm * time) : _servInfo(
 
 Server::~Server()
 {
-	if (!_clients.empty())
-	{
-		std::map<int, Client *>::iterator it = _clients.begin();
-		std::vector<pollfd>::iterator it0 = _poll_fds.begin();
-		for(; it != _clients.end(); it++)
-		{
-			delete it->second;
-			close(it->first);
-		}
-		for (; it0 != _poll_fds.end(); ++it0)
-			_poll_fds.erase(it0);
-	}
-	if (!_channels.empty())
-	{
-		std::vector<Channel *>::iterator it1 = _channels.begin();
-		for (; it1 != _channels.end(); it1++)
-			_channels.erase(it1);
-	}
-	_poll_fds.clear();
-	_channels.clear();
-	_clients.clear();
-	delete _handler;
-	close(_servFd);
+	//if (_clients.size() > 0)
+	//{
+	//	std::map<int, Client *>::iterator it = _clients.begin();
+	//	//std::vector<pollfd>::iterator it0 = _poll_fds.begin();
+	//	for(; it != _clients.end(); it++)
+	//	{
+	//		delete it->second;
+	//		close(it->first);
+	//	}
+	//	//for (; it0 != _poll_fds.end(); ++it0)
+	//	//	_poll_fds.erase(it0);
+	//}
+	//if (_channels.size() > 0)
+	//{
+	//	std::vector<Channel *>::iterator it1 = _channels.begin();
+	//	for (; it1 != _channels.end(); it1++)
+	//		_channels.erase(it1);
+	//}
+	//_clients.clear();
+	//_channels.clear();
+	//delete _handler;
+	//close(_servFd);
 }
 
 /*********************  Assessors !!  ************************/

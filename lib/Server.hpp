@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 11:37:28 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:51:39 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,32 +57,30 @@ class Server
 		void 				createServerSocket(void);
 		void				bindServerSocket(void);
 		void				listenForConnection(void);
-		void				closeServFd(void);
+		//void				closeServFd(void);
 		int					acceptConnection(void);
 		int 				checkPoll(int rc);
 		void 				manageConnections(void);
-		int					manageExistingConn(std::vector<pollfd> fds, std::vector<pollfd>::iterator it);
-		int					addConnections(void);
-		int					handleExistingConn(void);
-		int					managePolloutEvent(int fd);
-		int					managePollerrEvents(int fd);
+		int					manageExistingConn(std::vector<pollfd> &fds, std::vector<pollfd>::iterator it);
+		int					addConnections(std::vector<pollfd> &poll_fds, std::vector<pollfd> &new_poll);
+		//int					handleExistingConn(void);
+		int					managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd);
+		int					managePollerEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd);
 		pollfd				getActivePoll(int i);
 		int 				fillServinfo(char *port);
 		void				setHint(void);
 
 		/*********    Client management    *********/
-		void					addClient(Client *cli);
+		void				addClient(std::vector<pollfd> &new_poll, Client *cli);
 		void				cantAddClient(int fd);
-		void				delClient(int fd);
-		//bool				sendReply(int fd);
-		int					receiveMsg(int fd);
+		void				delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it, int fd);
+		void				receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it);
 		void				stockMsg(Client *cli, char *s);
 		bool				isValidNickname(std::string name);
 		int					checkRecv(int res, int fd);
 		void				parseMsg(std::string msg, int fd); // to set the command 
 		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
 		void				parseCmd(Client *cli, std::vector <std::string> cmds);
-		//void				addToClientBufferExtended(Server *s, Client *cli, std::string reply);
 
 		/*********    Channel management    *********/
 		void				addChannel(std::string chan_name, Channel* channel);
@@ -112,7 +110,7 @@ class Server
 		std::map<int, Client *>	_clients; //client id, client class
 		std::vector<Channel *>	_channels; // channel name, channel class
 		CmdHandler				*_handler; // manage the cmmands
-		std::vector<pollfd>		_poll_fds; // to handle all cnnections
+		//std::vector<pollfd>		_poll_fds; // to handle all cnnections
 };
 
 bool 							checkArg(std::string port, std::string pwd);

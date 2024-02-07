@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 18:27:05 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:59:38 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ Client::Client(int fd, Server *server)
 
 Client::~Client()
 {
-	_channel.clear();
-	delete _server;
+	//_channel.clear();
+	//delete _server;
 }
 
 std::string	const 	&Client::getNickname(void) const {return (_infos._nickname);}

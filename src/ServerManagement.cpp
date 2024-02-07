@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 19:02:18 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 13:53:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,89 +14,81 @@
 
 void	Server::manageConnections(void)
 {
-	int 	new_socket, rc;
-	pollfd	servPoll;
+	int 					new_socket;
+	std::vector<pollfd>		poll_fds;
+	pollfd					servPoll;
 	//int conn_count = 1; // Start with one for the server socket
 	
 	servPoll.fd 		= _servFd;
 	servPoll.events 	= POLLIN;
-	_poll_fds.push_back(servPoll);
+	poll_fds.push_back(servPoll);
 	
     while (server_shutdown == FALSE) 
 	{
         // Poll for events
-        int activity = poll((pollfd *)&_poll_fds[0], (unsigned int)_poll_fds.size(), TIMEOUT);
+		std::vector<pollfd>		new_poll;
+        int activity = poll((pollfd *)&poll_fds[0], poll_fds.size(), TIMEOUT);
         if (checkPoll(activity) == BREAK)
 			break;
-		for (size_t i = 0; i < _poll_fds.size() ; ++i)
+		for (std::vector<pollfd>::iterator it = poll_fds.begin(); it != poll_fds.end() ; ++it)
 		{
-			if (_poll_fds[i].revents == 0)
-				continue ; 
-        	else if (_poll_fds[i].fd == _servFd)
+			if (it->revents & POLLIN)
 			{
-				// New incoming connection
-				new_socket = addConnections();
-				if (new_socket == BREAK || new_socket == ERROR)
-					continue ;
-				std::cout << BGREEN "[Server] " <<  GREEN "New connection on fd #" << new_socket << " accepted.\n" DEFAULT;
+				if (it->fd == _servFd)
+				{
+					// New incoming connection
+					new_socket = addConnections(poll_fds, new_poll);
+					if (new_socket == BREAK || new_socket == ERROR)
+						continue ;
+					std::cout << BGREEN "[Server] " <<  GREEN "New connection on fd #" << new_socket << " accepted.\n" DEFAULT;
+				}
+				else
+					receiveMsg(poll_fds, it);
 			}
-			else if (i > 0)
-				rc = receiveMsg(_poll_fds[i].fd);
+			else if (it->revents & POLLOUT)
+			{
+				managePolloutEvent(poll_fds, it, it->fd);
+			}
+			else if (it->revents & POLLERR)
+			{
+				managePollerEvent(poll_fds, it, it->fd);
+			}
+		}
+		poll_fds.insert(poll_fds.end(), new_poll.begin(), new_poll.end()); 
+	}
+}
+
+int	Server::managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd)
+{
+	Client *client = _clients[fd];
+	if (!client)
+		std::cout << "[Server] Did not found connexion to client sorry" << std::endl;
+	else
+	{
+		std::string msg = client->getPartialMsg();
+		std::vector<std::string> cmds = splitMsg(msg, '\n');
+		for(size_t i = 0; i < cmds.size(); i++)
+			_handler->invoke(this, client, cmds[i]);
+		client->resetPartialMsg();
+		if (client->getDeconnStatus() == true)
+		{
+			delClient(poll_fds, it, fd);
+			return (BREAK);
 		}
 	}
+	return (TRUE);
 }
 
-int 	Server::addConnections(void)
+int	Server::managePollerEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd)
 {
-	int 	cliFd;
-	Client *client;
-	
-	cliFd = acceptConnection();
-	if (cliFd == ERROR)
+	if (it->fd == _servFd)
 	{
-		std::cout << BGREEN "[Server] " <<  GREEN "Coudn't accept incoming connection.\n" DEFAULT;
-		return BREAK ;
+		std::cerr << RED << "[Server] Listen socket error" << DEFAULT << std::endl;
+		return (ERROR);
 	}
-	if (cliFd > MAXCONN)
+	else
 	{
-		cantAddClient(cliFd);
-		return ERROR ;
+		delClient(poll_fds, it, fd);
+		return (BREAK);
 	}
-	client = new Client(cliFd, this);
-	if (cliFd > 3 && cliFd <= MAXCONN)
-		addClient(client);
-	return cliFd;
-}
-
-int	Server::receiveMsg(int fd)
-{
-	char	buf[MAXBUF];
-	Client *cli = _clients[fd];
-	
-	memset(buf, 0, MAXBUF);
-	_result = recv(fd, buf, MAXBUF, 0);
-	if (checkRecv(_result, fd) == ERROR)
-	{
-		delClient(fd);
-		return BREAK;
-	}
-	buf[_result] = '\0';
-	cli->setPartialMsg(buf);
-	std::string fullMsg = cli->getPartialMsg();
-	memset(buf, 0, sizeof(MAXBUF));
-	if (_result == MAXBUF && fullMsg[_result - 1] != '\n') // if the msg sent by client is longer than the MAXBUF
-	{
-		std::cout << BBLUE "[Client] " << BLUE "Partial message received from " << fd << DEFAULT "   << " << cli->getPartialMsg() << std::endl;
-		return TRUE;
-	}
-	else if (_result <= MAXBUF)
-	{
-		std::cout << BBLUE "[Client] " << BLUE "Message received from " << fd << DEFAULT " << " << cli->getPartialMsg() << std::endl;
-		cli->resetPartialMsg();
-		std::vector<std::string> cmds = splitMsg(fullMsg, '\n');
-		for(size_t i = 0; i < cmds.size(); i++)
-			_handler->invoke(this, cli, cmds[i]);
-		return TRUE;
-	}
-	return FALSE;
 }
