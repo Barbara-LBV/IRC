@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/06 13:42:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 12:29:03 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,24 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments[1] == "i" || arguments[1] == "+i" )
 	{
 		channel->setI(true);
-		channel->broadcastChannel("channel" + chan_name + " is invite-only now");
+		channel->broadcastChannel(client, "channel" + chan_name + " is invite-only now");
 	}
 	if (arguments[1] == "-i" )
 	{
 		channel->setI(false);
-		channel->broadcastChannel("channel" + chan_name + " is invite-only now");
+		channel->broadcastChannel(client, "channel" + chan_name + " is invite-only now");
 	}
 
 	// MODE #abc t/-t
 	if (arguments[1] == "t" || arguments[1] == "+t" )
 	{
 		channel->setT(true);
-		channel->broadcastChannel("only operator can set or modify TOPIC of channel" + chan_name);
+		channel->broadcastChannel(client, "only operator can set or modify TOPIC of channel" + chan_name);
 	}
 	if (arguments[1] == "-t" )
 	{
 		channel->setT(false);
-		channel->broadcastChannel("every user can set or modify TOPIC of channel" + chan_name);
+		channel->broadcastChannel(client, "every user can set or modify TOPIC of channel" + chan_name);
 	}
 
 	// MODE #abc k/-k
@@ -95,13 +95,13 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		else
 		{
 			channel->setPassword(arguments[2]);
-			channel->broadcastChannel("channel's Password has changed");
+			channel->broadcastChannel(client, "channel's Password has changed");
 		}
 	}
 	if (arguments[1] == "-k" )
 	{
 		channel->setPassword("");
-		channel->broadcastChannel("channel's Passwod has removed");
+		channel->broadcastChannel(client, "channel's Passwod has removed");
 	}
 	
 	// MODE #abc o/-o
