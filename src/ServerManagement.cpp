@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 13:53:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 14:59:33 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@ void	Server::manageConnections(void)
         int activity = poll((pollfd *)&poll_fds[0], poll_fds.size(), TIMEOUT);
         if (checkPoll(activity) == BREAK)
 			break;
-		for (std::vector<pollfd>::iterator it = poll_fds.begin(); it != poll_fds.end() ; ++it)
+		std::vector<pollfd>::iterator it = poll_fds.begin();
+		while (it != poll_fds.end())
 		{
+			//std::cout << "in global loop, it.fd = " << it->fd << std::endl;
 			if (it->revents & POLLIN)
 			{
 				if (it->fd == _servFd)
@@ -43,16 +45,24 @@ void	Server::manageConnections(void)
 					std::cout << BGREEN "[Server] " <<  GREEN "New connection on fd #" << new_socket << " accepted.\n" DEFAULT;
 				}
 				else
-					receiveMsg(poll_fds, it);
+				{
+					if (receiveMsg(poll_fds, it) ==  BREAK)
+						break;
+				}
 			}
 			else if (it->revents & POLLOUT)
 			{
-				managePolloutEvent(poll_fds, it, it->fd);
+				if (managePolloutEvent(poll_fds, it, it->fd) == BREAK)
+					break ;
 			}
 			else if (it->revents & POLLERR)
 			{
-				managePollerEvent(poll_fds, it, it->fd);
+				if (managePollerEvent(poll_fds, it, it->fd) == BREAK)
+					break ;
+				else
+					exit(ERROR);
 			}
+			++it;
 		}
 		poll_fds.insert(poll_fds.end(), new_poll.begin(), new_poll.end()); 
 	}

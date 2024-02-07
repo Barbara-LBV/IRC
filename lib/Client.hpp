@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 10:22:19 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/07 14:24:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ class Client
 		void				setRealName(std::string);
 		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
+		void				setDeconnStatus(bool);
 		void				setWelcomeStatus(bool);
 		void 				setRecvMsg(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
@@ -99,7 +100,7 @@ class Client
 		t_names					_infos; 
 		t_status				_state;
 		Server*					_server;
-		std::deque<Channel*> _channel;
+		std::deque<Channel*> 	_channel;
 };
 
 void	addToClientBufferExtended(Server *server, int cliFd, std::string reply);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 12:46:21 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/07 15:12:35 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void 	Channel::broadcastChannel(Client* client, std::string message)
    for (; it != cli_target.end(); ++it)
    {
 		if (this == (*it)->getActiveChannel() && client != *it)
-			addToClientBufferExtended(getServer(), (*it)->getFd(), RPL_PRIVMSG(client->getNickname(), getName(), message));
+			addToClientBuffer(getServer(), (*it)->getFd(), RPL_PRIVMSG(client->getPrefix(), getName(), message));
 	}
 }
 
