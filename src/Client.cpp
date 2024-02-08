@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 15:24:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 10:18:14 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ void Client::partAllChannel(void)
     {
         Channel *channel = _channel[i - 1]; // Accéder à l'élément à l'index i - 1
         if (channel)
-            channel->partChannel(this);
+            channel->partChannel(this, "");
     }
     _channel.clear();
 }
