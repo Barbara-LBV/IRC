@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 16:08:46 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/08 15:10:15 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@ class Channel
 		void 						setAdmin(Client *client){ _admin = client;};
 		/***********   Functions   ***********/
 		void 						joinChannel(Client *cli){_clients.push_back(cli);};
-   		void 						partChannel(Client* cli, std::string reason);
+   		bool 						partChannel(Client* cli, std::string reason);
 		bool    					is_oper(Client *client);
 		void 						removeOpe(Client *client);
 		bool						isInChannel(Client *client);
 		void						addOperator(Client *client){_ops.push_back(client);};
-		void 	  					broadcastChannel(Client* client, std::string message);
+		void 	  					broadcastChannelPrimsg(Client* client, std::string message);
+		void 						broadcastChannelPart(Client* client, std::string reason);
 		void						replyList(Client* client);
 		void    					removeClient(Client *client, std::string reason);
 		size_t						clientIndex(std::vector<Client *> clients, Client *client);

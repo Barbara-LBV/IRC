@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 14:24:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:32:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Client
 		/**********    Structures    *********/
 		typedef struct s_names // all the infos allowing to identify a client
 		{
-			int				_cliFd; // client fd
+			//int				_cliFd; // client fd
 			std::string		_nickname; // pseudo: usefull for channel operator
 			std::string		_oldNick; //if it's not the 1st nickname
 			std::string		_username; // user = personn who is using IRC Client software
@@ -94,7 +94,8 @@ class Client
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);
-
+		
+		int						_cliFd;
 		std::string				_partialMsg; 
 		std::string				_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
 		t_names					_infos; 

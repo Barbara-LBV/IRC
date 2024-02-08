@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/07 12:19:15 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/08 14:30:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 		else if (arguments.size() == 2 || arguments[1] == ":")
 		{
 			channel->setTopic("");
-			channel->broadcastChannel(client, "Topic of " + chan_name + " is cleared");
+			channel->broadcastChannelPrimsg(client, "Topic of " + chan_name + " is cleared");
 			return ;
 		}
 		if (arguments.size() >= 2)
@@ -107,5 +107,5 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 		}	
 	}
 	channel->setTopic(topic);
-	channel->broadcastChannel(client, "Topic of " + chan_name + " is changed");
+	channel->broadcastChannelPrimsg(client, "Topic of " + chan_name + " is changed");
 }

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/01 15:27:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 13:11:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 class Server;
 class Client;
+class Channel;
 
 class Command
 {
@@ -58,6 +59,7 @@ public:
 	~PartCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
+	void	broadcastToAllChannelMembers(Server *server, Channel &channel);
 };
 
 class QuitCommand : public Command
@@ -169,4 +171,5 @@ public:
 };
 
 bool	isAllDigits(const std::string& str);
+
 #endif

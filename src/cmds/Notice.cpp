@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Notice.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:11:32 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 12:29:16 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/08 14:30:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void NoticeCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (target[0] == '#')
 	{
 		Channel* channel = _server->getChannel(target);
-		channel->broadcastChannel(client, message);
+		channel->broadcastChannelPrimsg(client, message);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 18:39:01 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 18:14:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ Server::~Server()
         return;
     }
 	std::map<int, Client *>::iterator it = _clients.begin();
-	for(; it != _clients.end(); it++)
+	for(; it != _clients.end(); ++it)
 	{
 		delete it->second;
 		close(it->first);
@@ -44,13 +44,9 @@ Server::~Server()
         _channels.clear();
         return;
     }
-    for (size_t i = _channels.size(); i > 0; --i)
-    {
-        Channel *channel = _channels[i - 1]; // Access to th element at index i - 1
-        if (channel)
-            delete _channels[i];
-    }
-    _channels.clear();
+    for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
+       delete *it;
+    //_channels.clear();
 	delete _handler;
 }
 
@@ -119,7 +115,7 @@ void			Server::setDatetime(struct tm *timeinfo)
   	std::string str(buffer);
 	_time = str;
 }
-//void 	Server::broadcastChannel(std::string message, Channel* channel)
+//void 	Server::broadcastChannelPrimsg(std::string message, Channel* channel)
 //{
 //	std::vector<Client*>::iterator it = channel->getClients().begin();
 	

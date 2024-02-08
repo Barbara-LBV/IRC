@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 18:30:39 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 12:50:38 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iter
 	close(fd);
 }
 
-void		Server::delChannel(std::string topic)
+void		Server::delChannel(Channel *chan)
 {
 	std::vector< Channel *>::iterator it = _channels.begin();
     while(it != _channels.end())
     {
-		if ((*it)->getTopic() == topic)
+		if (*it == chan)
 		{
 			_channels.erase(it);
 			break ;

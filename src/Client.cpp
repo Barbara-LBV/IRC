@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 11:45:28 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 18:31:05 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ Client::Client(int fd, Server *server)
 {
 	_partialMsg = "";
 	_recvdFromServ = "";
-   	_infos._cliFd = fd;
+   	_cliFd = fd;
 	_infos._host = "localhost";
 	_state._connectionPwd = FALSE;
 	_state._registred = FALSE;
@@ -26,14 +26,7 @@ Client::Client(int fd, Server *server)
 	_infos._pwd = server->getPwd();
 }
 
-Client::~Client()
-{
-	for (std::deque<Channel *>::iterator it = _channel.begin(); it != _channel.end(); ++it)
-        delete *it;
-    // Effacer le contenu du conteneur
-    _channel.clear();
-	delete _server;
-}
+Client::~Client(){}
 
 std::string	const 	&Client::getNickname(void) const {return (_infos._nickname);}
 
@@ -55,7 +48,7 @@ bool	const		&Client::getDeconnStatus(void)const{return _state._toDisconnect;}
 
 bool const			&Client::getWelcomeStatus(void) const {return _state._welcomed;}
 
-int	const			&Client::getFd(void)const{return _infos._cliFd;}
+int	const			&Client::getFd(void)const{return _cliFd;}
 
 Server				*Client::getServer(void){return _server;}
 
@@ -101,6 +94,7 @@ void			Client::deleteChannel(Channel* channel)
 {
     // Use std::remove to move the elements to be removed to the end
     _channel.erase(std::remove(_channel.begin(), _channel.end(), channel), _channel.end());
+	std::cout << "size of _chennel" << _channel.size() << std::endl;
 }
 
 
