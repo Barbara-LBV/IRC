@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 18:17:44 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 11:43:47 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,24 +100,52 @@ bool    Channel::is_oper(Client *client)
 	return FALSE;
 }
 
-void    Channel::partChannel(Client* cli)
+
+
+void Channel::partChannel(Client* cli, std::string reason)
 {
+    std::string clientPrefix = cli->getPrefix();
+
+    // Broadcast PART message to the channel with or without a reason
+    if (reason.empty())
+        this->broadcastChannel(cli, RPL_PART(clientPrefix, this->getName()));
+    else
+        this->broadcastChannel(cli, RPL_PART_REASON(clientPrefix, this->getName(), reason));
+    reason.clear();
+
+    bool clientFound = false;
+
+    // Iterate through the list of clients in the channel
     for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
         if (*it == cli)
         {
-            _clients.erase(it);			// delete from list of client in this channel
+            // Remove the client from the list of clients in this channel
+            _clients.erase(it);
+            clientFound = true;
+
+            // If the client was an operator, remove them from the list of operators
             if (is_oper(cli))
                 removeOpe(cli);
-			cli->deleteChannel(this);   // remove the name of channel in  the client info
-            if ((it + 1) == _clients.end())
-                delete this;
-            break; 
+
+            // Remove the channel from the client's channel list
+            cli->deleteChannel(this);
+            
+            // Exit the loop since the client has been found and processed
+            break;
         }
-        if (it == _ops.end())
-            addToClientBufferExtended(cli->getServer(), cli->getFd(), ERR_USERNOTINCHANNEL(cli->getNickname(), cli->getNickname(), this->getName()));
     }
+
+    // If the client was not found, send an error message
+    if (!clientFound)
+        addToClientBufferExtended(cli->getServer(), cli->getFd(), ERR_USERNOTINCHANNEL(cli->getNickname(), "", this->getName()));
+
+    // If there are no more clients left in the channel, mark the channel for deletion
+    if (_clients.empty())
+        delete this;
 }
+
+
 
 void    Channel::removeOpe(Client *client)
 {
@@ -169,43 +197,3 @@ void        Channel::replyList(Client* client)
     addToClientBuffer(client->getServer(), client->getFd(), RPL_ENDOFNAMES(client->getNickname(), this->getName()));
 }
 
-void    Channel::removeClient(Client *client, std::string reason)
-{
-    	std::string clientPrefix = client->getPrefix();
-
-	if (reason.empty())
-		this->broadcastChannel(client, RPL_PART(clientPrefix, this->getName()));
-	else
-		this->broadcastChannel(client, RPL_PART_REASON(clientPrefix, this->getName(), reason));
-	reason.clear();
-
-	if (!_ops.empty())
-		_ops.erase(this->_ops.begin() + this->clientIndex(_ops, client));
-	//if (!_clients.empty())
-	//	_clients.erase(this->_clients.begin() + this->clientIndex(_clients, client));
-	//client->leave(this, 1, reason);
-
-	if (_clients.empty())
-	{
-		// free chan and remove it from server
-		return;
-	}
-	if (_admin == client)
-		_admin = _clients.begin().operator*();
-
-}
-
-size_t   Channel::clientIndex(std::vector<Client *> clients, Client *client)
-{
-	size_t i = 0;
-	std::vector<Client *>::iterator it = clients.begin();
-
-	while (it != clients.end())
-	{
-		if (*it == client)
-			return i;
-		it++;
-		i++;
-	}
-	return 0;
-}

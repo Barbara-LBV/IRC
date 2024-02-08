@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 18:29:46 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 11:43:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@
 //#define ERR_BANNEDFROMCHAN(client, channel) 			      "474 " + client + " #" + channel + " :Cannot join channel (+b)\r\n"
 
 //// KICK
-//#define RPL_KICK(source, channel, target, reason)		      ":" + source + " KICK " + channel + " " + target + " :" + reason
+// #define RPL_KICK(source, channel, target, reason)		      ":" + source + " KICK " + channel + " " + target + " :" + reason
 //#define ERR_USERNOTINCHANNEL(source, nickname, channel)		"441 " + source + " " + nickname + " " + channel + " :They aren't on that channel"
 
 //// KILL

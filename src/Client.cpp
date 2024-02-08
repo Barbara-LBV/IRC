@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 18:45:50 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/08 11:45:28 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void Client::partAllChannel(void)
     {
         Channel *channel = _channel[i - 1]; // Access to th element at index i - 1
         if (channel)
-            channel->partChannel(this);
+            channel->partChannel(this, "");
     }
     _channel.clear();
 }

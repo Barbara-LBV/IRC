@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 12:11:42 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/07 16:08:46 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ class Channel
 		void 						setAdmin(Client *client){ _admin = client;};
 		/***********   Functions   ***********/
 		void 						joinChannel(Client *cli){_clients.push_back(cli);};
-   		void 						partChannel(Client *cli);
+   		void 						partChannel(Client* cli, std::string reason);
 		bool    					is_oper(Client *client);
 		void 						removeOpe(Client *client);
 		bool						isInChannel(Client *client);
