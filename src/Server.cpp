@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 18:14:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:14:28 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,24 @@ void Server::addChannel(std::string chan_name, Channel* channel)
 {
     if (channel)
     {
-		if (_channels.size() == 0)
-			_channels.push_back(channel);
         // Check if the channel name already exists
-		else if (_channels[_channels.size() - 1]->getName() == chan_name)
-		{
-			// If not, add the channel to the map
-			_channels.push_back(channel);
-		}
-		else
-			std::cout << "channel name already is use\n";
+        std::vector<Channel*>::iterator it;
+        for (it = _channels.begin(); it != _channels.end(); ++it)
+        {
+            if ((*it)->getName() == chan_name)
+            {
+                // If the channel name already exists, print an error message
+                std::cout << "Channel name '" << chan_name << "' is already in use." << std::endl;
+                return;
+            }
+        }
+
+        // If the channel name doesn't already exist, add the channel to the list
+        _channels.push_back(channel);
     }
 }
+
+
 
 
 Client*			Server::getClient(int fd){return _clients[fd];}
@@ -115,19 +121,11 @@ void			Server::setDatetime(struct tm *timeinfo)
   	std::string str(buffer);
 	_time = str;
 }
-//void 	Server::broadcastChannelPrimsg(std::string message, Channel* channel)
-//{
-//	std::vector<Client*>::iterator it = channel->getClients().begin();
-	
-//    for (; it != channel->getClients().end(); ++it)
-//    {
-//		if (channel->getName() == (*it)->getActiveChannel())
-//		{
-//			addToClientBufferExtended(this, (*it)->getFd(), message);
-//            this->sendReply((*it)->getFd());
-//		}
-//	}
-//}
+void 	Server::broadcastChannel(Client* client, std::string message, Channel* channel)
+{
+	if (channel)
+		channel->broadcastChannelmessage(client, message);
+}
 
 void			Server::cleanServer()
 {

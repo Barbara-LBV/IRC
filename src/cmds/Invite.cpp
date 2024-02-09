@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:34 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/07 14:07:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 13:32:16 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 		if ((channel->getL() - channel->getClients().size()) > 0)
 		{
 			addToClientBuffer(client->getServer(), client->getFd(), RPL_INVITING(client->getNickname(), chan_name, target));
-			channel->joinChannel(client_target);
+			channel->addClient(client_target);
 			client_target->addChannel(channel);
 			addToClientBuffer(client->getServer(), client_target->getFd(), RPL_INVITE(client->getNickname(), target, chan_name));
 			//addToClientBuffer(client->getServer(), client_target->getFd(), RPL_JOIN(client_target->getPrefix(), chan_name));

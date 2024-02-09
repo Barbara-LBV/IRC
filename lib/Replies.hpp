@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 11:43:08 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:38:08 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@
 //// NICK
 //#define ERR_NONICKNAMEGIVEN(source)						"431 " + source + " :Nickname not given\r\n"
 //#define ERR_NICKNAMEINUSE(source, nickname)				"433 " + source + " " + nickname + " :Nickname is already in use\r\n"
-# define RPL_NICK(oclient, uclient, client)                       ":" + oclient + "!" + uclient + "@localhost NICK " +  client + "\r\n"
+# define RPL_NICK(oclient, uclient, nick)                 ":" + oclient + "!" + uclient + "@localhost NICK " +  nick + "\r\n" 
 
 //// NOTICE - no localhost before reply
 //#define RPL_NOTICE(source, target, message)				":" + source + " NOTICE " + target + " :" + message + "\r\n"

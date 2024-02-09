@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/08 14:30:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 14:23:39 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	
 	const std::string  target = arguments[0];
-	std::cout << "is this a channel name with # ? " << arguments[0] << std::endl;
 	if (target[0] == '#')
 	{
 		if (_server->isValidChannelName(target))

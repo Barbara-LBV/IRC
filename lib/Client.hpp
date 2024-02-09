@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 17:32:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:38:55 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ class Client
 		void				setPartialMsg(std::string partialMsg);
 		void				resetPartialMsg(void);
 		void				resetRecvMsg(void);
+		std::string  const  &getOldNick(void)const { return _infos._oldNick;};
+		void                 setOldNick(std::string nick){_infos._oldNick = nick;};
 ;		
 		/**********    Messages Management     *********/
 		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec

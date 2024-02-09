@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/07 14:11:57 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:31:16 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,12 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 	Channel* channel = _server->getChannel(name);
 	if (channel == NULL)
 	{
-        Channel* channel = new Channel(name, password, client, _server);
-		_server->addChannel(name, channel);
-		client->addChannel(channel);
-		channel->joinChannel(client);
-		channel->setAdmin(client);
+        Channel* channel = new Channel(name, password, _server);
 		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
+		_server->addChannel(name, channel);
+		channel->addClient(client);
+		channel->addOperator(client);
+		client->addChannel(channel);
 		channel->replyList(client);
 	}
     else 
@@ -119,10 +119,12 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		{
 			if (password == channel->getPassword())
 			{
-				channel->joinChannel(client);
+				std::cout << "i am joining a class who is already exit\n";
+				channel->addClient(client);
 				client->addChannel(channel);
 				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 				channel->replyList(client);
+				_server->broadcastChannel(client, RPL_JOIN(client->getPrefix(), name), channel);
 			}
 			else
 				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));

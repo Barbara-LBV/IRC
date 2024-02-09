@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/08 17:24:01 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:08:37 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 		
     Channel* 	channel = _server->getChannel(name);
 
-    if (channel->partChannel(client,reason) == FALSE)
-	{
-		_server->delChannel(channel);
-		delete channel;
-	}
+    channel->partChannel(client, reason);
+	
 }
