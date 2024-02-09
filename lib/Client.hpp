@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 15:14:14 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:06:23 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class Client
 		
 		/**********    Assessors     *********/
 		std::string	const 	&getNickname(void)const;
+		std::string	const 	&getOldNick(void)const { return _infos._oldNick;};
 		std::string	const 	&getUsername(void)const ;
 		std::string const 	&getRealName()const ;
 		std::string	const 	&getHost(void)const ;
@@ -66,6 +67,7 @@ class Client
 		void				setServer(Server *serv){_server = serv;};
 		Server				*getServer(void);
 		void				setNickname(std::string);
+		void			 	setOldNick(std::string nick){_infos._oldNick = nick;};
 		void				setUsername(std::string);
 		void				setRealName(std::string);
 		void				setPwd(std::string pwd);

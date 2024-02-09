@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 15:42:36 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:59:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ class Server
 		//void				setClient(Client *c);
 		
 		/*********    Socket and connections management    *********/
-		void 				initializeServer(void);
-		void 				createServerSocket(void);
-		void				bindServerSocket(void);
-		void				listenForConnection(void);
+		int 				initializeServer(void);
+		int 				createServerSocket(void);
+		int					bindServerSocket(void);
+		int					listenForConnection(void);
 		int					acceptConnection(void);
 		int 				checkPoll(int rc);
 		void 				manageConnections(void);

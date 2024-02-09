@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 15:43:01 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 19:01:20 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	Server::manageConnections(void)
 				if (managePollerEvent(poll_fds, it, it->fd) == BREAK)
 					break ;
 				else
-					exit(ERROR);
+					return ;
 			}
 			++it;
 		}
@@ -73,7 +73,6 @@ void	Server::manageConnections(void)
 int	Server::managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd)
 {
 	Client *client = _clients[fd];
-	//CmdHandler *handler = new CmdHandler(this);
 	if (!client)
 		std::cout << "[Server] Did not found connexion to client sorry" << std::endl;
 	else

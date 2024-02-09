@@ -6,13 +6,13 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 11:50:57 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 19:02:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-void	Server::createServerSocket(void)
+int	Server::createServerSocket(void)
 {
 	int rc, fd, on = 1;
 	fd = socket(_servInfo->ai_family, _servInfo->ai_socktype, _servInfo->ai_protocol);
@@ -21,7 +21,7 @@ void	Server::createServerSocket(void)
 		std::cerr << BGREEN "[Server] " << GREEN "Socket creation error" << std::endl;
 		server_shutdown = TRUE;
 		close(fd);
-		exit(ERROR);
+		return ERROR;
 	}
 	setFd(fd);
     rc = setsockopt(getFd(), SOL_SOCKET, SO_REUSEPORT, (const void*)&on, sizeof(on));
@@ -30,8 +30,9 @@ void	Server::createServerSocket(void)
 		std::cerr << BGREEN "[Server] " << GREEN "Impossible to reuse the socket" << std::endl;
 		close(getFd());
 		server_shutdown = TRUE;
-		exit(ERROR);
+		return ERROR;
 	}
+	return TRUE;
 }
 
 int Server::fillServinfo(char *port)
@@ -48,28 +49,30 @@ int Server::fillServinfo(char *port)
 	return (TRUE);
 }
 
-void	Server::bindServerSocket(void)
+int	Server::bindServerSocket(void)
 {
 	if (bind(getFd(), _servInfo->ai_addr, _servInfo->ai_addrlen) == ERROR)
 	{
 		std::cerr << BGREEN "[Server] " << GREEN "Socket impossible to bind" DEFAULT << std::endl;
 		close(getFd());
 		server_shutdown = TRUE;
-		exit(ERROR);
+		return ERROR;
 	}
 	fcntl(getFd(), F_SETFL, O_NONBLOCK);
+	return (TRUE);
 }
 
-void	Server::listenForConnection(void)
+int		Server::listenForConnection(void)
 {
 	if (listen(getFd(), BACKLOG) ==  ERROR)
 	{
 		std::cerr << BGREEN "[Server] " << GREEN "Socket cannot listen" DEFAULT << std::endl;
 		server_shutdown = TRUE;
 		close(getFd());
-		exit(ERROR);
+		return ERROR;
 	}
 	std::cout << BGREEN "[Server] " << GREEN "Listening on socket fd #" << _servFd << DEFAULT << std::endl;
+	return TRUE;
 }
 
 int		Server::acceptConnection(void)
@@ -89,13 +92,17 @@ int		Server::acceptConnection(void)
 	return (cliFd);
 }
 
-void Server::initializeServer(void)
+int Server::initializeServer(void)
 {
-    createServerSocket();
-    bindServerSocket();
-    listenForConnection();
+    if (createServerSocket() == ERROR)
+		return ERROR;
+    if (bindServerSocket() == ERROR)
+		return ERROR;
+    if (listenForConnection() == ERROR)
+		return ERROR;
 	std::cout << BGREEN "[Server] " <<  GREEN "Waiting for connections... " DEFAULT << std::endl;
 	freeaddrinfo(_servInfo);
+	return TRUE;
 }
 
 int		Server::checkRecv(int res, int fd)

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 15:21:04 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 19:01:51 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int main(int ac, char **av)
 	Server server(av[1], av[2], timeinfo);
 	if (server.fillServinfo(av[1]) == ERROR)
 		return 2;
-	server.initializeServer();
+	if (server.initializeServer() == ERROR)
+		return 2;
 	signal(SIGINT, Server::signal_handler);
 	try
 	{
