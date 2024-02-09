@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:05:56 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/01/31 16:28:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:44:26 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ class Client;
 class CmdHandler
 {
 	private:
-		Server 							*_server;
+		//Server 							*_server;
 		std::map<std::string, Command *> _commands;
 		
 	public:
-		CmdHandler(Server *server);
+		CmdHandler();
 		~CmdHandler();
 
 		void 			invoke(Server *serv, Client *client, std::string const &message);

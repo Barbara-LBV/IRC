@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 18:15:24 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:43:01 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,15 +73,17 @@ void	Server::manageConnections(void)
 int	Server::managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd)
 {
 	Client *client = _clients[fd];
+	//CmdHandler *handler = new CmdHandler(this);
 	if (!client)
 		std::cout << "[Server] Did not found connexion to client sorry" << std::endl;
 	else
 	{
-		std::string msg = client->getPartialMsg();
+		std::string msg = client->getFullMsg();
+		
 		std::vector<std::string> cmds = splitMsg(msg, '\n');
 		for(size_t i = 0; i < cmds.size(); i++)
 			_handler->invoke(this, client, cmds[i]);
-		client->resetPartialMsg();
+		client->resetFullMsg();
 		if (client->getDeconnStatus() == true)
 		{
 			delClient(poll_fds, it, fd);

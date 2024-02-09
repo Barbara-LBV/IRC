@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 17:35:33 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:24:00 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ CmdHandler::~CmdHandler()
 	for (; it != _commands.end(); it++)
 		delete it->second;
 	_commands.clear();
+	_server = NULL;
 }
 
 void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 14:49:43 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 14:04:29 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,19 @@ QuitCommand::~QuitCommand() {}
 void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	std::string  reason = "";
+	
+	if (arguments.empty())
+	{
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "QUIT"));
+		return;
+	}
+	
 	if (!arguments.empty() || !arguments[0].empty())
 	{
 		for (size_t i = 0; i < arguments.size(); i++)
 			reason = " " + arguments[i];
 	}
+	
 	addToClientBuffer(client->getServer(), client->getFd(), RPL_QUIT(client->getPrefix(), reason));
 	client->partAllChannel();
 	client->setDeconnStatus(true);

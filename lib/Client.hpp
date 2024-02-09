@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 17:32:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:14:14 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Channel;
 class Client
 {
 	public:
-		Client(int fd, Server *serv);
+		Client(int fd);
 		~Client();
 		
 		/**********    Structures    *********/
@@ -55,6 +55,7 @@ class Client
 		std::string	const 	&getHost(void)const ;
 		std::string		 	getMsgRecvd(void)const ;
 		std::string		 	getPartialMsg(void)const ;
+		std::string		 	getFullMsg(void)const ;
 		std::string		 	getMsgSent(void)const ;
 		std::string			getPrefix(void)const ;
 		bool const			&getConnPwd(void) const ;
@@ -67,17 +68,17 @@ class Client
 		void				setNickname(std::string);
 		void				setUsername(std::string);
 		void				setRealName(std::string);
-		void				setHost(std::string hot);
 		void				setPwd(std::string pwd);
 		void				setDeconnStatus(bool);
 		void				setWelcomeStatus(bool);
 		void 				setRecvMsg(std::string msg);
 		void				setPartialMsg(std::string partialMsg);
+		void				setFullMsg(std::string partialMsg);
 		void				resetPartialMsg(void);
+		void				resetFullMsg(void);
 		void				resetRecvMsg(void);
 ;		
 		/**********    Messages Management     *********/
-		//void			registringClient(std::string s); //split the 1st line received from client to get names and set them if nec
 		bool				isRegistred(void);
 		void				sendMsgtoServer(std::string msg);
 		void				recvMsgfromServer(void);
@@ -96,7 +97,8 @@ class Client
 		Client &operator=(Client const &s);
 		
 		int						_cliFd;
-		std::string				_partialMsg; 
+		std::string				_partialMsg;
+		std::string				_fullMsg;
 		std::string				_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
 		t_names					_infos; 
 		t_status				_state;

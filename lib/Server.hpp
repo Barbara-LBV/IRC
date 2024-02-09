@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 14:30:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:42:36 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ class Server
 		int					checkRecv(int res, int fd);
 		void				parseMsg(std::string msg, int fd); // to set the command 
 		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
-		void				parseCmd(Client *cli, std::vector <std::string> cmds);
-
+		
 		/*********    Channel management    *********/
 		void				addChannel(std::string chan_name, Channel* channel);
 		void				delChannel(Channel *chan);
@@ -88,7 +87,6 @@ class Server
 		bool				isValidChannelName(std::string cName);
 		
 		/*********        Cleaning       ************/
-		static void			cleanServer(void);
 		static void			signal_handler(int signal);
 		
 	private:

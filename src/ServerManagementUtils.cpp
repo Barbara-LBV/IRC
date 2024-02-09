@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 12:50:38 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:15:38 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int 	Server::addConnections(std::vector<pollfd>&poll_fds, std::vector<pollfd> &new_poll)
 {
+	(void)poll_fds;
 	int 	cliFd;
-	Client *client;
+	Client *cli;
 	
 	cliFd = acceptConnection();
 	if (cliFd == ERROR)
@@ -28,9 +29,11 @@ int 	Server::addConnections(std::vector<pollfd>&poll_fds, std::vector<pollfd> &n
 		cantAddClient(cliFd);
 		return ERROR ;
 	}
-	client = new Client(cliFd, this);
-	if (poll_fds.size() <= MAXCONN)
-		addClient(new_poll, client);
+	cli = new Client(cliFd);
+	cli->setServer(this);
+	cli->setPwd(getPwd());
+	if (cliFd <= MAXCONN + 3)
+		addClient(new_poll, cli);
 	return cliFd;
 }
 
@@ -47,14 +50,24 @@ int			Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::ite
 		delClient(poll_fds, it, it->fd);
 		return BREAK;
 	}
-	buf[_result] = '\0';
-	cli->setPartialMsg(buf);
-	std::string fullMsg = cli->getPartialMsg();
-	memset(buf, 0, sizeof(MAXBUF));
-	if (_result == MAXBUF && fullMsg[_result - 1] != '\n') // if the msg sent by client is longer than the MAXBUF
-		std::cout << BBLUE "[Client] " << BLUE "Partial message from " << it->fd << DEFAULT "   << " << cli->getPartialMsg();
+	//std::cout << "bp#1 last char = " << buf[_result - 1] << std::endl;
+	if (_result <= MAXBUF && buf[_result - 1] != '\n') // if the msg sent by client is longer than the MAXBUF
+	{
+		//buf[_result] = '\0';
+		cli->setPartialMsg(buf);
+		std::cout << BBLUE "[Client] " << BLUE "Partial message from " \
+			<< it->fd << DEFAULT " << " << cli->getPartialMsg() << std::endl;
+	}
 	else if (_result <= MAXBUF)
-		std::cout << BBLUE "[Client] " << BLUE "Message from " << it->fd << DEFAULT " << " << cli->getPartialMsg();
+	{
+		buf[_result] = '\0';
+		std::string msg = cli->getPartialMsg();
+		cli->setFullMsg(msg + buf);
+		cli->resetPartialMsg();
+		std::cout << BBLUE "[Client] " << BLUE "Message from " << it->fd 
+			<< DEFAULT " << " << cli->getFullMsg();
+	}
+	memset(buf, 0, sizeof(MAXBUF));
 	return TRUE;
 }
 

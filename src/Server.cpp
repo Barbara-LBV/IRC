@@ -6,13 +6,13 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 18:14:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:42:56 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-Server::Server(std::string port, std::string pwd, struct tm * time) : _servInfo(NULL), _handler (new CmdHandler(this))
+Server::Server(std::string port, std::string pwd, struct tm * time) : _servInfo(NULL)
 {
  	_servFd = -1;
 	_servPort = atoi(port.c_str());
@@ -22,6 +22,7 @@ Server::Server(std::string port, std::string pwd, struct tm * time) : _servInfo(
 	this->setDatetime(time);
 	_result = 0;
 	memset(&_hints, 0, sizeof(_hints));
+	_handler  = new CmdHandler(this);
 }
 
 Server::~Server()
@@ -46,8 +47,8 @@ Server::~Server()
     }
     for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
        delete *it;
-    //_channels.clear();
-	delete _handler;
+    _channels.clear();
+	//delete _handler;
 }
 
 /*********************  Assessors !!  ************************/
@@ -128,9 +129,3 @@ void			Server::setDatetime(struct tm *timeinfo)
 //		}
 //	}
 //}
-
-void			Server::cleanServer()
-{
-	
-	return ;
-}
