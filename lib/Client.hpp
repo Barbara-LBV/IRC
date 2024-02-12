@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 18:06:23 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/12 10:29:55 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ class Client
 		void				resetPartialMsg(void);
 		void				resetFullMsg(void);
 		void				resetRecvMsg(void);
+		std::string  const  &getOldNick(void)const { return _infos._oldNick;};
+		void                 setOldNick(std::string nick){_infos._oldNick = nick;};
 ;		
 		/**********    Messages Management     *********/
 		bool				isRegistred(void);

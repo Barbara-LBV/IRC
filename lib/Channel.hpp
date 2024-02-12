@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/08 15:10:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/09 18:35:14 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Client;
 class Channel
 {
 	public:
-		Channel(std::string const &name, std::string const &password, Client* ops, Server *server);
+		Channel(std::string const &name, std::string const &password, Server *server);
 		~Channel();
 
 		/***********   Assessors   ***********/
@@ -45,14 +45,14 @@ class Channel
 		void						setL(size_t N){_l = (N != 0) ? N : std::numeric_limits<int>::max(); };
 		void						setI(int b){_i = b;};
 		void						setT(int b){_t = b;};
-		void 						setAdmin(Client *client){ _admin = client;};
 		/***********   Functions   ***********/
-		void 						joinChannel(Client *cli){_clients.push_back(cli);};
+		void 						addClient(Client *cli);
    		bool 						partChannel(Client* cli, std::string reason);
 		bool    					is_oper(Client *client);
 		void 						removeOpe(Client *client);
 		bool						isInChannel(Client *client);
 		void						addOperator(Client *client){_ops.push_back(client);};
+		void 	  					broadcastChannelmessage(Client* client, std::string message);
 		void 	  					broadcastChannelPrimsg(Client* client, std::string message);
 		void 						broadcastChannelPart(Client* client, std::string reason);
 		void						replyList(Client* client);
@@ -64,15 +64,14 @@ class Channel
 		Channel &operator=(Channel const &c);
 		
 		const std::string	_name;
-		std::string			_topic;
+		std::string			_topic ;
 		std::string			_password;
 		Server*				_server;
 		std::vector<Client *>_clients;
 		std::vector<Client *>_ops;
-		Client				*_admin;
-		size_t				_l;		//Set/remove the user limit to channel
-		bool				_i;     //Set/remove Invite-only channel, true is invite only
-		bool				_t;		//Set/remove the restrictions of the TOPIC command to channel operator    //true is only operator can set topic
+		size_t				_l ;		//Set/remove the user limit to channel
+		bool				_i ;     //Set/remove Invite-only channel, true is invite only
+		bool				_t ;		//Set/remove the restrictions of the TOPIC command to channel operator    //true is only operator can set topic
 		                        											
 };
 

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 18:59:18 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/12 10:29:17 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ class Server
 		void				delChannel(Channel *chan);
 		void				cantAddChannel(void);
 		Channel* 			getChannel(const std::string& cName);
-		void 				broadcastChannelPrimsg(std::string message, Channel* channel);
+		void 				broadcastChannel(Client* client, std::string message, Channel* channel);
 		bool				isValidChannelName(std::string cName);
 		
 		/*********        Cleaning       ************/
