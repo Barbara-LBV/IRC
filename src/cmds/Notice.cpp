@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:11:32 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 18:17:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 16:43:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void NoticeCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (arguments[1][0] != ':')
 	{
-		addToClientBuffer(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getNickname()));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getNickname()));
 		return ;
 	}
 	std::string message = "";

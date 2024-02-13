@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/12 10:37:49 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:49:39 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,50 +18,38 @@
 
 PrivMsgCommand::PrivMsgCommand(Server *server) : Command(server) {}
 
-PrivMsgCommand::~PrivMsgCommand() {}
+PrivMsgCommand::~PrivMsgCommand(){}
 
 void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	if (arguments.size() < 2)
+	if (arguments.size() < 2 || arguments.size() == 0)
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PRIVMSG"));
 		return;
 	}
 	
 	const std::string  target = arguments[0];
+	
+	std::string message = "";
+	for (size_t i = 1; i < arguments.size(); i++)
+		message += arguments[i] + " ";
 	if (target[0] == '#')
 	{
 		if (_server->isValidChannelName(target))
 		{
-			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getPrefix(), target));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), target));
 			return ;
 		}
-	}
-	else
-	{
-		if (_server->isValidNickname(target))
-		{
-			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getPrefix(), target));
-			return ;
-		}
-	}
-	if (arguments[1][0] != ':')
-	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getPrefix()));
-		return ;
-	}
-	std::string message = arguments[1].substr(1);
-	for (size_t i = 2; i < arguments.size(); i++)
-		message += " " + arguments[i];
-	
-	if (target[0] == '#')
-	{
 		Channel* channel = _server->getChannel(target);
 		channel->broadcastChannelPrimsg(client, message);
+		return ;
 	}
-	else
+	if (_server->isValidNickname(target))
 	{
-		Client*		client_target = _server->getClientByNickname(target);
-		addToClientBuffer(client->getServer(), client_target->getFd(), RPL_PRIVMSG(client->getPrefix(), target, message));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
+		return ;
 	}
+	
+	Client*		client_target = _server->getClientByNickname(target);
+	addToClientBuffer(client->getServer(), client_target->getFd(), RPL_PRIVMSG(client->getPrefix(), client_target->getNickname(), message));	
 }

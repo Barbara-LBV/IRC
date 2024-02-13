@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 19:01:51 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/12 16:57:20 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,7 @@ int main(int ac, char **av)
 	if (server.initializeServer() == ERROR)
 		return 2;
 	signal(SIGINT, Server::signal_handler);
-	try
-	{
-		server.manageConnections();
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
+	server.manageConnections();
+	delete server.getCmdHandler();
 	return (0);
 }

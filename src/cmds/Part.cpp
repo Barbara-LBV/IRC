@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/12 10:37:34 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/12 18:03:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "PART"));
+		addToClientBufferExtended(client->getServer(), client->getFd(), \
+			ERR_NEEDMOREPARAMS(client->getNickname(), "PART"));
 		return;
 	}
 
@@ -36,7 +37,16 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 		
     Channel* 	channel = _server->getChannel(name);
-
+	if (!channel)
+	{
+		addToClientBufferExtended(_server, client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), channel->getName()));
+		return ;
+	}
+	if (channel->getClient(client->getNickname()) == NULL)
+	{
+		addToClientBufferExtended(_server, client->getFd(), ERR_USERNOTINCHANNEL(client->getNickname(), " ", channel->getName()));
+        return ;
+	}
     channel->partChannel(client, reason);
 	
 }

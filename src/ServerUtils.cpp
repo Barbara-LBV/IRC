@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 19:02:13 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 17:35:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,8 @@ int Server::initializeServer(void)
 	return TRUE;
 }
 
-int		Server::checkRecv(int res, int fd)
+int		Server::checkRecv(std::vector<pollfd> &poll_fds, int res, std::vector<pollfd>::iterator it)
 {
-	(void)fd;
 	if (res == ERROR)
 	{
 		std::cout << BGREEN "[Server] " <<  GREEN "recv() error\n" DEFAULT;
@@ -116,6 +115,7 @@ int		Server::checkRecv(int res, int fd)
 	if (res == 0)
 	{
 		std::cout << BGREEN "[Server] " <<  GREEN "Client disconnected\n" DEFAULT;
+		delClient(poll_fds, it, it->fd);
 		return ERROR;
 	}
 	return TRUE;
@@ -134,7 +134,8 @@ void	addToClientBuffer(Server *server, int cliFd, std::string reply)
 {
 	Client *client = server->getClient(cliFd);
 	
-	if (client)
-		client->setRecvMsg(reply);
+	if (!client)
+		return ;	
+	client->setRecvMsg(reply);
 	client->sendReply(client->getFd());
 }

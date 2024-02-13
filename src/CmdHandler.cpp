@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 18:40:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:53:12 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ CmdHandler::CmdHandler(Server *server)
 	_commands["PART"] = new PartCommand(_server);
 	_commands["KICK"] = new KickCommand(_server);
 	_commands["INVITE"] = new InvitCommand(_server);
+	_commands["TOPIC"] = new TopicCommand(_server);
 	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
 	_commands["NOTICE"] = new NoticeCommand(_server);
 	_commands["WHOIS"] = new WhoCommand(_server);
@@ -53,13 +54,12 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 		if (name == "CAP")
 			continue;
 		for (std::string::iterator it = name.begin(); it != name.end(); ++it)
-        	*it = std::toupper(*it); 
+        	*it = std::toupper(*it);
 		try
 		{
 			Command *command = _commands.at(name);
 			std::string buf;
 			std::stringstream ss(line.substr(name.length(), line.length()));
-			
 			while (ss >> buf)
 				args.push_back(buf);
 			if (command->getAuthRequired() && client->isRegistred() == FALSE)
@@ -73,9 +73,7 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 		catch (const std::out_of_range &e)
 		{
 			if (name != "CAP")
-			{
 				addToClientBufferExtended(serv, client->getFd(), ERR_UNKNOWNCOMMAND(client->getNickname(), name));
-			}
 		}
 	}
 }

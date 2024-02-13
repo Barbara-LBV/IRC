@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/12 10:36:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 17:59:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 		_server->addChannel(name, channel);
 		channel->addClient(client);
-		channel->addOperator(client);
+		channel->setAdmin(client);
+		channel->addOperator(channel->getAdmin());
 		client->addChannel(channel);
 		channel->replyList(client);
 	}
@@ -119,12 +120,14 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		{
 			if (password == channel->getPassword())
 			{
-				std::cout << "i am joining a class who is already exit\n";
 				channel->addClient(client);
 				client->addChannel(channel);
 				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 				channel->replyList(client);
 				_server->broadcastChannel(client, RPL_JOIN(client->getPrefix(), name), channel);
+				if (!channel->getTopic().empty())
+					addToClientBuffer(client->getServer(), client->getFd(), RPL_TOPIC(client->getNickname(), channel->getName(), channel->getTopic()));
+				std::cout << "in function, JION, topic in this channel is = " << channel->getTopic() << std::endl;
 			}
 			else
 				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));

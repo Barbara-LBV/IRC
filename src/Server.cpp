@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/12 10:33:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/12 16:56:26 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ Server::~Server()
     for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
        delete *it;
     _channels.clear();
-	delete _handler;
 }
 
 /*********************  Assessors !!  ************************/

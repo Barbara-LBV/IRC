@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 17:54:12 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/12 17:38:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void			Client::deleteChannel(Channel* channel)
 {
     // Use std::remove to move the elements to be removed to the end
     _channel.erase(std::remove(_channel.begin(), _channel.end(), channel), _channel.end());
-	std::cout << "size of _chennel" << _channel.size() << std::endl;
+	std::cout << "size of client #" << getFd() << " channel = " << _channel.size() << std::endl;
 }
 
 

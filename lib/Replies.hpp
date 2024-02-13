@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/12 10:31:11 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 17:21:33 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 #define ERR_NOTREGISTERED(source)						"451 " + source + " :You have not registered\r\n"
 #define ERR_UNKNOWNCOMMAND(source, command)				"421 " + source + " " + command + " :Unknown command\r\n"
 #define ERR_USERONCHANNEL(source, target, channel)		"443 " + source + " " + target + " " + channel + " :is already on channel\r\n"
-#define ERR_NOSUCHNICK(source, name)					"401 " + source + " " + name + " :No such nick/channel\r\n"
+#define ERR_NOSUCHNICK(source, name)					"401 " + source + " " + name + " :No such nick\r\n"
 #define ERR_INVITEONLYCHAN(source, channel)				"473 " + source + " " + channel + " :Cannot join channel (+i)\r\n"
 
 // NUMERIC REPLIES
@@ -43,12 +43,12 @@
 #define RPL_CREATED(source, date)										"003 " + source + " :This server was created " + date + "\r\n"
 #define RPL_MYINFO(source, servername, version, usermodes, chanmodes)	"004 " + source + " :" + servername + " " + version + " " + usermodes + " " + chanmodes + "\r\n"
 
-#define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users + "\r\n"
+#define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list.\r\n"
 #define RPL_INVITING(source, channel, target)			"341 " + source + " " + channel + " " + target + "\r\n"
 
-#define RPL_NOTOPIC(source, channel)					"331 " + source + " " + channel + " :No topic is set\r\n"
-#define RPL_TOPIC(source, channel, topic)				"332 " + source + " " + channel + " :" + topic + "\r\n"
+#define RPL_NOTOPIC(source, channel)					":localhost 331 " + source + " " + channel + " :No topic is set\r\n"
+#define RPL_TOPIC(source, channel, topic)				":localhost 332 " + source + " " + channel + " :" + topic + "\r\n"
 
 #define RPL_WHOREPLY(source, channel, username, hostname, serverhostname, nickname, realname)	"352 " + source + " " + channel + " " + username + " " + hostname + " " + serverhostname + " " + nickname + " H :0 " + realname + "\r\n"
 #define RPL_ENDOFWHO(source, channel)					"315 " + source + " " + channel + " :End of WHO list\r\n"
@@ -66,9 +66,9 @@
 #define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + " :" + reason + "\r\n"
 #define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason + "\r\n"
 
-#define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " :" + message + "\r\n"
+#define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " " + message + "\r\n"
 //#define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + " " + message + "\r\n")
-
+# define RPL_NICK(oclient, uclient, client)                       ":" + oclient + "!" + uclient + "@localhost NICK " +  client + "\r\n"
 #define RPL_NOTICE(source, target, message)			":" + source + " NOTICE " + target + " :" + message + "\r\n"
 #define RPL_INVITE(source, target, channel)			":" + source + " INVITE " + target + " :" + channel + "\r\n"
 
@@ -92,6 +92,7 @@
 #define RPL_MOTDSTART(client, servername) 				"375 " + client + " :- " + servername + " Message of the day - \r\n"
 #define RPL_MOTD(client, motd_line) 					"372 " + client + " :" + motd_line + "\r\n"
 #define RPL_ENDOFMOTD(client) 							"376 " + client + " :End of /MOTD command.\r\n"
+#define ERR_NORECIPIENT(client) 						"411 " + client + " :No recipient given PRIVMSG\r\n"
 
 ////INVITE - no localhost before RPL_INVITE
 //#define RPL_INVITE(nickname, username, target, channel)		(CLIENT_ID(nickname, username) + " INVITE " + target + " " + channel + "\r\n")
@@ -146,7 +147,7 @@
 //// NICK
 //#define ERR_NONICKNAMEGIVEN(source)						"431 " + source + " :Nickname not given\r\n"
 //#define ERR_NICKNAMEINUSE(source, nickname)				"433 " + source + " " + nickname + " :Nickname is already in use\r\n"
-# define RPL_NICK(oclient, uclient, client)                       ":" + oclient + "!" + uclient + "@localhost NICK " +  client + "\r\n"
+
 
 //// NOTICE - no localhost before reply
 //#define RPL_NOTICE(source, target, message)				":" + source + " NOTICE " + target + " :" + message + "\r\n"
@@ -167,7 +168,7 @@
 
 //// PRIVMSG - no localhost before reply
 //#define RPL_PRIVMSG(nick, username, target, message) 	            ":" + nick + "!" + username + "@localhost PRIVMSG " + target + " " + message + "\r\n"
-# define ERR_NORECIPIENT(client)                                  "411 " + client + " :No recipient given PRIVMSG\r\n"
+                               
 //# define ERR_NOTEXTTOSEND(client)                                 "412 " + client + " :No text to send\r\n"
 ////#define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " :" + message
 

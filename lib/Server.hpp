@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/12 10:29:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 17:34:58 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Server
 		int					&getPort(void);
 		int					&getFd(void);
 		std::string 		&getMsg(void);
+		CmdHandler 			*getCmdHandler(void){return _handler;};
 		void				setFd(int fd);
 		void				setPwd(std::string pwd);
 		void				setMsg(std::string buf);
@@ -74,7 +75,7 @@ class Server
 		int					receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it);
 		void				stockMsg(Client *cli, char *s);
 		bool				isValidNickname(std::string name);
-		int					checkRecv(int res, int fd);
+		int					checkRecv(std::vector<pollfd> &poll_fds, int res, std::vector<pollfd>::iterator it);
 		void				parseMsg(std::string msg, int fd); // to set the command 
 		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
 		
