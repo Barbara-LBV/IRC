@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CmdHandler.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 18:40:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 14:04:52 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void 	CmdHandler::invoke(Server *serv, Client *client, std::string const &msg)
 				client->sendReply(client->getFd());
 				return ;
 			}
+			std::cout << "command = "<< name << std::endl;
+			std::cout << "args size = " << args.size() << std::endl;
 			command->execute(client, args);
 		}
 		catch (const std::out_of_range &e)

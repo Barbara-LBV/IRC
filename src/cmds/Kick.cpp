@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:56:07 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/09 18:16:14 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:48:03 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,25 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
     Channel* 	channel = _server->getChannel(chan_name);
 	Client*		client_target = _server->getClientByNickname(target); 
 
-	std::string reason = "";
-	if (!arguments[2].empty())
+	std::string reason = arguments[2];
+	if (arguments.size() > 3)
 	{
-		for (size_t i = 1; i < arguments.size(); i++)
-		reason += " " + arguments[i];
+		for (size_t i = 3; i < arguments.size(); i++)
+			reason += " " + arguments[i];
 	}
     
     if (!channel->is_oper(client))
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
-    else if (!channel->isInChannel(client_target))
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getPrefix(), target, chan_name));
-    else
 	{
-        channel->partChannel(client_target, "");
-		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_KICK(client->getPrefix(), chan_name, target, reason));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
+		return;
 	}
+    if (!channel->isInChannel(client_target))
+	{
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getPrefix(), target, chan_name));
+		return ;
+	}
+	addToClientBuffer(_server, client->getFd(), RPL_PART(client_target->getPrefix(), chan_name));	
+	_server->broadcastChannel(NULL, RPL_KICK(client->getPrefix(), chan_name, target, reason), channel);
+	channel->removeClient(client_target);
+	return ;
 }

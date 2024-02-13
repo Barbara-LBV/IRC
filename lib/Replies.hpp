@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/12 10:31:11 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 16:00:52 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,9 @@
 //// MODE Channel
 //#define ERR_INVITONLYCHAN(source, channel)				"473 " + source + " " + channel + " :Cannot join channel (+i)"
 //#define ERR_CHANOPRIVSNEEDED(source, channel)			      "482 " + source + " " + channel + " :You're not channel operator"
-//#define MODE_CHANNELMSG(channel, mode) 					"MODE #" + channel + " " + mode + "\r\n"
-//#define MODE_CHANNELMSGWITHPARAM(channel, mode, param) 	      "MODE #" + channel + " " + mode + " " + param + "\r\n"
-//#define RPL_CHANNELMODEIS(client, channel, mode) 		      "324 " + client + " #" + channel + " " + mode + "\r\n"
+#define MODE_CHANNELMSG(channel, mode) 					"MODE #" + channel + " " + mode + "\r\n"
+#define MODE_CHANNELMSGWITHPARAM(channel, mode, param) 	      "MODE #" + channel + " " + mode + " " + param + "\r\n"
+#define RPL_CHANNELMODEIS(client, channel, mode) 		      "324 " + client + " #" + channel + " " + mode + "\r\n"
 //#define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) "324 " + client + " #" + channel + " " + mode + " " + password + "\r\n"
 //#define ERR_CANNOTSENDTOCHAN(client, channel) 			      "404 " + client + " #" + channel + " :Cannot send to channel\r\n"
 //#define ERR_CHANNELISFULL(client, channel) 				"471 " + client + " #" + channel + " :Cannot join channel (+l)\r\n"

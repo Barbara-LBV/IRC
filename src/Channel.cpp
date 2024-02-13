@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 18:48:48 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:02:09 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Channel::Channel(std::string const &name, std::string const &password, Server *s
                     {
                         _clients.clear();
                         _ops.clear();
+                        _invite.clear();
                         _topic = "";
                         _l = 1000;
                         _i = FALSE;
@@ -143,6 +144,34 @@ bool Channel::partChannel(Client* cli, std::string reason)
     return TRUE;
 }
 
+void    Channel::removeClient(Client* cli)
+{
+    std::string clientPrefix = cli->getPrefix();
+    bool clientFound = false;
+
+    for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if (*it == cli)
+        {
+            _clients.erase(it);
+            if (is_oper(cli))
+                removeOpe(cli);
+            cli->deleteChannel(this);
+            clientFound = true;
+            break;
+        }
+    }
+   
+    if (clientFound == false)
+        addToClientBufferExtended(cli->getServer(), cli->getFd(), ERR_USERNOTINCHANNEL(cli->getNickname(), "", this->getName()));
+     
+    if (_clients.size() == 0)
+    {
+       _server->delChannel(this);
+       delete this;
+    }
+}
+
 void Channel::removeOpe(Client *client)
 {
     std::vector<Client*>::iterator it;
@@ -173,6 +202,16 @@ bool	Channel::isInChannel(Client *client)
 	}
 	return false;
 }
+bool        Channel::isInvited(Client *client)
+{
+    for  (std::vector<Client *>::iterator it = _invite.begin(); it != _invite.end(); ++it)
+	{
+		if (*it == client)
+			return true;
+	}
+	return false;
+}
+
 
 void 	Channel::broadcastChannelPrimsg(Client* client, std::string message)
 {

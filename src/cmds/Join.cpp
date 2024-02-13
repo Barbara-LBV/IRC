@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/12 10:36:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 11:38:46 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
     else 
 	{
-		if(channel->getI() == true)
+		if(channel->getI() == true && channel->isInvited(client) == false)
 		{
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
 			return ;
@@ -119,7 +119,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		{
 			if (password == channel->getPassword())
 			{
-				std::cout << "i am joining a class who is already exit\n";
+				std::cout << "i am joining a class which is already exit\n";
 				channel->addClient(client);
 				client->addChannel(channel);
 				addToClientBuffer(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/06 16:12:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:46:18 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ bool	Server::isValidNickname(std::string name)
 	while (it != _clients.end())
 	{
 		if (it->second->getNickname() == name)
-			return FALSE;	
+			return FALSE;
+		it++;
 	}
 	return TRUE;
 }
