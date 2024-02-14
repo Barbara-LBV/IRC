@@ -23,6 +23,7 @@ SRCS_NAME 	= main.cpp \
 			cmds/Quit.cpp \
 			cmds/Topic.cpp \
 			cmds/WhoIs.cpp \
+			cmds/Who.cpp \
 			cmds/List.cpp \
 			cmds/Part.cpp \
 			cmds/Mode.cpp \

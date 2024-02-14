@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:45:52 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 16:58:33 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ bool Channel::partChannel(Client* cli, std::string reason)
             _clients.erase(it);
             cli->deleteChannel(this);
             addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART(cli->getPrefix(), getName()));	
-            _server->broadcastChannel(cli, RPL_PART(cli->getPrefix(), getName()), this);
+            _server->broadcastChannel(cli, RPL_PART(cli->getNickname(), getName()), this);
             reason.clear();
             
             if (is_oper(cli))

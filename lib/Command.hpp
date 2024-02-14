@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/13 15:52:45 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 13:03:22 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,14 +143,6 @@ public:
 	void execute(Client *client, std::vector<std::string> arguments);
 };
 
-class WhoCommand : public Command
-{
-public:
-	WhoCommand(Server *server);
-	~WhoCommand();
-
-	void execute(Client *client, std::vector<std::string> arguments);
-};
 
 class ListCommand : public Command
 {
@@ -166,6 +158,24 @@ class TopicCommand : public Command
 public:
 	TopicCommand(Server *server);
 	~TopicCommand();
+
+	void execute(Client *client, std::vector<std::string> arguments);
+};
+
+class WhoCommand : public Command
+{
+public:
+	WhoCommand(Server *server);
+	~WhoCommand();
+
+	void execute(Client *client, std::vector<std::string> arguments);
+};
+
+class WhoIsCommand : public Command
+{
+public:
+	WhoIsCommand(Server *server);
+	~WhoIsCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
 };

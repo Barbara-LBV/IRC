@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:25:18 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 11:51:24 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ CmdHandler::CmdHandler(Server *server)
 	_commands["TOPIC"] = new TopicCommand(_server);
 	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
 	_commands["NOTICE"] = new NoticeCommand(_server);
-	_commands["WHOIS"] = new WhoCommand(_server);
+	_commands["WHOIS"] = new WhoIsCommand(_server);
 	_commands["LIST"] = new ListCommand(_server);
 }
 

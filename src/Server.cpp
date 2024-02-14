@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/12 16:56:26 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 15:13:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Server::Server(std::string port, std::string pwd, struct tm * time) : _servInfo(
 	_servPort = atoi(port.c_str());
 	_cliNb = 0;
 	_servPwd = pwd;
-	_servName = "localhost";
+	_servName = "IrcServer";
 	this->setDatetime(time);
 	_result = 0;
 	memset(&_hints, 0, sizeof(_hints));
@@ -83,9 +83,6 @@ void Server::addChannel(std::string chan_name, Channel* channel)
         _channels.push_back(channel);
     }
 }
-
-
-
 
 Client*			Server::getClient(int fd){return _clients[fd];}
 

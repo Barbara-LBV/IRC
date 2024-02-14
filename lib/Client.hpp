@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:29:11 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 12:24:56 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ class Client
 		bool const			&getRegistrationStatus(void)const ;
 		bool const			&getDeconnStatus(void)const ;
 		int	const			&getFd(void)const ;
-		void				setServer(Server *serv){_server = serv;};
 		Server				*getServer(void);
+		std::deque<Channel*> &getChannels(void){return _channel;};
+		void				setServer(Server *serv){_server = serv;};
 		void				setNickname(std::string);
 		void			 	setOldNick(std::string nick){_infos._oldNick = nick;};
 		void				setUsername(std::string);

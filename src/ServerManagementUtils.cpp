@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:12:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 15:59:50 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int			Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::ite
 	if (_result <= MAXBUF && buf[_result - 1] != '\n')
 	{
 		cli->setPartialMsg(buf);
-		std::cout << BBLUE "[Client] " << BLUE "Partial message from " \
+		std::cout << BBLUE "[Client] " << BLUE "Partial message from Client #" \
 			<< it->fd << DEFAULT " << " << cli->getPartialMsg() << std::endl;
 	}
 	else if (_result <= MAXBUF)
@@ -60,7 +60,7 @@ int			Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::ite
 		std::string msg = cli->getPartialMsg();
 		cli->setFullMsg(msg + buf);
 		cli->resetPartialMsg();
-		std::cout << BBLUE "[Client] " << BLUE "Message from " << it->fd 
+		std::cout << BBLUE "[Client] " << BLUE "Message from Client #" << it->fd 
 			<< DEFAULT " << " << cli->getFullMsg();
 	}
 	memset(buf, 0, sizeof(MAXBUF));
