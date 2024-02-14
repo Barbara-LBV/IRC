@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/13 17:38:45 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 09:15:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Channel
 		void						setI(int b){_i = b;};
 		void						setT(int b){_t = b;};
 		void						setAdmin(Client * cli){_admin = cli;};
+		
 		/***********   Functions   ***********/
 		void 						addClient(Client *cli);
    		bool 						partChannel(Client* cli, std::string reason);

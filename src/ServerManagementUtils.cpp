@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/13 17:34:44 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:12:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void		Server::addClient(std::vector<pollfd> &poll_fds, Client *cli)
 void		Server::cantAddClient(int cliSocket)
 {
 	(void) cliSocket;
-	std::cout << BGREEN "[Server] " <<  GREEN "You cannot join, the server is already full." << DEFAULT << std::endl;
+	std::cout << BRED "[Server] " <<  RED "You cannot join, the server is already full." << DEFAULT << std::endl;
 	send(cliSocket, "[Server] You cannot join, the server is already full", 53, 0);
 	close (cliSocket);
 	close(_servFd); // we close the listening socket as we cannot add more clients

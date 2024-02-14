@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/13 17:35:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:16:43 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int Server::fillServinfo(char *port)
 	
 	if (getaddrinfo(NULL, port, &_hints, &_servInfo) < 0)
 	{
-		std::cerr << RED << "[Server] Flop du addrinfo" << DEFAULT << std::endl;
+		std::cerr << BRED "[Server] " << RED << "Flop of addrinfo" << DEFAULT << std::endl;
 		return (ERROR);
 	}
 	return (TRUE);
@@ -53,7 +53,7 @@ int	Server::bindServerSocket(void)
 {
 	if (bind(getFd(), _servInfo->ai_addr, _servInfo->ai_addrlen) == ERROR)
 	{
-		std::cerr << BGREEN "[Server] " << GREEN "Socket impossible to bind" DEFAULT << std::endl;
+		std::cerr << BRED "[Server] " << RED  "Socket impossible to bind" DEFAULT << std::endl;
 		close(getFd());
 		server_shutdown = TRUE;
 		return ERROR;
@@ -66,12 +66,12 @@ int		Server::listenForConnection(void)
 {
 	if (listen(getFd(), BACKLOG) ==  ERROR)
 	{
-		std::cerr << BGREEN "[Server] " << GREEN "Socket cannot listen" DEFAULT << std::endl;
+		std::cerr << BRED "[Server] " << RED "Socket cannot listen" DEFAULT << std::endl;
 		server_shutdown = TRUE;
 		close(getFd());
 		return ERROR;
 	}
-	std::cout << BGREEN "[Server] " << GREEN "Listening on socket fd #" << _servFd << DEFAULT << std::endl;
+	std::cout << BMAGENTA "[Server] " << MAGENTA "Listening on socket fd #" << _servFd << DEFAULT << std::endl;
 	return TRUE;
 }
 
@@ -84,7 +84,7 @@ int		Server::acceptConnection(void)
 	{
 		if (errno != EWOULDBLOCK)
 		{
-			std::cerr << BGREEN "[Server] " << GREEN "Socket cannot accept connection" DEFAULT << std::endl;
+			std::cerr << BRED "[Server] " << RED "Socket cannot accept connection" DEFAULT << std::endl;
 			return BREAK ;
 		}
 	}
@@ -100,7 +100,7 @@ int Server::initializeServer(void)
 		return ERROR;
     if (listenForConnection() == ERROR)
 		return ERROR;
-	std::cout << BGREEN "[Server] " <<  GREEN "Waiting for connections... " DEFAULT << std::endl;
+	std::cout << BMAGENTA "[Server] " <<  MAGENTA "Waiting for connections... " DEFAULT << std::endl;
 	freeaddrinfo(_servInfo);
 	return TRUE;
 }
@@ -109,13 +109,14 @@ int		Server::checkRecv(std::vector<pollfd> &poll_fds, int res, std::vector<pollf
 {
 	if (res == ERROR)
 	{
-		std::cout << BGREEN "[Server] " <<  GREEN "recv() error\n" DEFAULT;
+		std::cout << BRED "[Server] " << RED "recv() error\n" DEFAULT;
 		return ERROR;
 	}	
 	if (res == 0)
 	{
-		std::cout << BGREEN "[Server] " <<  GREEN "Client disconnected\n" DEFAULT;
+		std::cout << BRED "[Server] " << RED "Nothing to received: client #" << it->fd << " is disconnected\n" DEFAULT;
 		delClient(poll_fds, it, it->fd);
+		//put the client status at disconneted = true
 		return ERROR;
 	}
 	return TRUE;

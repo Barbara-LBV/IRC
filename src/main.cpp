@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/12 16:57:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:00:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	Server::signal_handler(int signal)
 	if (signal == SIGPIPE)
 		return ;
 	server_shutdown = true;
-	std::cout << BGREEN "[Server]" GREEN << " Shutting down..." DEFAULT << std::endl;
+	std::cout << BRED "[Server] " RED << "Shutting down..." DEFAULT << std::endl;
 }
 
 int main(int ac, char **av)

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/07 11:11:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 09:56:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,11 @@
 /*********************  Colors *******************/
 
 # define DEFAULT "\001\033[0;39m\002"
+# define BRED "\001\033[1;91m\002"
 # define RED "\001\033[1;91m\002"
 # define YELLOW "\001\033[1;93m\002"
-# define MAGENTA "\001\033[1;95m\002"
+# define BMAGENTA "\001\033[1;95m\002"
+# define MAGENTA "\001\033[0;95m\002"
 # define GREY "\001\033[1;89m\002"
 # define BGREEN "\001\033[1;92m\002"
 # define GREEN "\001\033[0;92m\002"

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/13 17:54:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:10:46 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
 		return;
 	}
-	std::cout << "topic before = " << arguments[1] << std::endl;
 	std::string&  chan_name = arguments[0];
 	chan_name[0] == '#' ? chan_name : chan_name.insert(0, 1, '#');
 	
@@ -92,10 +91,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments.size() >= 2)
 	{
 		if (!channel->getTopic().empty())
-		{
 			channel->setTopic(topic);
-			channel->globalBroadcastChannel(client, "Topic of " + chan_name + " is cleared.");
-		}
 		if (arguments[1][0] != ':')
 		{
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getNickname()));
@@ -106,7 +102,6 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 		for(size_t i = 2; i < arguments.size(); i++)
 			topic += " " + arguments[i];
 	}
-	std::cout << "topic after = " << topic << std::endl;
 	channel->setTopic(topic);
 	channel->globalBroadcastChannel(client, RPL_TOPIC(client->getNickname(), channel->getName(), topic));;
 }
