@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/13 17:59:13 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:37:15 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,13 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 		_server->addChannel(name, channel);
 		channel->addClient(client);
-		channel->setAdmin(client);
-		channel->addOperator(channel->getAdmin());
+		channel->addOperator(client);
 		client->addChannel(channel);
 		channel->replyList(client);
 	}
     else 
 	{
-		if(channel->getI() == true)
+		if(channel->getI() == true && channel->isInvited(client) == false)
 		{
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_INVITONLYCHAN(client->getPrefix(), name));
 			return ;
@@ -126,8 +125,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 				channel->replyList(client);
 				_server->broadcastChannel(client, RPL_JOIN(client->getPrefix(), name), channel);
 				if (!channel->getTopic().empty())
-					addToClientBuffer(client->getServer(), client->getFd(), RPL_TOPIC(client->getNickname(), channel->getName(), channel->getTopic()));
-				std::cout << "in function, JION, topic in this channel is = " << channel->getTopic() << std::endl;
+					addToClientBufferExtended(client->getServer(), client->getFd(), RPL_TOPIC(client->getNickname(), channel->getName(), channel->getTopic()));
 			}
 			else
 				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));

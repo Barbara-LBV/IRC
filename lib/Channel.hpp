@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 09:15:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:34:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ class Channel
 		std::vector<std::string>	getNicknames();
 		Server*						getServer(){return _server;};
 		Client*						getClient(const std::string &nickname);
-		Client*						getAdmin(void){return _admin;};
 		size_t						getL(){return _l;};
 		bool						getI(){return _i;};
 		bool						getT(){return _t;};
@@ -46,34 +45,35 @@ class Channel
 		void						setL(size_t N){_l = (N != 0) ? N : std::numeric_limits<int>::max(); };
 		void						setI(int b){_i = b;};
 		void						setT(int b){_t = b;};
-		void						setAdmin(Client * cli){_admin = cli;};
 		
 		/***********   Functions   ***********/
-		void 						addClient(Client *cli);
-   		bool 						partChannel(Client* cli, std::string reason);
 		bool    					is_oper(Client *client);
-		void 						removeOpe(Client *client);
 		bool						isInChannel(Client *client);
+		bool						isInvited(Client *client);
+		void 						addClient(Client *cli);
 		void						addOperator(Client *client){_ops.push_back(client);};
-		void 						globalBroadcastChannel(Client* client, std::string message);
+		void						addInvite(Client *client){_invited.push_back(client);};
+		void 						removeOpe(Client *client);
+   		bool 						partChannel(Client* cli, std::string reason);
+		void						removeClient(Client* client);
 		void 	  					broadcastChannelmessage(Client* client, std::string message);
 		void 	  					broadcastChannelPrimsg(Client* client, std::string message);
 		void 						broadcastChannelPart(Client* client, std::string reason);
 		void						replyList(Client* client);
-		void    					removeClient(Client *client, std::string reason);
 		size_t						clientIndex(std::vector<Client *> clients, Client *client);
+		
 		
 	private:
 		Channel(Channel const &name);
 		Channel &operator=(Channel const &c);
 		
 		const std::string	_name;
-		std::string			_topic ;
+		std::string			_topic;
 		std::string			_password;
 		Server*				_server;
 		std::vector<Client *>_clients;
 		std::vector<Client *>_ops;
-		Client				*_admin;
+		std::vector<Client *>_invited;
 		size_t				_l ;		//Set/remove the user limit to channel
 		bool				_i ;     //Set/remove Invite-only channel, true is invite only
 		bool				_t ;		//Set/remove the restrictions of the TOPIC command to channel operator    //true is only operator can set topic

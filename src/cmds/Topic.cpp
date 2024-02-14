@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/14 10:10:46 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:36:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,5 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 			topic += " " + arguments[i];
 	}
 	channel->setTopic(topic);
-	channel->globalBroadcastChannel(client, RPL_TOPIC(client->getNickname(), channel->getName(), topic));;
+	channel->broadcastChannelmessage(NULL, RPL_TOPIC(client->getNickname(), channel->getName(), topic));;
 }

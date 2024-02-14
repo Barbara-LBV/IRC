@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/13 17:53:51 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:45:52 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ Channel::Channel(std::string const &name, std::string const &password, Server *s
                     {
                         _clients.clear();
                         _ops.clear();
+                        _invited.clear();
                         _topic = "";
                         _l = 1000;
                         _i = FALSE;
                         _t = TRUE;
-                        _admin = NULL;
                     }
                     
 Channel::~Channel() {}
@@ -117,17 +117,15 @@ bool Channel::partChannel(Client* cli, std::string reason)
                 removeOpe(cli);
             if (_ops.size() == 0 && _clients.size() > 0)
             {
-                _admin = _clients.begin().operator*();
-                addOperator(_admin);
+                cli = _clients.begin().operator*();
+                addOperator(cli);
             }
             
             //clientFound = true;
             break;
         }
     }
-    std::cout << "size of list client in this channel = " << _clients.size() << std::endl;
-    std::cout << "size of list operator in this channel = " << _ops.size() << std::endl;
-    
+
     if (_clients.size() == 0)
     {
        _server->delChannel(this);
@@ -144,6 +142,34 @@ bool Channel::partChannel(Client* cli, std::string reason)
     return TRUE;
 }
 
+void    Channel::removeClient(Client* cli)
+{
+    std::string clientPrefix = cli->getPrefix();
+    bool clientFound = false;
+
+    for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if (*it == cli)
+        {
+            _clients.erase(it);
+            if (is_oper(cli))
+                removeOpe(cli);
+            cli->deleteChannel(this);
+            clientFound = true;
+            break;
+        }
+    }
+   
+    if (clientFound == false)
+        addToClientBufferExtended(cli->getServer(), cli->getFd(), ERR_USERNOTINCHANNEL(cli->getNickname(), "", this->getName()));
+     
+    if (_clients.size() == 0)
+    {
+       _server->delChannel(this);
+       delete this;
+    }
+}
+
 void Channel::removeOpe(Client *client)
 {
     std::vector<Client*>::iterator it;
@@ -152,7 +178,6 @@ void Channel::removeOpe(Client *client)
         if (*it == client)
         {
             _ops.erase(it); // delete from list of operators in this channel
-            _admin = NULL;
             return ;
         }
     }
@@ -172,6 +197,16 @@ bool	Channel::isInChannel(Client *client)
 	}
 	return false;
 }
+bool        Channel::isInvited(Client *client)
+{
+    for  (std::vector<Client *>::iterator it = _invited.begin(); it != _invited.end(); ++it)
+	{
+		if (*it == client)
+			return true;
+	}
+	return false;
+}
+
 
 void 	Channel::broadcastChannelPrimsg(Client* client, std::string message)
 {
@@ -193,19 +228,6 @@ void 	Channel::broadcastChannelmessage(Client* client, std::string message)
    for (; it != cli_target.end(); ++it)
    {
 		if (this == (*it)->getActiveChannel() && client != *it)
-			addToClientBufferExtended(getServer(), (*it)->getFd(), message);
-	}
-}
-
-void 	Channel::globalBroadcastChannel(Client* client, std::string message)
-{
-    (void)client;
-    std::vector<Client*> cli_target = getClients();
-	std::vector<Client*>::iterator it = cli_target.begin();
-	
-   for (; it != cli_target.end(); ++it)
-   {
-		if (this == (*it)->getActiveChannel())
 			addToClientBuffer(getServer(), (*it)->getFd(), message);
 	}
 }

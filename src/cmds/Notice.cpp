@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:11:32 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 09:52:44 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 10:35:51 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void NoticeCommand::execute(Client *client, std::vector<std::string> arguments)
 			return ;
 		}
 		Channel* channel = _server->getChannel(target);
-		channel->globalBroadcastChannel(client, RPL_NOTICE(client->getPrefix(), channel->getName(), message));
+		channel->broadcastChannelmessage(NULL, RPL_NOTICE(client->getPrefix(), channel->getName(), message));
 		return ;
 	}
 	if (_server->isValidNickname(target))

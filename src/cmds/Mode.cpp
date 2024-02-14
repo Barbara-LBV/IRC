@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/09 18:17:48 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/13 16:03:42 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	if (arguments[0] == client->getNickname() && arguments[1] == "+i")
-	{
-		addToClientBuffer(client->getServer(), client->getFd(), "");
-		return;
-	}
+	// if (arguments[0] == client->getNickname() && arguments[1] == "+i")
+	// {
+	// 	addToClientBuffer(client->getServer(), client->getFd(), "");
+	// 	return;
+	// }
 	
 	std::string&  chan_name = arguments[0];
 	chan_name[0] == '#' ? chan_name : chan_name.insert(0, 1, '#');
@@ -67,7 +67,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments[1] == "i" || arguments[1] == "+i" )
 	{
 		channel->setI(true);
-		channel->broadcastChannelPrimsg(client, "channel" + chan_name + " is invite-only now");
+		_server->broadcastChannel(NULL, MODE_CHANNELMSG(chan_name, "+i"), channel);
 	}
 	if (arguments[1] == "-i" )
 	{
