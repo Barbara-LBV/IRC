@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 12:24:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 10:12:51 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ class Client
 		void				addChannel(Channel* channel);
 		void				partAllChannel(void);
 		void			    deleteChannel(Channel* channel);
-
+	
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);

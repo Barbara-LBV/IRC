@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/12 18:03:32 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 10:12:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,4 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
         return ;
 	}
     channel->partChannel(client, reason);
-	
 }
