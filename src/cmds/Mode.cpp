@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/13 16:03:42 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/14 16:02:18 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,14 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	// if (arguments[0] == client->getNickname() && arguments[1] == "+i")
-	// {
-	// 	addToClientBuffer(client->getServer(), client->getFd(), "");
-	// 	return;
-	// }
+	if (arguments[0] == client->getNickname())
+	{
+		if (arguments[1] == "+i")
+			addToClientBuffer(client->getServer(), client->getFd(), "");
+		if (arguments[1] == "-o")
+			addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "-o" ));
+		return;
+	}
 	
 	std::string&  chan_name = arguments[0];
 	chan_name[0] == '#' ? chan_name : chan_name.insert(0, 1, '#');
@@ -50,98 +53,119 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	if (!channel)
 	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getPrefix(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHCHANNEL(client->getNickname(), chan_name));
 		return ;
 	}
     if (!channel->isInChannel(client))
 	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getPrefix(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
 		return ;
 	}
 	else if (!channel->is_oper(client))
 	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
+		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
 		return ;
 	}
 	// MODE #abc i/-i
 	if (arguments[1] == "i" || arguments[1] == "+i" )
 	{
 		channel->setI(true);
-		_server->broadcastChannel(NULL, MODE_CHANNELMSG(chan_name, "+i"), channel);
+		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "+i", "channel is Invite only now"), channel);
+		return;
 	}
 	if (arguments[1] == "-i" )
 	{
 		channel->setI(false);
-		channel->broadcastChannelPrimsg(client, "channel" + chan_name + " is invite-only now");
+		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "-i", "channel no need to invite"), channel);
+		return ;
 	}
 
 	// MODE #abc t/-t
 	if (arguments[1] == "t" || arguments[1] == "+t" )
 	{
 		channel->setT(true);
-		channel->broadcastChannelPrimsg(client, "only operator can set or modify TOPIC of channel" + chan_name);
+		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "+t", "only operator can set or modify TOPIC of channel"), channel);
+		return;
 	}
 	if (arguments[1] == "-t" )
 	{
 		channel->setT(false);
-		channel->broadcastChannelPrimsg(client, "every user can set or modify TOPIC of channel" + chan_name);
+		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "-t", "every user can set or modify TOPIC of channel"), channel);
+		return;
 	}
 
 	// MODE #abc k/-k
 	if (arguments[1] == "k" || arguments[1] == "+k" )
 	{
 		if (arguments[2].empty())
+		{
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
+			return ;
+		}
 		else
 		{
 			channel->setPassword(arguments[2]);
-			channel->broadcastChannelPrimsg(client, "channel's Password has changed");
+			_server->broadcastChannel(NULL, RPL_CHANNELMODEISWITHKEY(client->getPrefix(), chan_name, "+k", channel->getPassword()), channel);
+			return;
 		}
 	}
 	if (arguments[1] == "-k" )
 	{
 		channel->setPassword("");
-		channel->broadcastChannelPrimsg(client, "channel's Passwod has removed");
+		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "-k", " password of channel is removed"), channel);
+		return ;
 	}
 	
 	// MODE #abc o/-o
-	if (arguments[1] == "o" || arguments[1] == "+o" || "-o")
+	if (arguments[1] == "o" || arguments[1] == "+o" || arguments[1] == "-o")
 	{
 		if (arguments[2].empty())
+		{
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
+			return;
+		}
 		else 
 		{
 			std::string target = arguments[2];
 			if (_server->isValidNickname(target))
 			{
-				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getPrefix(), target));
+				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOSUCHNICK(client->getNickname(), target));
 				return ;
 			}
 			Client*		client_target = _server->getClientByNickname(target); 
 			if (!channel->isInChannel(client_target))
 			{
-				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getPrefix(), target, chan_name));
+				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getNickname(), target, chan_name));
 				return ;
 			}
-			else if (!channel->is_oper(client_target))
+			bool isOperator = false;
+			if (channel->is_oper(client_target))
+				isOperator = true;
+			if (arguments[1] == "o" || arguments[1] == "+o")
 			{
-				if (arguments[1] == "o" || arguments[1] == "+o")
+				if (isOperator == false)
 				{
+					
+					addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "+o"));
+					_server->broadcastChannel(NULL, RPL_MODE(client->getPrefix(),chan_name, "+o", target + " got operator privilege now"), channel);
 					channel->addOperator(client_target);
-					client_target->addChannel(channel);
-					addToClientBufferExtended(client->getServer(), client->getFd(), target + " is got operator privilege now");
-					return ;
+				}
+				else
+					addToClientBufferExtended(client->getServer(), client->getFd(), target + "  already a operator in this channel");
+				return;
+			}
+			else if (arguments[1] == "-o")
+			{
+				if (isOperator == true)
+				{
+					std::cout << "what will be happen when operator left the channel? \n";
+					addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "-o"));
+					_server->broadcastChannel(NULL, RPL_MODE(client->getPrefix(),chan_name, "-o", target + " is no more operator of channel" ), channel);
+					channel->removeOpe(client_target);
 				}
 				else 
-				{
-					if (arguments[1] == "-o")
-					{
-						channel->removeOpe(client_target);
-						client_target->deleteChannel(channel);
-						addToClientBufferExtended(client->getServer(), client->getFd(), target + " is no more operator of channel " + chan_name);
-						return ;
-					}
-				}
+					addToClientBufferExtended(client->getServer(), client->getFd(), target + "  is not operator of this channel");
+				return ;
 			}
 		}
 	}
@@ -155,11 +179,20 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
         if ((iss >> sizeValue) && iss.eof())
 		{
 			if ((arguments[1] == "l" || arguments[1] == "+l") && (sizeValue != 0))
+			{
 				channel->setL(sizeValue);
+				_server->broadcastChannel(NULL, MODE_CHANNELMSGWITHPARAM(chan_name, "+l", ("Limit for channel user is " + arguments[2])), channel);
+				return;
+			}
 		}    
 	}
 	if (arguments.size() == 2 && arguments[1] == "-l")
+	{
 		channel->setL(0);
+		_server->broadcastChannel(NULL, MODE_CHANNELMSGWITHPARAM(chan_name, "-l", "channel is unlimit user channel now"), channel);
+		return;
+	}
+	_server->broadcastChannel(NULL, ERR_UMODEUNKNOWNFLAG(client->getNickname()), channel);
 }
 
 bool	isAllDigits(const std::string& str) 

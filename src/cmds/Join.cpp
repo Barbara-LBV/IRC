@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/14 10:37:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 13:14:32 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,13 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 				_server->broadcastChannel(client, RPL_JOIN(client->getPrefix(), name), channel);
 				if (!channel->getTopic().empty())
 					addToClientBufferExtended(client->getServer(), client->getFd(), RPL_TOPIC(client->getNickname(), channel->getName(), channel->getTopic()));
+				return;
 			}
 			else
-				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getPrefix()));
+				addToClientBufferExtended(client->getServer(), client->getFd(), ERR_PASSWDMISMATCH(client->getNickname()));
 			
 		}
 		else
-			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getPrefix(), name));
+			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getNickname(), name));
 	}
 }

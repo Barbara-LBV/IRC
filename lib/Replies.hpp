@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:45:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/14 17:05:09 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@
 //#define ERR_CHANOPRIVSNEEDED(source, channel)			      "482 " + source + " " + channel + " :You're not channel operator"
 #define MODE_CHANNELMSG(channel, mode) 					"MODE #" + channel + " " + mode + "\r\n"
 #define MODE_CHANNELMSGWITHPARAM(channel, mode, param) 	      "MODE #" + channel + " " + mode + " " + param + "\r\n"
-#define RPL_CHANNELMODEIS(client, channel, mode) 		      "324 " + client + " #" + channel + " " + mode + "\r\n"
-//#define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) "324 " + client + " #" + channel + " " + mode + " " + password + "\r\n"
+//#define RPL_CHANNELMODEIS(client, channel, mode) 		      "324 " + client + " #" + channel + " " + mode + "\r\n"
+#define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) "324 " + client + " " + channel + " " + mode + " " + password + "\r\n"
 //#define ERR_CANNOTSENDTOCHAN(client, channel) 			      "404 " + client + " #" + channel + " :Cannot send to channel\r\n"
 //#define ERR_CHANNELISFULL(client, channel) 				"471 " + client + " #" + channel + " :Cannot join channel (+l)\r\n"
 //#define ERR_INVALIDMODEPARAM(client, channel, mode, password)     "696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n"
@@ -135,8 +135,8 @@
 
 //// MODE User
 //#define RPL_MODE(source, channel, modes, args)			":" + source + " MODE " + channel + " " + modes + " " + args
-//#define MODE_USERMSG(client, mode) 						":" + client + " MODE " + client + " :" + mode + "\r\n"
-//#define ERR_UMODEUNKNOWNFLAG(client) 					"501 " + client + " :Unknown MODE flag\r\n"
+#define MODE_USERMSG(client, mode) 						":" + client + " MODE " + client + " :" + mode + "\r\n"
+#define ERR_UMODEUNKNOWNFLAG(client) 					"501 " + client + " :Unknown MODE flag\r\n"
 //#define ERR_USERSDONTMATCH(client) 						"502 " + client + " :Cant change mode for other users\r\n"
 //#define RPL_UMODEIS(client, mode) 						"221 " + client + " " + mode + "\r\n"
 
