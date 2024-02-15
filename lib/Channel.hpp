@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 14:29:25 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 10:14:39 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ class Channel
 		void						addOperator(Client *client){_ops.push_back(client);};
 		void						addInvite(Client *client){_invited.push_back(client);};
 		void 						removeOpe(Client *client);
-   		bool 						partChannel(Client* cli, std::string reason);
+   		void 						partChannel(Client* cli, std::string reason);
 		void						removeClient(Client* client);
 		void 	  					broadcastChannelmessage(Client* client, std::string message);
 		void 	  					broadcastChannelPrimsg(Client* client, std::string message);

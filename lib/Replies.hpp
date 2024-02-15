@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 16:04:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 12:49:14 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list.\r\n"
 #define RPL_INVITING(source, channel, target)			"341 " + source + " " + channel + " " + target + "\r\n"
 
-#define RPL_NOTOPIC(source, channel)					":localhost 331 " + source + " " + channel + " :No topic is set\r\n"
-#define RPL_TOPIC(source, channel, topic)				":localhost 332 " + source + " " + channel + " :" + topic + "\r\n"
+#define RPL_NOTOPIC(source, channel)					":IrcServer 331 " + source + " " + channel + " :No topic is set\r\n"
+#define RPL_TOPIC(source, channel, topic)				":IrcServer 332 " + source + " " + channel + " :" + topic + "\r\n"
 
 #define RPL_LIST(source, channel, nbUsers, topic)		"322 " + source + " " + channel + " " + nbUsers + " :" + topic + "\r\n"
 #define RPL_LISTEND(source)								"323 " + source + " :End of LIST\r\n"
@@ -120,9 +120,10 @@
 //#define ERR_INVITONLYCHAN(source, channel)				"473 " + source + " " + channel + " :Cannot join channel (+i)"
 //#define ERR_CHANOPRIVSNEEDED(source, channel)			      "482 " + source + " " + channel + " :You're not channel operator"
 #define MODE_CHANNELMSG(channel, mode) 					"MODE #" + channel + " " + mode + "\r\n"
-#define MODE_CHANNELMSGWITHPARAM(channel, mode, param) 	      "MODE #" + channel + " " + mode + " " + param + "\r\n"
-#define RPL_CHANNELMODEIS(client, channel, mode) 		      "324 " + client + " #" + channel + " " + mode + "\r\n"
-//#define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) "324 " + client + " #" + channel + " " + mode + " " + password + "\r\n"
+#define MODE_CHANNELMSGWITHPARAM(channel, mode, param) 			":IrcServer MODE " + channel + " " + mode + " " + param + "\r\n"
+//#define MODE_CHANNELMSGWITHPARAM(source, channel, mode, param) 	      ":localhost" + source + " MODE " + channel + " " + mode + " " + param + "\r\n"
+//#define RPL_CHANNELMODEIS(client, channel, mode) 		      "324 " + client + " #" + channel + " " + mode + "\r\n"
+#define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) ":IrcServer 324 " + client + " " + channel + " " + mode + " " + password + "\r\n"
 //#define ERR_CANNOTSENDTOCHAN(client, channel) 			      "404 " + client + " #" + channel + " :Cannot send to channel\r\n"
 //#define ERR_CHANNELISFULL(client, channel) 				"471 " + client + " #" + channel + " :Cannot join channel (+l)\r\n"
 //#define ERR_INVALIDMODEPARAM(client, channel, mode, password)     "696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n"
@@ -134,7 +135,7 @@
 //// MODE User
 //#define RPL_MODE(source, channel, modes, args)			":" + source + " MODE " + channel + " " + modes + " " + args
 #define MODE_USERMSG(client, mode) 						":" + client + " MODE " + client + " :" + mode + "\r\n"
-//#define ERR_UMODEUNKNOWNFLAG(client) 					"501 " + client + " :Unknown MODE flag\r\n"
+#define ERR_UMODEUNKNOWNFLAG(client) 					"501 " + client + " :Unknown MODE flag\r\n"
 //#define ERR_USERSDONTMATCH(client) 						"502 " + client + " :Cant change mode for other users\r\n"
 //#define RPL_UMODEIS(client, mode) 						"221 " + client + " " + mode + "\r\n"
 
