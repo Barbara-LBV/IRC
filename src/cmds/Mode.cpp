@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/15 16:13:18 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 11:43:53 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	// MODE #abc o/-o
 	if (arguments[1] == "o" || arguments[1] == "+o" || arguments[1] == "-o")
 	{
-		if (arguments[2].empty())
+		if (arguments.size() < 3)
 		{
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
 			return;

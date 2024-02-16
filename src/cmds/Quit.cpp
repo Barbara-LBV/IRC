@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 18:31:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 11:55:42 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,14 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 	
-	if (!arguments.empty() || !arguments[0].empty())
+	if (!arguments.empty() || arguments.size() > 0)
 	{
-		for (size_t i = 0; i < arguments.size(); i++)
+		reason = arguments[0];
+		for (size_t i = 1; i < arguments.size(); i++)
 			reason = " " + arguments[i];
 	}
 	
 	addToClientBuffer(client->getServer(), client->getFd(), RPL_QUIT(client->getPrefix(), reason));
-	//client->partAllChannel();
+	client->partAllChannel();
 	client->setDeconnStatus(true);
 }

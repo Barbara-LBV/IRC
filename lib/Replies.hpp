@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 18:54:24 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 09:59:10 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@
 #define RPL_MODE(source, channel, modes, args)		":" + source + " MODE " + channel + " " + modes + " " + args + "\r\n"
 #define RPL_PING(source, token)						":" + source + " PONG :" + token + "\r\n"
 #define RPL_QUIT(source, message)					":" + source + " QUIT" + message + "\r\n"
-#define RPL_JOIN(source, channel)					":" + source + " JOIN :" + channel + "\r\n"
+#define RPL_JOIN(source, channel)					":" + source + " JOIN " + channel + "\r\n"
 #define RPL_PART(source, channel)					":" + source + " PART " + channel + "\r\n"
 #define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + reason + "\r\n"
-#define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason + "\r\n"
+#define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " " + reason + "\r\n"
 
 #define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " " + message + "\r\n"
 #define RPL_NICK(oclient, uclient, client)         ":" + oclient + "!" + uclient + "@localhost NICK " +  client + "\r\n"
