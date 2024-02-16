@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:16:43 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 17:10:51 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,8 @@ int		Server::checkRecv(std::vector<pollfd> &poll_fds, int res, std::vector<pollf
 	}	
 	if (res == 0)
 	{
-		std::cout << BRED "[Server] " << RED "Nothing to received: client #" << it->fd << " is disconnected\n" DEFAULT;
+		std::cout << BRED "[Server] " << RED "Nothing to receive: client #" << it->fd << " is disconnected\n" DEFAULT;
 		delClient(poll_fds, it, it->fd);
-		//put the client status at disconneted = true
 		return ERROR;
 	}
 	return TRUE;

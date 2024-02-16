@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:06:37 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/14 15:57:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 15:25:34 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@
    Numeric Replies:
 
            ERR_NOSUCHSERVER              ERR_NONICKNAMEGIVEN
-           RPL_WHOISUSER                
+           RPL_WHOISUSER                 ERR_NOSUCHNICK
            RPL_WHOISCHANNELS             RPL_WHOISSERVER
            RPL_AWAY                      RPL_WHOISOPERATOR
-           RPL_WHOISIDLE                 ERR_NOSUCHNICK
+           RPL_WHOISIDLE                 
            RPL_ENDOFWHOIS
 	
 	  Examples:
@@ -58,38 +58,32 @@ WhoIsCommand::~WhoIsCommand() {}
 void WhoIsCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	std::string activeChannels(""), opOnChannels("");
-	std::string name = arguments[0];
-	if (name.size() == 0)
+	if (arguments.size() == 0)
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "WHOIS"));
+	std::string name = arguments[0];
 	if (name == client->getUsername() || name == client->getNickname())
 	{
 		activeChannels = retrieveChannelNames(client);
-		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_WHOISUSER(client->getNickname(), client->getUsername(), client->getHost(), activeChannels, client->getServer()->getServerName()));
+		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_WHOISUSER(client->getPrefix(), client->getUsername(), client->getHost(), activeChannels, client->getServer()->getServerName()));
 		if (client->getChannels().size() > 0)
 		{
 			addToClientBuffer(client->getServer(), client->getFd(), RPL_WHOISCHANNELS(client->getNickname(), activeChannels));
-			if (client)
-			{
-				opOnChannels = retrieveChannelOp(client);
-				if (!opOnChannels.empty())
-					addToClientBufferExtended(client->getServer(), client->getFd(), RPL_WHOISOPERATOR(client->getNickname(), opOnChannels));
-			}
+			opOnChannels = retrieveChannelOp(client);
+			if (!opOnChannels.empty())
+				addToClientBufferExtended(client->getServer(), client->getFd(), RPL_WHOISOPERATOR(client->getNickname(), opOnChannels));
 		}
 	}
 	else if(name == client->getServer()->getClientByNickname(name)->getNickname())
 	{
 		Client *cli = client->getServer()->getClientByNickname(name);
 		activeChannels = retrieveChannelNames(cli);
-		addToClientBufferExtended(cli->getServer(), cli->getFd(), RPL_WHOISUSER(cli->getNickname(), cli->getUsername(), cli->getHost(), activeChannels, cli->getServer()->getServerName()));
+		addToClientBufferExtended(cli->getServer(), cli->getFd(), RPL_WHOISUSER(cli->getPrefix(), cli->getUsername(), cli->getHost(), activeChannels, cli->getServer()->getServerName()));
 		if (cli->getChannels().size() > 0)
 		{
 			addToClientBuffer(cli->getServer(), cli->getFd(), RPL_WHOISCHANNELS(cli->getNickname(), activeChannels));
-			if (cli)
-			{
-				opOnChannels = retrieveChannelOp(cli);
-				if (!opOnChannels.empty())
-					addToClientBufferExtended(cli->getServer(), cli->getFd(), RPL_WHOISOPERATOR(cli->getNickname(), opOnChannels));
-			}
+			opOnChannels = retrieveChannelOp(cli);
+			if (!opOnChannels.empty())
+				addToClientBufferExtended(cli->getServer(), cli->getFd(), RPL_WHOISOPERATOR(cli->getNickname(), opOnChannels));
 		}
 	}
 	else
@@ -103,7 +97,7 @@ std::string		retrieveChannelNames(Client *client)
 	std::deque<Channel *> channels = client->getChannels();
 	std::deque<Channel *>::iterator it = channels.begin();
 	for (; it != channels.end(); it++)
-		allChans += "@" + (*it)->getName() + " ";
+		allChans += (*it)->getName() + " ";
 	return allChans;
 }
 
@@ -121,7 +115,7 @@ std::string		retrieveChannelOp(Client *client)
 		{
 			if(*ite == client)
 			{
-				chanOp += (*it)->getName() + " ";
+				chanOp += "@" + (*it)->getName() + " ";
 				break ;
 			}
 		}

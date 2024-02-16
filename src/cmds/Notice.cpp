@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:11:32 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:35:51 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 18:34:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void NoticeCommand::execute(Client *client, std::vector<std::string> arguments)
 	
 	const std::string  target = arguments[0];
 	
-	std::string message = "";
-	for (size_t i = 1; i < arguments.size(); i++)
-		message += arguments[i] + " ";
+	std::string message = arguments[1];
+	for (size_t i = 2; i < arguments.size(); i++)
+		message += " " + arguments[i];
 	if (target[0] == '#')
 	{
 		if (_server->isValidChannelName(target))

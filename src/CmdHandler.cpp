@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:08:47 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 11:51:24 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 14:20:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,20 @@
 CmdHandler::CmdHandler(Server *server)
 {
 	_server = server;
-	_commands["PASS"] = new PassCommand(_server, false);
-	_commands["NICK"] = new NickCommand(_server, false);
-	_commands["USER"] = new UserCommand(_server, false);
-	_commands["QUIT"] = new QuitCommand(_server, false);
-	_commands["PING"] = new PingCommand(_server);
-	_commands["JOIN"] = new JoinCommand(_server);
-	_commands["MODE"] = new ModeCommand(_server);
-	_commands["PART"] = new PartCommand(_server);
-	_commands["KICK"] = new KickCommand(_server);
 	_commands["INVITE"] = new InvitCommand(_server);
-	_commands["TOPIC"] = new TopicCommand(_server);
+	_commands["JOIN"] 	= new JoinCommand(_server);
+	_commands["KICK"] 	= new KickCommand(_server);
+	_commands["MODE"] 	= new ModeCommand(_server);
+	_commands["NICK"] 	= new NickCommand(_server, false);
+	_commands["PART"] 	= new PartCommand(_server);
+	_commands["PASS"] 	= new PassCommand(_server, false);
+	_commands["PING"] 	= new PingCommand(_server);
 	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
 	_commands["NOTICE"] = new NoticeCommand(_server);
-	_commands["WHOIS"] = new WhoIsCommand(_server);
-	_commands["LIST"] = new ListCommand(_server);
+	_commands["QUIT"] 	= new QuitCommand(_server, false);
+	_commands["TOPIC"] 	= new TopicCommand(_server);
+	_commands["USER"] 	= new UserCommand(_server, false);
+	_commands["WHOIS"] 	= new WhoIsCommand(_server);
 }
 
 CmdHandler::~CmdHandler()

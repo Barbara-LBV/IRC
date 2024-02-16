@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 15:59:50 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 17:59:03 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,34 +69,30 @@ int			Server::receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::ite
 
 void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it, int fd)
 {
-	std::map<int, Client*>::iterator ite = _clients.begin();
-	Client *tmp = _clients[fd];
-	for(; ite != _clients.end(); it++)
-	{
-		if (ite->first == fd)
-		{
-			_clients.erase(fd);
-			delete tmp;
-			break ;
-		}
-	}
+	Client *tmp = this->_clients[fd];
+	
+	this->_clients.erase(fd);
+	delete tmp;
+	
 	poll_fds.erase(it);
 	_cliNb--;
 	if (_cliNb <= 0)
 		_cliNb = 0;
+	close(fd);
 	std::cout << BGREEN "[Server] " <<  GREEN "Client #" << fd
 	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
-	close(fd);
 }
 
 void		Server::delChannel(Channel *chan)
 {
 	std::vector< Channel *>::iterator it = _channels.begin();
+	Channel * tmp = chan;
     while(it != _channels.end())
     {
 		if (*it == chan)
 		{
 			_channels.erase(it);
+			delete tmp;
 			break ;
 		}
 		++it;

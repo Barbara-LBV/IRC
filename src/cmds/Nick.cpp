@@ -6,14 +6,14 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/12 10:36:26 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 14:35:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Client.hpp"
 
-NickCommand::NickCommand(Server *server, bool auth) : Command(server, auth) {}
+NickCommand::NickCommand(Server *server, bool auth) : Command(server, auth) { _i = '0';}
 
 NickCommand::~NickCommand() {}
 
@@ -31,7 +31,10 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (_server->getClientByNickname(nickname) && client->getNickname().empty())
 	{
 		while (_server->getClientByNickname(nickname))
-			nickname = nickname + "0";
+		{
+			nickname.insert(nickname.size(), 1, _i);
+			_i++; 
+		}
 	}
 
 	else if (_server->getClientByNickname(nickname))

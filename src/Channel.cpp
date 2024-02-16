@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 12:26:11 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 18:53:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Channel::Channel(std::string const &name, std::string const &password, Server *s
                         _ops.clear();
                         _invited.clear();
                         _topic = "";
-                        _l = 1000;
+                        _l = MAXCONN;
                         _i = FALSE;
                         _t = TRUE;
                     }
@@ -101,91 +101,58 @@ bool    Channel::is_oper(Client *client)
 
 void Channel::partChannel(Client* cli, std::string reason)
 {
-    if (isInChannel(cli))
+    
+    if (is_oper(cli))
     {
-        if (is_oper(cli))
-        {
-            addToClientBufferExtended(cli->getServer(), cli->getFd(), MODE_USERMSG(cli->getNickname(), "-o"));
-            _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->_name, "-o", cli->getNickname() + " is no more operator of channel" ), this);  
-        }
-        addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART_REASON(cli->getPrefix(), getName(), reason));    
-        _server->broadcastChannel(cli, RPL_PART_REASON(cli->getNickname(), getName(),reason), this);
-        removeClient(cli);
+        addToClientBufferExtended(cli->getServer(), cli->getFd(), MODE_USERMSG(cli->getNickname(), "-o"));
+        _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->_name, "-o", cli->getNickname() + " is no more operator of channel" ), this);  
     }
-    if (_ops.size() == 0 && _clients.size() > 0)
+    if (reason != "")
     {
-        Client* client = _clients.begin().operator*();
-        addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "+o"));
-        _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->getName(), "+o", client->getNickname() + " got operator privilege now"), this);
-        addOperator(client);
+        addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART_REASON(cli->getPrefix(), getName(), reason));
+        _server->broadcastChannel(cli,  RPL_PART_REASON(cli->getPrefix(), getName(), reason), this);
     }
-
+    else
+    {
+        addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART(cli->getPrefix(), getName()));
+        _server->broadcastChannel(cli, RPL_PART(cli->getPrefix(), getName()), this);
+    }
+    removeClient(cli);
     if (_clients.size() == 0)
     {
-       _server->delChannel(this);
         addToClientBuffer(_server, cli->getFd(), RPL_ENDOFNAMES(cli->getNickname(), this->getName()));
-       delete this;
+       _server->delChannel(this);
        return;
     }  
     
-
-    // // Iterate through the list of clients in the channel
-    // for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-    // {
-    //     if (*it == cli)
-    //     {
-    //         _clients.erase(it);
-    //         cli->deleteChannel(this);
-    //         addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART(cli->getPrefix(), getName()));    
-    //         _server->broadcastChannel(cli, RPL_PART(cli->getNickname(), getName()), this);
-    //         reason.clear();
-            
-    //         if (is_oper(cli))
-    //             removeOpe(cli);
-    //         if (_ops.size() == 0 && _clients.size() > 0)
-    //         {
-    //             cli = _clients.begin().operator*();
-    //             addOperator(cli);
-    //         }
-    //         break;
-    //     }
-    // }
-
-    // if (_clients.size() == 0)
-    // {
-    //    _server->delChannel(this);
-    //    addToClientBuffer(_server, cli->getFd(), RPL_ENDOFNAMES(cli->getNickname(), this->getName()));
-    //    delete this;
-    // }
-    // return;
+    if (_ops.size() == 0 && _clients.size() > 0)
+    {
+        Client* client = _clients.front();
+        addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "+o"));
+        _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->getName(), "+o", client->getNickname() + " got operator privilege now"), this);
+        addOperator(client);
+        return;
+    }
 }
 
 void    Channel::removeClient(Client* cli)
 {
-    std::string clientPrefix = cli->getPrefix();
     bool clientFound = false;
 
     for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
-        if (*it == cli)
+        if ((*it)->getNickname() == cli->getNickname())
         {
-            _clients.erase(it);
-            if (is_oper(cli))
-                removeOpe(cli);
-            cli->deleteChannel(this);
+            _clients.erase(it); // the channel remove cli from its clients list
+            if (is_oper(cli)) 
+                removeOpe(cli); // the channel remove cli from its op list
+            cli->deleteChannel(this); // client remove channel from it channel list
             clientFound = true;
             break;
         }
     }
-   
     if (clientFound == false)
         addToClientBufferExtended(cli->getServer(), cli->getFd(), ERR_USERNOTINCHANNEL(cli->getNickname(), "", this->getName()));
-     
-    if (_clients.size() == 0)
-    {
-       _server->delChannel(this);
-       delete this;
-    }
 }
 
 void Channel::removeOpe(Client *client)
@@ -193,18 +160,14 @@ void Channel::removeOpe(Client *client)
     std::vector<Client*>::iterator it;
     for (it = _ops.begin(); it != _ops.end(); ++it)
     {
-        if (*it == client)
+        if ((*it)->getNickname() == client->getNickname())
         {
             _ops.erase(it); // delete from list of operators in this channel
             return ;
         }
     }
-
     if (it == _ops.end())
-    {
-        std::cout << "position 4\n";
         std::cout << client->getNickname() + " is not an operator of this channel\n";
-    }
 }
 
 bool	Channel::isInChannel(Client *client)
@@ -234,7 +197,7 @@ void 	Channel::broadcastChannelPrimsg(Client* client, std::string message)
 
     for (; it != cli_target.end(); ++it)
     {
-		if (this == (*it)->getActiveChannel() && client != *it)
+		if (client != *it)
 			addToClientBuffer(getServer(), (*it)->getFd(), RPL_PRIVMSG(client->getPrefix(), getName(), message));
 	}
 }

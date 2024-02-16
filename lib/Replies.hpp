@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 12:49:14 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 18:54:24 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@
 #define RPL_QUIT(source, message)					":" + source + " QUIT" + message + "\r\n"
 #define RPL_JOIN(source, channel)					":" + source + " JOIN :" + channel + "\r\n"
 #define RPL_PART(source, channel)					":" + source + " PART " + channel + "\r\n"
-#define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + " :" + reason + "\r\n"
+#define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + reason + "\r\n"
 #define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason + "\r\n"
 
 #define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " " + message + "\r\n"
@@ -69,7 +69,7 @@
 #define RPL_INVITE(source, target, channel)			":" + source + " INVITE " + target + " :" + channel + "\r\n"
 
 // WHOIS
-#define RPL_WHOISUSER(nick, user, host, channel, server) "311 " + nick + " is " + user + " " + host + " on " + server + ", active in " + channel + "\r\n"
+#define RPL_WHOISUSER(nick, user, host, channel, server) "311 " + nick + " is " + user + " " + host + " on " + server + " active in " + channel + "\r\n"
 #define RPL_WHOISCHANNELS(source, channels)			":" + source + " is on " + channels + "\r\n"
 #define RPL_WHOISOPERATOR(source, channels)			"313 " + source + " is operator on " + channels + "\r\n"
 

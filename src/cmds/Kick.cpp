@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:56:07 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/14 12:47:38 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/15 18:54:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
     
     Channel* 	channel = _server->getChannel(chan_name);
 	Client*		client_target = _server->getClientByNickname(target); 
+	std::string reason = "";
 
-	std::string reason = arguments[2];
-	if (arguments.size() > 3)
+	if (arguments.size() > 2)
 	{
+		reason = arguments[2];
 		for (size_t i = 3; i < arguments.size(); i++)
-			reason += " " + arguments[i];
+			reason += arguments[i] + " ";
 	}
     
     if (!channel->is_oper(client))

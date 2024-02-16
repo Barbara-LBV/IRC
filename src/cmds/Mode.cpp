@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/15 12:45:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/15 16:13:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,14 +158,15 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 			}
 			else if (arguments[1] == "-o")
 			{
-				if (isOperator == true)
+				if (isOperator == true && client->getNickname() != client_target->getNickname())
 				{
 					std::cout << "what will be happen when operator left the channel? \n";
 					addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "-o"));
 					_server->broadcastChannel(NULL, RPL_MODE(client->getPrefix(),chan_name, "-o", target + " is no more operator of channel" ), channel);
 					channel->removeOpe(client_target);
+					return;
 				}
-				else 
+				if (isOperator == false)
 					addToClientBufferExtended(client->getServer(), client->getFd(), target + "  is not operator of this channel");
 				return ;
 			}
