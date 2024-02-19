@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 16:54:33 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 15:00:23 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@
 #define RPL_QUIT(source, message)					":" + source + " QUIT " + message + "\r\n"
 #define RPL_JOIN(source, channel)					":" + source + " JOIN " + channel + "\r\n"
 #define RPL_PART(source, channel)					":" + source + " PART " + channel + "\r\n"
-#define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + reason + "\r\n"
+#define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + " " + reason + "\r\n"
 #define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " " + reason + "\r\n"
 
 #define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " " + message + "\r\n"
