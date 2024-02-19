@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagement.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 16:56:04 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 10:51:29 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	Server::manageConnections(void)
 			else if (it->revents & POLLOUT)
 			{
 				if (managePolloutEvent(poll_fds, it, it->fd) == BREAK)
+				
 					break ;
 			}
 			else if (it->revents & POLLERR)

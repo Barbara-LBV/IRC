@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagementUtils.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 17:12:18 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 11:40:53 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iter
 {
 	Client *tmp = this->_clients[fd];
 	
+	quitAllChannels(tmp, " ");
 	this->_clients.erase(fd);
 	delete tmp;
 	poll_fds.erase(it);
@@ -81,6 +82,34 @@ void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iter
 	std::cout << BGREEN "[Server] " <<  GREEN "Client #" << fd
 	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
 }
+void 	quitAllChannels(Client *cli, std::string reason)
+{
+	std::deque<Channel *> chan = cli->getChannels();
+	if (chan.empty())
+    {
+        chan.clear();
+        return;
+    }
+	else
+	{
+		std::deque<Channel *>::iterator it = chan.begin();
+		for (;it != chan.end() ; it++)
+		{
+			(*it)->removeClient(cli);
+			std::cout << "size of clients in the channel is " << (*it)->getClients().size() << std::endl;
+			if ((*it)->getOperator().size() == 0 && (*it)->getClients().size() > 0)
+			{
+				Client* client = (*it)->getClients().front();
+				addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "+o"));
+				(*it)->broadcastChannelmessage(NULL, RPL_MODE(cli->getPrefix(),(*it)->getName(), "+o", client->getNickname() + " got operator privilege now"));
+				(*it)->addOperator(client);
+				//return;
+			}
+		}
+		addToClientBuffer(cli->getServer(), cli->getFd(), RPL_QUIT(cli->getPrefix(), reason));	
+	}	
+}
+
 
 void		Server::delChannel(Channel *chan)
 {

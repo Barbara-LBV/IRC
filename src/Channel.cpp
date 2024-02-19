@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 18:38:09 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 10:11:47 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,11 @@ bool    Channel::is_oper(Client *client)
 void Channel::partChannel(Client* cli, std::string reason)
 {
     
-    if (is_oper(cli))
-    {
-        addToClientBufferExtended(cli->getServer(), cli->getFd(), MODE_USERMSG(cli->getNickname(), "-o"));
-        _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->_name, "-o", cli->getNickname() + " is no more operator of channel" ), this);  
-    }
+    // if (is_oper(cli))
+    // {
+    //     addToClientBufferExtended(cli->getServer(), cli->getFd(), MODE_USERMSG(cli->getNickname(), "-o"));
+    //     _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->_name, "-o", cli->getNickname() + " is no more operator of channel" ), this);  
+    // }
     if (reason != "")
     {
         addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART_REASON(cli->getPrefix(), getName(), reason));

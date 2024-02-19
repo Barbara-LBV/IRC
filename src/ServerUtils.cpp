@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 17:10:51 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 10:55:56 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ int		Server::checkRecv(std::vector<pollfd> &poll_fds, int res, std::vector<pollf
 	}
 	return TRUE;
 }
+
 
 void 	addToClientBufferExtended(Server *server, int cliFd, std::string reply)
 {
