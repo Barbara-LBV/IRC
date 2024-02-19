@@ -6,15 +6,16 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 15:01:13 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:54:03 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Channel.hpp"
 
-Channel::Channel(std::string const &name, std::string const &password, Server *server)
+Channel::Channel(Client* client, std::string const &name, std::string const &password, Server *server)
 					: _name(name),_password(password), _server(server)
                     {
+                        _admin = client;
                         _clients.clear();
                         _ops.clear();
                         _invited.clear();
@@ -106,18 +107,20 @@ void Channel::partChannel(Client* cli, std::string reason)
     // {
     //     addToClientBufferExtended(cli->getServer(), cli->getFd(), MODE_USERMSG(cli->getNickname(), "-o"));
     //     _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->_name, "-o", cli->getNickname() + " is no more operator of channel" ), this);  
-    // }
+    // 
+         
+    removeClient(cli);
     if (reason != "")
     {
         addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART_REASON(cli->getPrefix(), getName(), reason));
-        _server->broadcastChannel(cli,  RPL_PART_REASON(cli->getPrefix(), getName(), reason), this);
+        _server->broadcastChannel(NULL,  RPL_PART_REASON(cli->getPrefix(), getName(), reason), this);
     }
     else
     {
         addToClientBuffer(cli->getServer(), cli->getFd(), RPL_PART(cli->getPrefix(), getName()));
-        _server->broadcastChannel(cli, RPL_PART(cli->getPrefix(), getName()), this);
+        _server->broadcastChannel(NULL, RPL_PART(cli->getPrefix(), getName()), this);
     }
-    removeClient(cli);
+    replyList(cli);
     if (_clients.size() == 0)
     {
         addToClientBuffer(_server, cli->getFd(), RPL_ENDOFNAMES(cli->getNickname(), this->getName()));
@@ -236,6 +239,8 @@ void        Channel::replyList(Client* client)
         list += *it + " ";
     } 
     list += "\n";
-    addToClientBuffer(client->getServer(), client->getFd(), RPL_NAMREPLY(client->getNickname(), this->getName(), list));
-    addToClientBuffer(client->getServer(), client->getFd(), RPL_ENDOFNAMES(client->getNickname(), this->getName()));
+    // addToClientBuffer(client->getServer(), client->getFd(), RPL_NAMREPLY(client->getNickname(), this->getName(), list));
+    // addToClientBuffer(client->getServer(), client->getFd(), RPL_ENDOFNAMES(client->getNickname(), this->getName()));
+    broadcastChannelmessage(NULL, RPL_NAMREPLY(client->getNickname(), this->getName(), list));
+    broadcastChannelmessage(NULL, RPL_ENDOFNAMES(client->getNickname(), this->getName()));
 }

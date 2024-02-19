@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:56:07 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/16 11:27:07 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:54:53 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_USERNOTINCHANNEL(client->getPrefix(), target, chan_name));
 		return ;
-	}
-	// addToClientBuffer(_server, client->getFd(), RPL_PART(client_target->getPrefix(), chan_name));	
+	}	
 	_server->broadcastChannel(NULL, RPL_KICK(client->getPrefix(), chan_name, target, reason), channel);
 	channel->removeClient(client_target);
+	channel->replyList(client);
 	return ;
 }

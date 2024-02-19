@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 11:05:45 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:43:15 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,6 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 {
 	std::string  reason = "";
 	
-	if (arguments.empty())
-	{
-		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "QUIT"));
-		return;
-	}
 	
 	if (!arguments.empty() || arguments.size() > 0)
 	{
@@ -51,50 +46,6 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 			reason += " " + arguments[i];
 		reason[0] == ':' ? reason : reason.insert(0, 1, ':');
 	}
-	
-	// quitAllChannels(client, reason);
 	addToClientBuffer(client->getServer(), client->getFd(), RPL_QUIT(client->getPrefix(), reason));
 	client->setDeconnStatus(true);
 }
-
-// void 	quitAllChannels(Client *cli, std::string reason)
-// {
-// 	(void)reason;
-// 	std::deque<Channel *> chan = cli->getChannels();
-// 	if (chan.empty())
-//     {
-//         chan.clear();
-//         return;
-//     }
-// 	else
-// 	{
-// 		std::deque<Channel *>::iterator it = chan.begin();
-// 		std::vector<Client *> clients;
-// 		std::vector<Client *>::iterator ite;
-// 		for (;it != chan.end() ; it++)
-// 		{
-// 			(*it)->removeClient(cli);
-// 			// 			break ;
-// 			// clients = (*it)->getClients();
-// 			// if (clients.size() > 0)
-// 			// {
-// 			// 	ite = clients.begin();
-// 			// 	for (; ite != clients.end(); ite++)
-// 			// 	{
-// 			// 		if (*ite == cli)
-// 			// 		{
-// 			// 			if ((*it)->is_oper(cli)) 
-//             //    			 	(*it)->removeOpe(cli);
-// 			// 			clients.erase(ite);
-// 			// 			if (clients.size() == 0)
-// 			// 				(*ite)->getServer()->delChannel(*it);
-//     		// 			addToClientBuffer(cli->getServer(), cli->getFd(), RPL_QUIT(cli->getPrefix(), reason));	
-// 			// 			break ;
-// 			// 		}
-// 			// 	}
-// 			// }
-// 		}
-// 		addToClientBuffer(cli->getServer(), cli->getFd(), RPL_QUIT(cli->getPrefix(), reason));	
-// 	}	
-//    	chan.clear();
-// }

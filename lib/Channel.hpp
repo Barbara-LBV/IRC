@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 15:51:29 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 16:11:20 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Client;
 class Channel
 {
 	public:
-		Channel(std::string const &name, std::string const &password, Server *server);
+		Channel(Client* client, std::string const &name, std::string const &password, Server *server);
 		~Channel();
 
 		/***********   Assessors   ***********/
@@ -36,6 +36,7 @@ class Channel
 		std::vector<std::string>	getNicknames();
 		Server*						getServer(){return _server;};
 		Client*						getClient(const std::string &nickname);
+		Client*						getAdmin(){return _admin;};
 		size_t						getL(){return _l;};
 		bool						getI(){return _i;};
 		bool						getT(){return _t;};
@@ -74,6 +75,7 @@ class Channel
 		std::vector<Client *>_clients;
 		std::vector<Client *>_ops;
 		std::vector<Client *>_invited;
+		Client* 			_admin;
 		size_t				_l ;		//Set/remove the user limit to channel
 		bool				_i ;     //Set/remove Invite-only channel, true is invite only
 		bool				_t ;		//Set/remove the restrictions of the TOPIC command to channel operator    //true is only operator can set topic
