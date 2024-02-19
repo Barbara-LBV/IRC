@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:34 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/14 10:32:07 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:52:26 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,6 @@ InvitCommand::~InvitCommand() {}
 
 void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	// for (size_t i = 0 ; i < arguments.size(); i++)
-	// {
-	// 	std::cout << "################################arguments = " + arguments[i] << std::endl;
-	// }
     if (arguments.size() < 2)
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "INVITE"));
@@ -53,7 +49,7 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
 		return;
 	}
-	else if (!channel->is_oper(client))
+	else if (!channel->isOper(client))
 	{
 		addToClientBuffer(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
 		return ;

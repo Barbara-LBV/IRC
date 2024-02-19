@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/16 16:47:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:51:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,23 +134,4 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 		else
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANNELISFULL(client->getNickname(), name));
 	}
-}
-
-std::string parseChannelName(std::string chan)
-{
-	std::string name = chan;
-	
-	name[0] == '#' ? name : name.insert(0, 1, '#');
-	if (name.size() > 50)
-		name.erase(50, name.size() - 50);
-	
-	while (name.find(',') != std::string::npos)
-		name.erase(name.find(','), 1);
-		
-	for (size_t i = 0; i < name.size(); i++)
-	{
-		if (!std::isprint(name[i]))
-			name.erase(i, 0);
-	}
-	return name;
 }

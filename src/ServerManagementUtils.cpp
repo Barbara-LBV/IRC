@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 13:12:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:46:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iter
 	std::cout << BGREEN "[Server] " <<  GREEN "Client #" << fd
 	<< " successfully disconnected. There is now " << _cliNb << " active connections." DEFAULT << std::endl;
 }
+
 void 	quitAllChannels(Client *cli, std::string reason)
 {
 	std::deque<Channel *> chan = cli->getChannels();
@@ -110,7 +111,6 @@ void 	quitAllChannels(Client *cli, std::string reason)
 		addToClientBuffer(cli->getServer(), cli->getFd(), RPL_QUIT(cli->getPrefix(), reason));	
 	}	
 }
-
 
 void		Server::delChannel(Channel *chan)
 {

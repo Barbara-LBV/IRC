@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:56:07 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/16 11:27:07 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:52:39 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Server.hpp"
-
-//KICK #abc parida            // kick user parida from channel #abc
 
 KickCommand::KickCommand(Server *server) : Command(server) {}
 
@@ -54,7 +52,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 			reason += arguments[i] + " ";
 	}
     
-    if (!channel->is_oper(client))
+    if (!channel->isOper(client))
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getPrefix(), chan_name));
 		return;

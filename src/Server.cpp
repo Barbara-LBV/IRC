@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 15:13:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:12:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,27 +63,6 @@ Channel* Server::getChannel(const std::string& cName)
     return NULL; // Channel not found, return NULL
 }
 
-void Server::addChannel(std::string chan_name, Channel* channel)
-{
-    if (channel)
-    {
-        // Check if the channel name already exists
-        std::vector<Channel*>::iterator it;
-        for (it = _channels.begin(); it != _channels.end(); ++it)
-        {
-            if ((*it)->getName() == chan_name)
-            {
-                // If the channel name already exists, print an error message
-                std::cout << "Channel name '" << chan_name << "' is already in use." << std::endl;
-                return;
-            }
-        }
-
-        // If the channel name doesn't already exist, add the channel to the list
-        _channels.push_back(channel);
-    }
-}
-
 Client*			Server::getClient(int fd){return _clients[fd];}
 
 std::string		&Server::getPwd(void){ return _servPwd;}
@@ -99,7 +78,8 @@ std::string		&Server::getStartTime(void){ return _time;}
 Client 			*Server::getClientByNickname(const std::string &nickname)
 {
 	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-		if (it->second->getNickname() == nickname) {
+		if (it->second->getNickname() == nickname) 
+		{
 			// Found the client with the given nickname
 			return it->second;
 		}
@@ -108,9 +88,9 @@ Client 			*Server::getClientByNickname(const std::string &nickname)
 	return NULL; 
 }
 
-void			Server::setFd(int fd){_servFd = fd;}
+void		Server::setFd(int fd){_servFd = fd;}
 
-void			Server::setDatetime(struct tm *timeinfo)
+void		Server::setDatetime(struct tm *timeinfo)
 {
 	char buffer[80];
 
@@ -118,8 +98,29 @@ void			Server::setDatetime(struct tm *timeinfo)
   	std::string str(buffer);
 	_time = str;
 }
-void 	Server::broadcastChannel(Client* client, std::string message, Channel* channel)
+
+void 		Server::broadcastChannel(Client* client, std::string message, Channel* channel)
 {
 	if (channel)
 		channel->broadcastChannelmessage(client, message);
+}
+
+void 		Server::addChannel(std::string chan_name, Channel* channel)
+{
+    if (channel)
+    {
+        // Check if the channel name already exists
+        std::vector<Channel*>::iterator it;
+        for (it = _channels.begin(); it != _channels.end(); ++it)
+        {
+            if ((*it)->getName() == chan_name)
+            {
+                // If the channel name already exists, print an error message
+                std::cout << "Channel name '" << chan_name << "' is already in use." << std::endl;
+                return;
+            }
+        }
+        // If the channel name doesn't already exist, add the channel to the list
+        _channels.push_back(channel);
+    }
 }

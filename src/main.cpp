@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:00:42 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:18:38 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ int main(int ac, char **av)
 		return 2;
 	Server server(av[1], av[2], timeinfo);
 	if (server.fillServinfo(av[1]) == ERROR)
-		return 2;
+		return 3;
 	if (server.initializeServer() == ERROR)
-		return 2;
+		return 4;
 	signal(SIGINT, Server::signal_handler);
 	server.manageConnections();
 	delete server.getCmdHandler();

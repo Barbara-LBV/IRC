@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 11:05:45 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:39:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 // 			// 	{
 // 			// 		if (*ite == cli)
 // 			// 		{
-// 			// 			if ((*it)->is_oper(cli)) 
+// 			// 			if ((*it)->isOper(cli)) 
 //             //    			 	(*it)->removeOpe(cli);
 // 			// 			clients.erase(ite);
 // 			// 			if (clients.size() == 0)

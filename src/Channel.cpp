@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 10:11:47 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:42:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 Channel::Channel(std::string const &name, std::string const &password, Server *server)
 					: _name(name),_password(password), _server(server)
-                    {
-                        _clients.clear();
-                        _ops.clear();
-                        _invited.clear();
-                        _topic = "";
-                        _l = MAXCONN;
-                        _i = FALSE;
-                        _t = TRUE;
-                    }
+{
+    _clients.clear();
+    _ops.clear();
+    _invited.clear();
+    _topic = "";
+    _l = MAXCONN;
+    _i = FALSE;
+    _t = TRUE;
+}
                     
 Channel::~Channel() {}
 
@@ -83,7 +83,7 @@ void Channel::addClient(Client *cli)
 }
 
 
-bool    Channel::is_oper(Client *client)
+bool    Channel::isOper(Client *client)
 {
 	std::vector<Client *> opers_chan = this->getOperator();
 	std::vector<Client *>:: iterator it_oper = opers_chan.begin();
@@ -102,7 +102,7 @@ bool    Channel::is_oper(Client *client)
 void Channel::partChannel(Client* cli, std::string reason)
 {
     
-    // if (is_oper(cli))
+    // if (isOper(cli))
     // {
     //     addToClientBufferExtended(cli->getServer(), cli->getFd(), MODE_USERMSG(cli->getNickname(), "-o"));
     //     _server->broadcastChannel(NULL, RPL_MODE(cli->getPrefix(),this->_name, "-o", cli->getNickname() + " is no more operator of channel" ), this);  
@@ -144,7 +144,7 @@ void    Channel::removeClient(Client* cli)
         if ((*it)->getNickname() == cli->getNickname())
         {
             _clients.erase(it); // the channel remove cli from its clients list
-            if (is_oper(cli)) 
+            if (isOper(cli)) 
                 removeOpe(cli); // the channel remove cli from its op list
             cli->delChannel(this); // client remove channel from it channel list
             clientFound = true;
@@ -214,17 +214,17 @@ void 	Channel::broadcastChannelmessage(Client* client, std::string message)
 	}
 }
 
-void 	Channel::broadcastChannelPart(Client* client, std::string reason)
-{
-    std::vector<Client*> cli_target = getClients();
-	std::vector<Client*>::iterator it = cli_target.begin();
+//void 	Channel::broadcastChannelPart(Client* client, std::string reason)
+//{
+//    std::vector<Client*> cli_target = getClients();
+//	std::vector<Client*>::iterator it = cli_target.begin();
 	
-   for (; it != cli_target.end(); ++it)
-   {
-		if (this == (*it)->getActiveChannel() && client != *it)
-			addToClientBuffer(getServer(), (*it)->getFd(),  RPL_PART_REASON(client->getPrefix(), this->getName(), reason));
-	}
-}
+//   for (; it != cli_target.end(); ++it)
+//   {
+//		if (this == (*it)->getActiveChannel() && client != *it)
+//			addToClientBuffer(getServer(), (*it)->getFd(),  RPL_PART_REASON(client->getPrefix(), this->getName(), reason));
+//	}
+//}
 
 void        Channel::replyList(Client* client)
 {

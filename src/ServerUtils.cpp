@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:19:04 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 10:55:56 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 14:15:40 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,8 @@ int		Server::acceptConnection(void)
 	int cliFd = accept(getFd(), (sockaddr *)&client, &addr_size);
 	if (cliFd == ERROR)
 	{
-		if (errno != EWOULDBLOCK)
-		{
-			std::cerr << BRED "[Server] " << RED "Socket cannot accept connection" DEFAULT << std::endl;
-			return BREAK ;
-		}
+		std::cerr << BRED "[Server] " << RED "Socket cannot accept connection" DEFAULT << std::endl;
+		return BREAK ;
 	}
 	fcntl(cliFd, F_SETFL, O_NONBLOCK);
 	return (cliFd);

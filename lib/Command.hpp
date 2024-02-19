@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/19 11:07:04 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 15:38:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,17 @@ public:
 	~NoticeCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
+};
+
+class BotCommand
+{
+	private:
+		Server *_server;
+	public:
+	BotCommand(Server *server);
+	~BotCommand();
+	
+	static void execute(Client *client, std::vector<std::string> arguments);
 };
 
 class PrivMsgCommand : public Command

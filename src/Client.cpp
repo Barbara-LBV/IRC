@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 18:37:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 14:58:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ Client::Client(int fd)
 	_state._registred = FALSE;
 	_state._welcomed = FALSE;
 	_state._toDisconnect = FALSE;
-	//_infos._pwd = server->getPwd();
 }
 
 Client::~Client(){}
