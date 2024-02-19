@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 14:17:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 18:36:36 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ class Client
 		/**********    Structures    *********/
 		typedef struct s_names // all the infos allowing to identify a client
 		{
-			//int				_cliFd; // client fd
 			std::string		_nickname; // pseudo: usefull for channel operator
 			std::string		_oldNick; //if it's not the 1st nickname
 			std::string		_username; // user = personn who is using IRC Client software
@@ -93,8 +92,8 @@ class Client
 		Channel*			getActiveChannel(void) const;
 		void				addChannel(Channel* channel);
 		void				partAllChannel(void);
-		void			    deleteChannel(Channel* channel);
-	
+		void				delChannel(Channel *channel);
+		
 	private:
 		Client(Client const &s);
 		Client &operator=(Client const &s);

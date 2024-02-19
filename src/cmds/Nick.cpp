@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/15 14:35:06 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 16:40:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 
 	std::string nickname = arguments[0];
+	nickname = parseNickname(arguments[0]);
 
 	if (_server->getClientByNickname(nickname) && client->getNickname().empty())
 	{
@@ -59,4 +60,21 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
     if (!client->getUsername().empty())
         addToClientBuffer(_server, client->getFd(), RPL_NICK(client->getOldNick(), client->getUsername(), nickname));
     client->welcomeClient(_server);
+}
+
+std::string 	parseNickname(std::string str)
+{
+	std::string name = str;
+	
+	if (name.size() > 8)
+		name.erase(8, name.size() - 8);
+
+	name[0] == '#' ? name.erase(0, 1) : name;
+	
+	for (size_t i = 0; i < name.size(); i++)
+	{
+		if (!std::isprint(name[i]))
+			name.erase(i, 0);
+	}
+	return name;
 }

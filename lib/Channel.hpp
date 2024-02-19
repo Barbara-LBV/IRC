@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 10:14:39 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 15:51:29 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,4 @@ class Channel
 		                        											
 };
 
-std::string		retrieveChannelOp(Client *client);
-std::string		retrieveChannelNames(Client *client);
 #endif

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/15 14:34:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 18:09:42 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,11 @@ public:
 	void execute(Client *client, std::vector<std::string> arguments);
 };
 
-bool	isAllDigits(const std::string& str);
+bool			isAllDigits(const std::string& str);
+std::string		retrieveChannelOp(Client *client);
+std::string		retrieveChannelNames(Client *client);
+std::string 	parseChannelName(std::string chan);
+std::string 	parseNickname(std::string name);
+void 			quitAllChannels(Client *cli, std::string reason);
 
 #endif

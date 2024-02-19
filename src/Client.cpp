@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 17:53:29 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 18:37:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ Channel*		Client::getActiveChannel(void) const
     return NULL;
 }
 
-void			Client::deleteChannel(Channel* channel)
+void			Client::delChannel(Channel* channel)
 {
     // Use std::remove to move the elements to be removed to the end
 	std::deque<Channel *>::iterator it = _channel.begin();
@@ -107,9 +107,7 @@ void			Client::deleteChannel(Channel* channel)
 			break ;
 		}
 	}
-	std::cout << "size of client #" << getFd() << " channel = " << _channel.size() << std::endl;
 }
-
 
 bool				Client::sendReply(int fd)
 {

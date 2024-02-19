@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 17:14:34 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 16:56:04 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ int	Server::managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd
 		client->resetFullMsg();
 		if (client->getDeconnStatus() == true)
 		{
-			std::cout << "in bp#1\n";
 			delClient(poll_fds, it, fd);
 			return (BREAK);
 		}

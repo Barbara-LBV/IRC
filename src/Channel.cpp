@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 18:53:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 18:38:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void    Channel::removeClient(Client* cli)
             _clients.erase(it); // the channel remove cli from its clients list
             if (is_oper(cli)) 
                 removeOpe(cli); // the channel remove cli from its op list
-            cli->deleteChannel(this); // client remove channel from it channel list
+            cli->delChannel(this); // client remove channel from it channel list
             clientFound = true;
             break;
         }
@@ -179,6 +179,7 @@ bool	Channel::isInChannel(Client *client)
 	}
 	return false;
 }
+
 bool        Channel::isInvited(Client *client)
 {
     for  (std::vector<Client *>::iterator it = _invited.begin(); it != _invited.end(); ++it)
@@ -188,7 +189,6 @@ bool        Channel::isInvited(Client *client)
 	}
 	return false;
 }
-
 
 void 	Channel::broadcastChannelPrimsg(Client* client, std::string message)
 {
@@ -239,4 +239,3 @@ void        Channel::replyList(Client* client)
     addToClientBuffer(client->getServer(), client->getFd(), RPL_NAMREPLY(client->getNickname(), this->getName(), list));
     addToClientBuffer(client->getServer(), client->getFd(), RPL_ENDOFNAMES(client->getNickname(), this->getName()));
 }
-

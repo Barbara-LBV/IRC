@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/15 17:59:03 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 17:12:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void		Server::delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iter
 	
 	this->_clients.erase(fd);
 	delete tmp;
-	
 	poll_fds.erase(it);
 	_cliNb--;
 	if (_cliNb <= 0)

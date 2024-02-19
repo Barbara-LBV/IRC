@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 11:55:42 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/16 19:05:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,46 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments)
 			reason = " " + arguments[i];
 	}
 	
+	quitAllChannels(client, reason);
 	addToClientBuffer(client->getServer(), client->getFd(), RPL_QUIT(client->getPrefix(), reason));
-	client->partAllChannel();
 	client->setDeconnStatus(true);
+}
+
+void 	quitAllChannels(Client *cli, std::string reason)
+{
+	(void)reason;
+	std::deque<Channel *> chan = cli->getChannels();
+	if (chan.empty())
+    {
+        chan.clear();
+        return;
+    }
+	else
+	{
+		std::deque<Channel *>::iterator it = chan.begin();
+		std::vector<Client *> clients;
+		std::vector<Client *>::iterator ite;
+		for (;it != chan.end() ; it++)
+		{
+			clients = (*it)->getClients();
+			if (clients.size() > 0)
+			{
+				ite = clients.begin();
+				for (; ite != clients.end(); ite++)
+				{
+					if (*ite == cli)
+					{
+						if ((*it)->is_oper(cli)) 
+               			 	(*it)->removeOpe(cli);
+						clients.erase(ite);
+						if (clients.size() == 0)
+							(*ite)->getServer()->delChannel(*it);
+    					addToClientBuffer(cli->getServer(), cli->getFd(), RPL_QUIT(cli->getPrefix(), reason));	
+						break ;
+					}
+				}
+			}
+		}
+	}	
+   	chan.clear();
 }

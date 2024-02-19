@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 10:25:36 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/16 15:48:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ bool checkArg(std::string port, std::string pwd)
 	{
 		std::cerr << pwd << ": chosen password is too long.\n";
 		return false;
+	}
+	for(size_t i = 0; i < pwd.size(); i++)
+	{
+		if (!std::isprint(pwd[i]))
+		{
+			std::cerr << pwd << ": chosen password has non-printable character.\n";
+			return false;
+		}
 	}
 	for(size_t i = 0; i < port.size(); i++)
 	{
@@ -44,8 +52,8 @@ bool checkArg(std::string port, std::string pwd)
 std::vector<std::string>	splitMsg(std::string msg, char c)
 {
 	std::vector<std::string> cmd;
-	std::stringstream	parse(msg);
-	std::string				 line;
+	std::stringstream		parse(msg);
+	std::string				line;
 
 	while (getline(parse, line, c))
 	{
