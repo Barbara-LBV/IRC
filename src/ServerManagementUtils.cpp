@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagementUtils.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 11:40:53 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:12:03 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,9 @@ void 	quitAllChannels(Client *cli, std::string reason)
 				addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "+o"));
 				(*it)->broadcastChannelmessage(NULL, RPL_MODE(cli->getPrefix(),(*it)->getName(), "+o", client->getNickname() + " got operator privilege now"));
 				(*it)->addOperator(client);
-				//return;
 			}
+			else if ((*it)->getClients().size() == 0)
+				(*it)->getServer()->delChannel(*it);
 		}
 		addToClientBuffer(cli->getServer(), cli->getFd(), RPL_QUIT(cli->getPrefix(), reason));	
 	}	
