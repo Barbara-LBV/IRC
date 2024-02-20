@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/16 11:43:53 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:39:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
 		return ;
 	}
-	else if (!channel->is_oper(client))
+	else if (!channel->isOper(client))
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
 		return ;
@@ -141,7 +141,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 				return ;
 			}
 			bool isOperator = false;
-			if (channel->is_oper(client_target))
+			if (channel->isOper(client_target))
 				isOperator = true;
 			if (arguments[1] == "o" || arguments[1] == "+o")
 			{

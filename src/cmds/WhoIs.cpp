@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:06:37 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/15 15:25:34 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:37:39 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void WhoIsCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (name == client->getUsername() || name == client->getNickname())
 	{
 		activeChannels = retrieveChannelNames(client);
+		if (activeChannels.size() == 0)
+			activeChannels = "0";
 		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_WHOISUSER(client->getPrefix(), client->getUsername(), client->getHost(), activeChannels, client->getServer()->getServerName()));
 		if (client->getChannels().size() > 0)
 		{

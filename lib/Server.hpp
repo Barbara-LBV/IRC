@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/13 17:34:58 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:07:20 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ class Server
 		void				setPwd(std::string pwd);
 		void				setMsg(std::string buf);
 		void				setDatetime(struct tm *timeinfo);
-		//void 				setChannel(Channel *c);
-		//void				setClient(Client *c);
 		
 		/*********    Socket and connections management    *********/
 		int 				initializeServer(void);
@@ -89,7 +87,7 @@ class Server
 		
 		/*********        Cleaning       ************/
 		static void			signal_handler(int signal);
-		
+			
 	private:
 		Server(Server const &s);
 		Server &operator=(Server const &s);	
@@ -106,6 +104,7 @@ class Server
 		std::map<int, Client *>	_clients; //client id, client class
 		std::vector<Channel *>	_channels; // channel name, channel class
 		CmdHandler				*_handler; // manage the cmmands
+
 };
 
 bool 							checkArg(std::string port, std::string pwd);

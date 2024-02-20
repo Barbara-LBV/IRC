@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:21:43 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/14 11:30:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:10:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,18 @@
 #include <sys/epoll.h>
 #include <exception>
 #include <string.h>
-#include <cerrno>
 #include <fcntl.h>
 #include <poll.h>
 #include <ctime>
 #include <sys/types.h>
 #include <algorithm>
 #include <cctype>
-#include <cstdlib> // for std::atoi
+#include <cstdlib>
 
 /****************** Includes *******************/
 
 #include "Replies.hpp"
 #include "Command.hpp"
-//#include "Client.hpp"
-//#include "Channel.hpp"
-//#include "CmdHandler.hpp"
 
 /*********************  Colors *******************/
 

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/14 10:36:18 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 13:39:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NOTONCHANNEL(client->getNickname(), chan_name));
 		return;
 	}
-	else if (channel->getT() && !channel->is_oper(client))
+	else if (channel->getT() && !channel->isOper(client))
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
 		return ;

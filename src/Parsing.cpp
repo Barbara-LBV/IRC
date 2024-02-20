@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:33:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/16 15:48:13 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:51:21 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ bool	Server::isValidNickname(std::string name)
 	}
 	return TRUE;
 }
+
 bool	Server::isValidChannelName(std::string cName)
 {
     cName[0] == '#' ? cName : cName = "#" + cName;
@@ -87,4 +88,54 @@ bool	Server::isValidChannelName(std::string cName)
         ++it;
     } 
     return true;
+}
+
+std::string 	parseNickname(std::string str)
+{
+	std::string name = str;
+	size_t i(0);
+	
+	if (name.size() > 30)
+		name.erase(30, name.size() - 30);
+	
+	while (i < name.size())
+	{
+		if(std::isalpha(name[i]))
+			break ;
+		else
+		{
+			name.erase(i, 1);
+			i = -1;
+		}
+		i++;
+	}
+	
+	for (size_t i = 0; i < name.size(); i++)
+	{
+		if (!std::isprint(name[i]))
+		{
+			name.erase(i, 1);
+			i = -1;
+		}
+	}
+	return name;
+}
+
+std::string parseChannelName(std::string chan)
+{
+	std::string name = chan;
+	
+	name[0] == '#' ? name : name.insert(0, 1, '#');
+	if (name.size() > 50)
+		name.erase(50, name.size() - 50);
+	
+	while (name.find(',') != std::string::npos)
+		name.erase(name.find(','), 1);
+		
+	for (size_t i = 0; i < name.size(); i++)
+	{
+		if (!std::isprint(name[i]))
+			name.erase(i, 0);
+	}
+	return name;
 }

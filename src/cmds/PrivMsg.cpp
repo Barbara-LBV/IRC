@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/19 16:26:46 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 09:44:27 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	
 	const std::string  target = arguments[0];
+
+	if (target == "bot")
+	{
+		BotCommand::execute(client, arguments);
+		return ;
+	}
 	
 	std::string message = arguments[1];
 	for (size_t i = 2; i < arguments.size(); i++)

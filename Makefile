@@ -27,7 +27,8 @@ SRCS_NAME 	= main.cpp \
 			cmds/Mode.cpp \
 			cmds/Join.cpp \
 			cmds/Notice.cpp \
-			Channel.cpp
+			Channel.cpp \
+			cmds/bot.cpp
 			
 SRCS		= $(shell find $(SRCS_DIR) -name "*.cpp") # SRCS        = $(wildcard $(SRCS_DIR)*.cpp) 
 

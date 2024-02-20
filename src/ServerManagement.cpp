@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagement.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 10:51:29 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:22:54 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ void	Server::manageConnections(void)
 	int 					new_socket;
 	std::vector<pollfd>		poll_fds;
 	pollfd					servPoll;
+	//pollfd					servPoll;
 	
-	servPoll.fd 		= _servFd;
+	servPoll.fd 		= 0;
 	servPoll.events 	= POLLIN;
 	poll_fds.push_back(servPoll);
 	
@@ -30,8 +31,9 @@ void	Server::manageConnections(void)
 		{
 			if (errno == EINTR)
 				break ;
-			std::cerr << RED << "[Server] Poll error" << DEFAULT << std::endl;
-			throw ;
+			std::cerr << BRED << "[Server] " RED << "Poll error" << DEFAULT << std::endl;
+			server_shutdown = TRUE;
+			return ;
 		}
 		std::vector<pollfd>::iterator it = poll_fds.begin();
 		while (it != poll_fds.end())
@@ -75,7 +77,7 @@ int	Server::managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd
 {
 	Client *client = _clients[fd];
 	if (!client)
-		std::cout << "[Server] Did not found connexion to client sorry" << std::endl;
+		std::cout << BRED "[Server] " RED << "Coudn't find client's connection, sorry!" DEFAULT << std::endl;
 	else
 	{
 		std::string msg = client->getFullMsg();

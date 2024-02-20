@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 11:05:56 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/09 18:46:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/19 15:24:45 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ class CmdHandler
 		CmdHandler(Server *server);
 		~CmdHandler();
 
-		void 			invoke(Server *serv, Client *client, std::string const &message);
-		//std::string 	parseCmd(std::string cmd);
+		void 	invoke(Server *serv, Client *client, std::string const &message);
 };
 
 #endif

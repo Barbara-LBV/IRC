@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 16:11:20 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 09:42:02 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ class Channel
 		void						setT(int b){_t = b;};
 		
 		/***********   Functions   ***********/
-		bool    					is_oper(Client *client);
+		bool    					isOper(Client *client);
 		bool						isInChannel(Client *client);
 		bool						isInvited(Client *client);
 		void 						addClient(Client *cli);
@@ -59,10 +59,8 @@ class Channel
 		void						removeClient(Client* client);
 		void 	  					broadcastChannelmessage(Client* client, std::string message);
 		void 	  					broadcastChannelPrimsg(Client* client, std::string message);
-		void 						broadcastChannelPart(Client* client, std::string reason);
-		void						replyList(Client* client);
-		size_t						clientIndex(std::vector<Client *> clients, Client *client);
-		
+		//void 						broadcastChannelPart(Client* client, std::string reason);
+		void						replyList(Client* client);	
 		
 	private:
 		Channel(Channel const &name);
