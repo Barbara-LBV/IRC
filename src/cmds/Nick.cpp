@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:24 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/19 17:51:04 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 10:08:15 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Client.hpp"
 
-NickCommand::NickCommand(Server *server, bool auth) : Command(server, auth) { _i = '0';}
+NickCommand::NickCommand(Server *server, bool auth) : Command(server, auth) {}
 
 NickCommand::~NickCommand() {}
 
@@ -38,6 +38,7 @@ void NickCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	if (_server->getClientByNickname(nickname) && client->getNickname().empty())
 	{
+		_i = '0';
 		while (_server->getClientByNickname(nickname))
 		{
 			nickname.insert(nickname.size(), 1, _i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 18:30:40 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 10:57:21 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@
 #define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) ":IrcServer 324 " + client + " " + channel + " " + mode + " " + password + "\r\n"
 #define MODE_USERMSG(client, mode) 						":" + client + " MODE " + client + " :" + mode + "\r\n"
 #define ERR_UMODEUNKNOWNFLAG(client) 					"501 " + client + " :Unknown MODE flag\r\n"
+#define RPL_CHANNELMODEIS(client, channel, mode)        "324 " + client + " " + channel + " " + mode + "\r\n"
 
 #endif

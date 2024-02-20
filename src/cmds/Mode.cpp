@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/19 13:39:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 10:54:39 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ ModeCommand::~ModeCommand() {}
 
 void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	if (arguments.size() < 2 || arguments[0].empty() || arguments[1].empty()) 
+	if (arguments.size() < 1) 
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
 		return;
@@ -67,6 +67,13 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), chan_name));
 		return ;
 	}
+
+	if (arguments.size() == 1) 
+	{
+		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_CHANNELMODEIS(client->getNickname(), chan_name, ""));
+		return;
+	}
+	
 	// MODE #abc i/-i
 	if (arguments[1] == "i" || arguments[1] == "+i" )
 	{
@@ -196,7 +203,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		_server->broadcastChannel(NULL, RPL_MODE(client->getPrefix(), chan_name, "-l ", "channel is unlimit user channel now"), channel);
 		//_server->broadcastChannel(NULL, MODE_CHANNELMSGWITHPARAM(client-> getNickname(), chan_name, "-l", "channel is unlimit user channel now"), channel);
 		return;
-	}
+	}	
 	_server->broadcastChannel(NULL, ERR_UMODEUNKNOWNFLAG(client->getNickname()), channel);
 }
 

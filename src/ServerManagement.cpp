@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagement.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 18:22:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 09:57:18 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ void	Server::manageConnections(void)
 	int 					new_socket;
 	std::vector<pollfd>		poll_fds;
 	pollfd					servPoll;
-	//pollfd					servPoll;
 	
-	servPoll.fd 		= 0;
+	servPoll.fd 		= _servFd;
 	servPoll.events 	= POLLIN;
 	poll_fds.push_back(servPoll);
 	

@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:54 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/20 09:43:13 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 09:53:48 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 	Channel* channel = _server->getChannel(name);
 	if (channel == NULL)
 	{
-        Channel* channel = new Channel(client, name, password, _server);
+        Channel* channel = new Channel(name, password, _server);
 		addToClientBufferExtended(client->getServer(), client->getFd(), RPL_JOIN(client->getPrefix(), name));
 		_server->addChannel(name, channel);
 		channel->addClient(client);

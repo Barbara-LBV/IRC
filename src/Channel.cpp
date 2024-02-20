@@ -6,13 +6,13 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:06:20 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/20 09:42:38 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 09:54:15 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Channel.hpp"
 
-Channel::Channel(Client* client, std::string const &name, std::string const &password, Server *server)
+Channel::Channel(std::string const &name, std::string const &password, Server *server)
 					: _name(name),_password(password), _server(server)
 {
     _clients.clear();
@@ -169,7 +169,7 @@ void Channel::removeOpe(Client *client)
         }
     }
     if (it == _ops.end())
-        std::cout << client->getNickname() + " is not an operator of this channel\n";
+        addToClientBufferExtended(client->getServer(), client->getFd(), ERR_CHANOPRIVSNEEDED(client->getNickname(), getName()));
 }
 
 bool	Channel::isInChannel(Client *client)
@@ -216,17 +216,6 @@ void 	Channel::broadcastChannelmessage(Client* client, std::string message)
 	}
 }
 
-//void 	Channel::broadcastChannelPart(Client* client, std::string reason)
-//{
-//    std::vector<Client*> cli_target = getClients();
-//	std::vector<Client*>::iterator it = cli_target.begin();
-	
-//   for (; it != cli_target.end(); ++it)
-//   {
-//		if (this == (*it)->getActiveChannel() && client != *it)
-//			addToClientBuffer(getServer(), (*it)->getFd(),  RPL_PART_REASON(client->getPrefix(), this->getName(), reason));
-//	}
-//}
 
 void        Channel::replyList(Client* client)
 {
