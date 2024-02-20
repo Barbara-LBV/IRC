@@ -6,42 +6,9 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:06:14 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/19 13:39:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:11:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-//    Topic message
-
-//       Command: TOPIC
-//    Parameters: <channel> [ <topic> ]
-
-//    The TOPIC command is used to change or view the topic of a channel.
-//    The topic for channel <channel> is returned if there is no <topic>
-//    given.  If the <topic> parameter is present, the topic for that
-//    channel will be changed, if this action is allowed for the user
-//    requesting it.  If the <topic> parameter is an empty string, the
-//    topic for that channel will be removed.
-
-
-//    Numeric Replies:
-
-//            ERR_NEEDMOREPARAMS              ERR_NOTONCHANNEL
-//            RPL_NOTOPIC                     RPL_TOPIC
-//            ERR_CHANOPRIVSNEEDED            ERR_NOCHANMODES
-
-//    Examples:
-
-//    :WiZ!jto@tolsun.oulu.fi TOPIC #test :New topic ; User Wiz setting the
-//                                    topic.
-
-//    TOPIC #test :another topic      ; Command to set the topic on #test
-//                                    to "another topic".
-
-//    TOPIC #test :                   ; Command to clear the topic on
-//                                    #test.
-
-//    TOPIC #test                     ; Command to check the topic for
-//                                    #test.
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Server.hpp"
@@ -52,7 +19,7 @@ TopicCommand::~TopicCommand() {}
 
 void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	 if (arguments.empty() || arguments.size() < 1)
+	 if (arguments.size() == 0)
 	{
 		addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
 		return;
@@ -81,17 +48,15 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments.size() == 1)
 	{
 		if (channel->getTopic().size() > 0)
-			addToClientBufferExtended(client->getServer(), client->getFd(), RPL_TOPIC(client->getNickname(), channel->getName(), channel->getTopic()));
+			addToClientBuffer(client->getServer(), client->getFd(), RPL_TOPIC(client->getNickname(), channel->getName(), channel->getTopic()));
 		else
-			addToClientBufferExtended(client->getServer(), client->getFd(), RPL_NOTOPIC(client->getNickname(), channel->getName()));
+			addToClientBuffer(client->getServer(), client->getFd(), RPL_NOTOPIC(client->getNickname(), channel->getName()));
 		return;
 	}
 	
 	std::string  topic = "";
 	if (arguments.size() >= 2)
 	{
-		if (!channel->getTopic().empty())
-			channel->setTopic(topic);
 		if (arguments[1][0] != ':')
 		{
 			addToClientBufferExtended(client->getServer(), client->getFd(), ERR_NORECIPIENT(client->getNickname()));
@@ -103,5 +68,5 @@ void TopicCommand::execute(Client *client, std::vector<std::string> arguments)
 			topic += " " + arguments[i];
 	}
 	channel->setTopic(topic);
-	channel->broadcastChannelmessage(NULL, RPL_TOPIC(client->getNickname(), channel->getName(), topic));;
+	channel->broadcastChannelmessageExt(NULL, RPL_TOPIC(client->getNickname(), channel->getName(), topic));;
 }

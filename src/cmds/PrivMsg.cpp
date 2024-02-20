@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:05:32 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/20 09:44:27 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:15:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	if (target == "bot")
 	{
-		BotCommand::execute(client, arguments);
+		//BotCommand::execute(client, arguments);
+		executeBot(client, arguments);
 		return ;
 	}
 	

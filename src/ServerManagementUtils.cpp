@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 14:18:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 13:46:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 13:38:59 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int 	Server::addConnections(std::vector<pollfd>&poll_fds, std::vector<pollfd> &n
 		std::cout << BGREEN "[Server] " <<  GREEN "Coudn't accept incoming connection.\n" DEFAULT;
 		return BREAK ;
 	}
-	if (cliFd > MAXCONN)
+	if (cliFd > MAXCONN + 3)
 	{
 		cantAddClient(cliFd);
 		return ERROR ;
@@ -145,5 +145,5 @@ void		Server::cantAddClient(int cliSocket)
 	std::cout << BRED "[Server] " <<  RED "You cannot join, the server is already full." << DEFAULT << std::endl;
 	send(cliSocket, "[Server] You cannot join, the server is already full", 53, 0);
 	close (cliSocket);
-	close(_servFd); // we close the listening socket as we cannot add more clients
+	//close(_servFd); // we close the listening socket as we cannot add more clients
 }

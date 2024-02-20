@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:39 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 13:42:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 13:31:52 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ class Client
 		bool				sendReply(int fd);
 		
 		/**********    Channel Management    *********/
-		//std::string	const	&getChannelName()const;
 		Channel*			getActiveChannel(void) const;
 		void				addChannel(Channel* channel);
 		void				partAllChannel(void);
@@ -100,7 +99,7 @@ class Client
 		int						_cliFd;
 		std::string				_partialMsg;
 		std::string				_fullMsg;
-		std::string				_recvdFromServ; // each client has its own recv buffer. Must check that the whole msg has been received (ending with /0) then stock it in _recvFrom.
+		std::string				_recvdFromServ;
 		t_names					_infos; 
 		t_status				_state;
 		Server*					_server;
