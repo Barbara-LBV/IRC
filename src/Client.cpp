@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:43:36 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 14:58:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:11:20 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ Channel*		Client::getActiveChannel(void) const
 
 void			Client::delChannel(Channel* channel)
 {
-    // Use std::remove to move the elements to be removed to the end
 	std::deque<Channel *>::iterator it = _channel.begin();
 	for(; it != _channel.end(); it++)
 	{

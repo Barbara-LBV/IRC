@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:08 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/20 10:54:39 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 14:30:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		std::string& mode = arguments[1];
 		if (arguments[1] == "+i")
 			addToClientBuffer(client->getServer(), client->getFd(), MODE_USERMSG(nick, mode));
-		//if (arguments[1] == "-o")
-		//	addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "-o" ));
 		return;
 	}
 	
@@ -78,13 +76,13 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments[1] == "i" || arguments[1] == "+i" )
 	{
 		channel->setI(true);
-		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "+i", "channel is Invite only now"), channel);
+		channel->broadcastChannelmessageExt(NULL, RPL_CHANNELMODEIS(client->getNickname(), chan_name, "+i :channel is Invite only now"));
 		return;
 	}
 	if (arguments[1] == "-i" )
 	{
 		channel->setI(false);
-		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "-i", "channel no need to invite"), channel);
+		channel->broadcastChannelmessageExt(NULL, RPL_CHANNELMODEIS(client->getNickname(), chan_name, "-i :channel no need to invite"));
 		return ;
 	}
 
@@ -92,13 +90,13 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	if (arguments[1] == "t" || arguments[1] == "+t" )
 	{
 		channel->setT(true);
-		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "+t", "only operator can set or modify TOPIC of channel"), channel);
+		channel->broadcastChannelmessageExt(NULL, RPL_CHANNELMODEIS(client->getNickname(), chan_name, "+t :only operator can set or modify TOPIC of channel"));
 		return;
 	}
 	if (arguments[1] == "-t" )
 	{
 		channel->setT(false);
-		_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "-t", "every user can set or modify TOPIC of channel"), channel);
+		channel->broadcastChannelmessageExt(NULL, RPL_CHANNELMODEIS(client->getNickname(), chan_name, "-t :every user can set or modify TOPIC of channel"));
 		return;
 	}
 
@@ -114,7 +112,6 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		{
 			channel->setPassword(arguments[2]);
 			_server->broadcastChannel(NULL, MODE_CHANNELMSGWITHPARAM(chan_name, "+k", channel->getPassword()), channel);
-			//_server->broadcastChannel(NULL, RPL_MODE(client->getNickname(), chan_name, "+k", ("password has changed for " + channel->getPassword())), channel);
 			return;
 		}
 	}
@@ -167,14 +164,15 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 			{
 				if (isOperator == true && client->getNickname() != client_target->getNickname())
 				{
-					std::cout << "what will be happen when operator left the channel? \n";
 					addToClientBufferExtended(client->getServer(), client->getFd(), MODE_USERMSG(client->getNickname(), "-o"));
 					_server->broadcastChannel(NULL, RPL_MODE(client->getPrefix(),chan_name, "-o", target + " is no more operator of channel" ), channel);
 					channel->removeOpe(client_target);
 					return;
 				}
+				else if (isOperator == true && client->getNickname() == client_target->getNickname())
+					addToClientBufferExtended(client->getServer(), client->getFd(), RPL_CHANNELMODEIS(client->getNickname(), chan_name, "you can not take off your ops"));
 				if (isOperator == false)
-					addToClientBufferExtended(client->getServer(), client->getFd(), target + "  is not operator of this channel");
+					addToClientBufferExtended(client->getServer(), client->getFd(), target + RPL_CHANNELMODEIS(client->getNickname(), chan_name, " is not operator of this channel."));
 				return ;
 			}
 		}
@@ -192,7 +190,6 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 			{
 				channel->setL(sizeValue);
 				_server->broadcastChannel(NULL, RPL_MODE(client->getPrefix(), chan_name, "+l ", ("Limit for channel user is " + arguments[2])), channel);
-				//_server->broadcastChannel(NULL, MODE_CHANNELMSGWITHPARAM(client-> getNickname(), chan_name, "+l", ("Limit for channel user is " + arguments[2])), channel);
 				return;
 			}
 		}    
@@ -201,7 +198,6 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	{
 		channel->setL(0);
 		_server->broadcastChannel(NULL, RPL_MODE(client->getPrefix(), chan_name, "-l ", "channel is unlimit user channel now"), channel);
-		//_server->broadcastChannel(NULL, MODE_CHANNELMSGWITHPARAM(client-> getNickname(), chan_name, "-l", "channel is unlimit user channel now"), channel);
 		return;
 	}	
 	_server->broadcastChannel(NULL, ERR_UMODEUNKNOWNFLAG(client->getNickname()), channel);

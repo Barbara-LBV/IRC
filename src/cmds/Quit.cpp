@@ -3,32 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 17:32:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/20 09:45:22 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:12:07 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Server.hpp"
-
-// Command: QUIT
-//    Parameters: [ <Quit Message> ]
-
-//    A client session is terminated with a quit message.  The server
-//    acknowledges this by sending an ERROR message to the client.
-
-//    Numeric Replies:
-
-//            None.
-
-//    Example:
-
-//    QUIT :Gone to have lunch        ; Preferred message format.
-
-//    :syrk!kalt@millennium.stealth.net QUIT :Gone to have lunch ; User
-//                                    syrk has quit IRC to have lunch.
 
 QuitCommand::QuitCommand(Server *server, bool auth) : Command(server, auth){}
 

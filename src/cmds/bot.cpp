@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:52:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 18:11:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:16:05 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,7 @@
 #include "../../lib/IrcLib.hpp"
 #include "../../lib/Server.hpp"
 
-BotCommand::BotCommand(Server *server)
-{
-    _server = server;
-}
-
-BotCommand::~BotCommand(){}
-
-void	BotCommand::execute(Client *client, std::vector<std::string> arguments)
+void PrivMsgCommand::executeBot(Client *client, std::vector<std::string> arguments)
 {
     
     if (arguments.size() < 2)
@@ -31,7 +24,7 @@ void	BotCommand::execute(Client *client, std::vector<std::string> arguments)
     }
 
     std::string botCommand = arguments[1];
-    std::string prefix = "Bot!botuser@localhost";
+    std::string prefix = "Bot!botuser@IrcServer";
 
     if (botCommand == ":info")
         addToClientBuffer(client->getServer(), client->getFd(), RPL_PRIVMSG(prefix, client->getNickname(), "I am a simple IRC bot."));

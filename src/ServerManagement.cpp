@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagement.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/20 09:57:18 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 13:36:19 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	Server::manageConnections(void)
 				{
 					// New incoming connection
 					new_socket = addConnections(poll_fds, new_poll);
-					if (new_socket == BREAK || new_socket == ERROR)
+					if (new_socket == BREAK)// || new_socket == ERROR)
 						continue ;
 					std::cout << BGREEN "[Server] " <<  GREEN "New connection on fd #" << new_socket << " accepted.\n" DEFAULT;
 				}

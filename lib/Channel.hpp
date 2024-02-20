@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/20 09:48:34 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:04:02 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,14 @@ class Channel
 		bool						isInChannel(Client *client);
 		bool						isInvited(Client *client);
 		void 						addClient(Client *cli);
+		void 						addAdmin(Client *cli){_admin = cli;};
 		void						addOperator(Client *client){_ops.push_back(client);};
 		void						addInvite(Client *client){_invited.push_back(client);};
 		void 						removeOpe(Client *client);
    		void 						partChannel(Client* cli, std::string reason);
 		void						removeClient(Client* client);
 		void 	  					broadcastChannelmessage(Client* client, std::string message);
+		void 						broadcastChannelmessageExt(Client* client, std::string message);
 		void 	  					broadcastChannelPrimsg(Client* client, std::string message);
 		void						replyList(Client* client);	
 		
@@ -71,8 +73,9 @@ class Channel
 		std::vector<Client *>_clients;
 		std::vector<Client *>_ops;
 		std::vector<Client *>_invited;
+		Client* 			_admin;
 		size_t				_l ;		//Set/remove the user limit to channel
-		bool				_i ;     //Set/remove Invite-only channel, true is invite only
+		bool				_i ;     	//Set/remove Invite-only channel, true is invite only
 		bool				_t ;		//Set/remove the restrictions of the TOPIC command to channel operator    //true is only operator can set topic
 		                        											
 };

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:45:16 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 18:12:59 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:10:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ Channel* Server::getChannel(const std::string& cName)
         if ((*it)->getName() == cName)
             return *it; // Channel found, return the pointer
     }
-
     return NULL; // Channel not found, return NULL
 }
 
@@ -77,14 +76,11 @@ std::string		&Server::getStartTime(void){ return _time;}
 
 Client 			*Server::getClientByNickname(const std::string &nickname)
 {
-	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) 
+	{
 		if (it->second->getNickname() == nickname) 
-		{
-			// Found the client with the given nickname
 			return it->second;
-		}
 	}
-	// addToClientBufferExtended(this, nickname, ERR_NOSUCHNICK(client->getNickname(), target));
 	return NULL; 
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 11:52:09 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/20 10:57:21 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 14:58:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@
 #define RPL_PING(source, token)						":" + source + " PONG :" + token + "\r\n"
 #define RPL_QUIT(source, message)					":" + source + " QUIT " + message + "\r\n"
 #define RPL_JOIN(source, channel)					":" + source + " JOIN " + channel + "\r\n"
-#define RPL_PART(source, channel)					":" + source + " PART " + channel + "\r\n"
-#define RPL_PART_REASON(source, channel, reason)	":" + source + " PART " + channel + " " + reason + "\r\n"
+//#define RPL_PART(source, channel)					":" + source + " PART " + channel + "\r\n"
+#define RPL_PART(source, channel, reason)			":" + source + " PART " + channel + " " + reason + "\r\n"
 #define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " " + reason + "\r\n"
 #define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " " + message + "\r\n"
 #define RPL_NICK(oclient, uclient, client)         ":" + oclient + "!" + uclient + "@localhost NICK " +  client + "\r\n"
-#define RPL_NOTICE(source, target, message)			":" + source + " NOTICE " + target + " :" + message + "\r\n"
+#define RPL_NOTICE(source, target, message)			":" + source + " NOTICE " + target + " " + message + "\r\n"
 #define RPL_INVITE(source, target, channel)			":" + source + " INVITE " + target + " :" + channel + "\r\n"
 
 // WHOIS
@@ -82,5 +82,6 @@
 #define MODE_USERMSG(client, mode) 						":" + client + " MODE " + client + " :" + mode + "\r\n"
 #define ERR_UMODEUNKNOWNFLAG(client) 					"501 " + client + " :Unknown MODE flag\r\n"
 #define RPL_CHANNELMODEIS(client, channel, mode)        "324 " + client + " " + channel + " " + mode + "\r\n"
+#define RPL_UMODEIS(client, mode) 						"221 " + client + " " + mode + "\r\n"
 
 #endif

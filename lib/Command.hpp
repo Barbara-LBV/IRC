@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 14:30:29 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/19 15:38:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:16:18 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,6 @@ public:
 	void execute(Client *client, std::vector<std::string> arguments);
 };
 
-class BotCommand
-{
-	private:
-		Server *_server;
-	public:
-	BotCommand(Server *server);
-	~BotCommand();
-	
-	static void execute(Client *client, std::vector<std::string> arguments);
-};
-
 class PrivMsgCommand : public Command
 {
 public:
@@ -61,6 +50,7 @@ public:
 	~PrivMsgCommand();
 
 	void execute(Client *client, std::vector<std::string> arguments);
+	void executeBot(Client *client, std::vector<std::string> arguments);
 };
 
 class PartCommand : public Command
@@ -105,7 +95,8 @@ class NickCommand : public Command
 public:
 	NickCommand(Server *server, bool auth);
 	~NickCommand();
-	char _i;	
+	char _i;
+	char _j;	
 	void execute(Client *client, std::vector<std::string> arguments);
 };
 
