@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManagement.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 16:58:27 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/20 13:36:19 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:46:13 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/Server.hpp"
 
-void	Server::manageConnections(void)
+void	Server::manageLoop(void)
 {
 	int 					new_socket;
 	std::vector<pollfd>		poll_fds;

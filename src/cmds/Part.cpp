@@ -6,7 +6,7 @@
 /*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 15:02:46 by pmaimait          #+#    #+#             */
-/*   Updated: 2024/02/19 18:18:31 by pmaimait         ###   ########.fr       */
+/*   Updated: 2024/02/20 17:06:48 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,14 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments)
         return ;
 	}
     channel->partChannel(client, reason);
+	Channel* 	channel2 = _server->getChannel(name);
+	if (channel2)
+	{
+		Client* 	admin = channel2->getAdmin();
+		if (admin != NULL)
+		{
+			if (client->getNickname() == channel2->getAdmin()->getNickname())
+    			addToClientBuffer(client->getServer(), client->getFd(), RPL_KICK(client->getPrefix(), channel2->getName(), client->getNickname(), reason));
+		}
+	} 
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmaimait <pmaimait@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 12:03:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/20 15:04:02 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 16:30:47 by pmaimait         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Channel
 		std::vector<std::string>	getNicknames();
 		Server*						getServer(){return _server;};
 		Client*						getClient(const std::string &nickname);
+		Client*						getAdmin(){return _admin;};
 		size_t						getL(){return _l;};
 		bool						getI(){return _i;};
 		bool						getT(){return _t;};
