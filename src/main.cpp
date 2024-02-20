@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 15:19:10 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 18:18:38 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:30:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int main(int ac, char **av)
 	if (server.initializeServer() == ERROR)
 		return 4;
 	signal(SIGINT, Server::signal_handler);
-	server.manageConnections();
+	server.manageLoop();
 	delete server.getCmdHandler();
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 16:11:00 by blefebvr          #+#    #+#             */
-/*   Updated: 2024/02/19 18:07:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2024/02/20 16:09:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ class Server
 		~Server();
 		
 		/*********    Assessors    *********/
-		struct sockaddr_in 	&getServAdd(void);	
-		socklen_t 			&getServAddLen(void);
-		
 		Client*				getClient(int fd);
 		Client*				getClientByNickname(const std::string &nickname);
 		std::string			&getPwd(void);
@@ -44,11 +41,8 @@ class Server
 		std::string			&getStartTime(void);
 		int					&getPort(void);
 		int					&getFd(void);
-		std::string 		&getMsg(void);
 		CmdHandler 			*getCmdHandler(void){return _handler;};
 		void				setFd(int fd);
-		void				setPwd(std::string pwd);
-		void				setMsg(std::string buf);
 		void				setDatetime(struct tm *timeinfo);
 		
 		/*********    Socket and connections management    *********/
@@ -57,13 +51,10 @@ class Server
 		int					bindServerSocket(void);
 		int					listenForConnection(void);
 		int					acceptConnection(void);
-		int 				checkPoll(int rc);
-		void 				manageConnections(void);
-		int					manageExistingConn(std::vector<pollfd> &fds, std::vector<pollfd>::iterator it);
+		void 				manageLoop(void);
 		int					addConnections(std::vector<pollfd> &poll_fds, std::vector<pollfd> &new_poll);
 		int					managePolloutEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd);
 		int					managePollerEvent(std::vector<pollfd>& poll_fds, std::vector<pollfd>::iterator &it, int fd);
-		pollfd				getActivePoll(int i);
 		int 				fillServinfo(char *port);
 
 		/*********    Client management    *********/
@@ -71,16 +62,12 @@ class Server
 		void				cantAddClient(int fd);
 		void				delClient(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it, int fd);
 		int					receiveMsg(std::vector<pollfd> &poll_fds, std::vector<pollfd>::iterator it);
-		void				stockMsg(Client *cli, char *s);
 		bool				isValidNickname(std::string name);
 		int					checkRecv(std::vector<pollfd> &poll_fds, int res, std::vector<pollfd>::iterator it);
-		void				parseMsg(std::string msg, int fd); // to set the command 
-		void				fillClient(Client *cli, std::vector <std::string> cmds); // with first
 		
 		/*********    Channel management    *********/
 		void				addChannel(std::string chan_name, Channel* channel);
 		void				delChannel(Channel *chan);
-		void				cantAddChannel(void);
 		Channel* 			getChannel(const std::string& cName);
 		void 				broadcastChannel(Client* client, std::string message, Channel* channel);
 		bool				isValidChannelName(std::string cName);
